@@ -1,0 +1,34 @@
+echo hi > outfiles/a
+echo hi > outfiles/a && cat outfiles/a
+echo hi >> outfiles/a && cat outfiles/a
+echo hi>outfiles/a && cat outfiles/a
+echo hi >outfiles/a && cat outfiles/a
+echo hi> outfiles/a && cat outfiles/a
+cat < test_files/infile
+< test_files/infile cat
+> outfiles/a echo hi && cat outfiles/a
+echo one > outfiles/a && echo two > outfiles/a && cat outfiles/a
+echo one > outfiles/a && echo two >> outfiles/a && cat outfiles/a
+cat < test_files/infile > outfiles/a && cat outfiles/a
+cat > outfiles/a < test_files/infile && cat outfiles/a
+> outfiles/a
+> outfiles/a && cat outfiles/a
+echo hi > outfiles/a > outfiles/b && cat outfiles/a outfiles/b
+echo hi >> outfiles/a >> outfiles/b && cat outfiles/a outfiles/b
+cat < nonexistent_file
+cat < nonexistent_file; echo $?
+echo hi > nonexistent_dir/file; echo $?
+echo hi > test_files/invalid_permission; echo $?
+cat < test_files/invalid_permission; echo $?
+echo redir > "outfiles/file with space" && cat "outfiles/file with space"
+echo hi | cat > outfiles/a && cat outfiles/a
+cat test_files/infile > outfiles/a | cat
+ls > outfiles/a && wc -l < outfiles/a
+cat < test_files/infile < test_files/empty
+echo hi 1> outfiles/a && cat outfiles/a
+ls nonexistent 2> outfiles/err; cat outfiles/err
+cat nonexistent 2>&1
+echo multi > outfiles/a >> outfiles/b > outfiles/c && cat outfiles/c
+echo a > outfiles/a; echo b >> outfiles/a; cat < outfiles/a
+echo hi >
+cat < test_files/infile | wc -l

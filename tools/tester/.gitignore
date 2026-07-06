@@ -1,0 +1,7 @@
+# binaire 42_sh copié à chaque run (ancré : le fichier ici, pas un dossier)
+/42_sh
+# artefacts python
+__pycache__/
+*.pyc
+# rapport d'échecs
+failures.log

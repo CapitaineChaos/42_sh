@@ -1,0 +1,195 @@
+#!/bin/bash
+
+make -C ../
+
+if [ $? -eq 0 ]; then
+    echo "Compilation réussie !"
+else
+    echo "Erreur de compilation."
+	exit 1
+fi
+
+
+cp ../minishell minishell
+
+MINISHELL_PATH="./minishell"
+
+readarray -t lst_common  < lst_common
+readarray -t lst_wildcat < lst_wildcat
+readarray -t lst_lapinou < lst_lapinou
+readarray -t lst_bonus   < lst_bonus
+
+all=("${lst_common[@]}" "${lst_wildcat[@]}" "${lst_lapinou[@]}" "${lst_bonus[@]}")
+
+#
+#
+# echo -e "unset -HELLO" | LANGUAGE=en LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 bash --posix 
+#
+# printf "%s\n" bonus_* > lst_bonus
+# printf "%s\n" wildcat_* > lst_wildcat
+# printf "%s\n" common_* > lst_common
+# printf "%s\n" lapinou_* > lst_lapinou
+#
+# Run a specific test if the file name was specified
+
+shopt -s nullglob
+if [[ $1 ]]; then
+    # Cas où tu passes "wildcat", "lapinou", etc.
+    if [[ $1 == wildcat || $1 == wildcat_ ]]; then
+        test_lists=(wildcat_*.tests)
+    elif [[ $1 == lapinou || $1 == lapinou_ ]]; then
+        test_lists=(lapinou_*.tests)
+    elif [[ $1 == common || $1 == common_ ]]; then
+        test_lists=(common_*.tests)
+    elif [[ $1 == bonus || $1 == bonus_ ]]; then
+        test_lists=(bonus_*.tests)
+    elif [[ -f $1 ]]; then
+        # Cas où c’est un fichier test individuel
+        test_lists=($1)
+    else
+        echo "Aucun test trouvé pour: $1" >&2
+        exit 1
+    fi
+else
+    # Liste complète par défaut
+    test_lists=(
+        common_*.tests
+        lapinou_*.tests
+        bonus_*.tests
+        wildcat_*.tests
+    )
+fi
+shopt -u nullglob
+
+RESET="\033[0m"
+BOLD="\033[1m"
+YELLOW="\033[0;33m"
+GREY="\033[38;5;244m"
+GREEN="\033[0;32m"
+PURPLE="\033[0;35m"
+BLUE="\033[0;36m"
+RED="\033[0;31m"
+END="\033[0m"
+
+
+chmod 000 ./test_files/invalid_permission
+mkdir ./outfiles
+mkdir ./mini_outfiles
+mkdir ./bash_outfiles
+
+printf $GREEN
+echo "🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴";
+echo "🌴🌴🌴Lapinou 🐰🐯 WiLDCaT🌴🌴MiniShELL🌴🌴🌴"
+echo "🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴🌴";
+echo ""
+printf $RESET
+
+# Récupération du prompt pour soustraction future
+# PROMPT=$(echo -e "\nexit\n" | $MINISHELL_PATH | head -n 1 | sed "s/\x1B\[[0-9;]\{1,\}[A-Za-z]//g" )
+
+# Helper commands:
+REMOVE_COLORS="sed s/\x1B\[[0-9;]\{1,\}[A-Za-z]//g"
+REMOVE_EXIT="grep -v ^exit$"
+
+# Définition des fichiers temporaires en mémoire partagée
+TMP_MINI_OUT=$(mktemp /dev/shm/minishell_test_out.XXXXX)
+TMP_MINI_ERR=$(mktemp /dev/shm/minishell_test_err.XXXXX)
+TMP_BASH_OUT=$(mktemp /dev/shm/bash_test_out.XXXXX)
+TMP_BASH_ERR=$(mktemp /dev/shm/bash_test_err.XXXXX)
+TMP_MINI_VAL=$(mktemp /dev/shm/mini_valgrind.XXXXXX)
+
+# Nettoyage sur exit pour pas se casser la tête
+trap	'rm -f "$TMP_MINI_OUT" "$TMP_MINI_ERR" "$TMP_BASH_OUT" "$TMP_BASH_ERR"; \
+		rm -f "$TMP_MINI_VAL"; \
+		chmod 666 ./test_files/invalid_permission; \
+		rm -rf ./outfiles ./mini_outfiles ./bash_outfiles' EXIT
+
+source ./test_prog_err.sh
+
+# Boucle principale
+for testfile in ${test_lists[*]}; do
+
+	printf $RED
+	echo ———————————— $testfile
+
+	while IFS= read -r teste || [[ -n $teste ]]; do
+		((i++))
+
+		rm -rf ./outfiles/*
+		rm -rf ./mini_outfiles/*
+
+		: > "$TMP_MINI_VAL"  # Vide le fichier
+
+		(printf "%s\n" "$teste" | valgrind --leak-check=full --error-exitcode=99 --log-file="$TMP_MINI_VAL" env LANGUAGE=en LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 "$MINISHELL_PATH" >"$TMP_MINI_OUT" 2>"$TMP_MINI_ERR") 2> /dev/null
+		MINI_EXIT_CODE=$?
+		MINI_VALGRIND_LOG=$(cat "$TMP_MINI_VAL")
+		cp ./outfiles/* ./mini_outfiles &>/dev/null
+		MINI_OUTPUT=$(cat "$TMP_MINI_OUT")
+		MINI_ERROR_MSG=$(cat "$TMP_MINI_ERR" |  sed 's/.*: *//')
+
+		rm -rf ./outfiles/*
+		rm -rf ./bash_outfiles/*
+
+		(printf "%s\n" "$teste" | LANGUAGE=en LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 bash --posix --noprofile --norc >"$TMP_BASH_OUT" 2>"$TMP_BASH_ERR") 2> /dev/null
+		BASH_EXIT_CODE=$?
+		cp ./outfiles/* ./bash_outfiles &>/dev/null
+		BASH_OUTPUT=$(cat "$TMP_BASH_OUT")
+		BASH_ERROR_MSG=$(cat "$TMP_BASH_ERR" |  sed 's/.*: *//')
+
+		OUTFILES_DIFF=$(diff --brief ./mini_outfiles ./bash_outfiles)
+
+		printf $YELLOW
+		printf "Test %3s: " $i
+		err_t=""
+		test_prog_err $MINI_EXIT_CODE "$TMP_MINI_VAL"
+		if [[ -n "$err_t" ]]; then
+			printf "💥 %b " $err_t
+		elif [[ "$MINI_OUTPUT" == "$BASH_OUTPUT" && "$MINI_EXIT_CODE" == "$BASH_EXIT_CODE" && -z "$OUTFILES_DIFF" ]]; then
+			printf ✅
+			((ok++))
+			if [ "$MINI_ERROR_MSG" != "$BASH_ERROR_MSG" ]; then
+				printf "⚠️ "
+			fi
+		else
+			printf ❌
+		fi
+		printf "%b" "$GREY $teste \n$END"
+		if [ "$OUTFILES_DIFF" ]; then
+			echo "$OUTFILES_DIFF"
+			echo minishell outfiles:
+			cat ./mini_outfiles/*
+			echo bash posix outfiles:
+			cat ./bash_outfiles/*
+		fi
+		if [ "$MINI_OUTPUT" != "$BASH_OUTPUT" ]; then
+			echo minishell out = \($MINI_OUTPUT\)
+			echo bash posix out = \($BASH_OUTPUT\)
+		fi
+		if [ "$MINI_EXIT_CODE" != "$BASH_EXIT_CODE" ]; then
+			echo minishell exit code = $MINI_EXIT_CODE
+			echo bash posix exit code = $BASH_EXIT_CODE
+		fi
+		if [ "$MINI_ERROR_MSG" != "$BASH_ERROR_MSG" ]; then
+			echo minishell error = \($MINI_ERROR_MSG\)
+			echo bash posix error = \($BASH_ERROR_MSG\)
+		fi
+		if [[ "$MINI_OUTPUT" != "$BASH_OUTPUT" || "$MINI_EXIT_CODE" != "$BASH_EXIT_CODE" || -n "$OUTFILES_DIFF"  ]]; then
+			echo ""
+		fi
+	done < $testfile
+done
+
+printf $PURPLE
+printf $BOLD
+echo   $ok/$i
+printf $END
+
+if [[ "$ok" == "$i" ]]; then
+	echo "🎊 🎊 🎊"
+	echo "😎 😎 😎"
+	echo "🎉 🎉 🎉"
+	exit 0
+else
+	echo "😭 😭 😭"
+	exit 1
+fi

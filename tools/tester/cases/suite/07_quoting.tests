@@ -1,0 +1,37 @@
+echo 'hello'
+echo "hello"
+echo ''
+echo ""
+echo 'a b c'
+echo "a b c"
+echo a'b'c
+echo a"b"c
+echo abc"def"'ghi'
+echo "'"
+echo '"'
+echo \'
+echo \"
+echo "she said \"hi\""
+echo 'it'\''s'
+echo "\$"
+echo '\$'
+echo "\\"
+echo '\\'
+echo "\n"
+echo '\n'
+echo "\t"
+echo '\t'
+echo "   spaced   "
+echo '   spaced   '
+echo "tab	tab"
+echo ""''""
+echo "$USER"
+echo '$USER'
+echo "no $NONE here"
+echo 'no $HOME expand'
+echo "$HOME expands"
+echo \$HOME
+echo ""a""
+echo '' '' ''
+echo "$"
+echo "end$"

@@ -1,0 +1,14 @@
+pwd
+pwd -P
+pwd -L
+pwd --
+pwd -x
+pwd extra args here
+pwd -P -L
+pwd -LP
+cd / && pwd
+cd test_files && pwd
+cd .. && pwd
+pwd | cat
+echo $PWD
+cd /tmp && pwd && cd / && pwd

@@ -1,0 +1,28 @@
+true && echo yes
+false && echo no
+true || echo no
+false || echo yes
+echo a; echo b
+echo a ; echo b
+echo a;echo b
+true && echo a && echo b
+false && echo a && echo b
+true || echo a || echo b
+false || echo a || echo b
+true && echo a || echo b
+false && echo a || echo b
+true || echo a && echo b
+false || echo a && echo b
+echo a && echo b; echo c
+ls nonexistent && echo ok
+ls nonexistent || echo failed
+true && false; echo $?
+false || true; echo $?
+echo a && echo b && echo c && echo d
+nonexistentcmd || echo recovered
+echo start; false; echo $?; true; echo $?
+echo a && echo b | cat
+echo a | cat && echo b
+false && echo a | cat; echo $?
+echo x > outfiles/a && cat outfiles/a || echo fail
+true && cd /tmp && pwd

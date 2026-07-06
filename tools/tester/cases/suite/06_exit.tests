@@ -1,0 +1,25 @@
+exit
+exit 0
+exit 1
+exit 2
+exit 42
+exit 255
+exit 256
+exit 257
+exit -1
+exit -42
+exit +5
+exit 999999999999999999999
+exit 666 666 666 666
+exit abc
+exit 12abc
+exit 1abc2
+exit ""
+exit "   42   "
+exit 1 2
+exit 1 2 3
+exit 0 extra
+echo before && exit 5
+exit 5 && echo after
+(exit 7); echo $?
+exit $?

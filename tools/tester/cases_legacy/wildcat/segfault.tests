@@ -1,0 +1,13 @@
+<
+<<
+>
+>>
+<echo<
+>>echo>>
+>echo>
+echo $*
+echo hi <
+echo hi | >
+ls && <
+ls || <
+#./tester wildcat_segfault.tests | grep "minishell exit code = 139" | wc -l

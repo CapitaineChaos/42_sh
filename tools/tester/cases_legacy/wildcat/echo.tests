@@ -1,0 +1,133 @@
+$?
+$?$?
+$DONTEXIST
+$> echo $9HOME
+?$HOME
+'$HOMEdskjhfkdshfsd'
+$LESS$VAR
+Ctlr-C
+#echo
+.echo.
+<echo<
+>>echo>>
+>echo>
+|echo|
+echo
+echo '*'
+echo *
+echo > <
+echo | |
+echo "$"""
+echo '$'''
+echo $
+echo $""
+echo $*
+echo $?
+echo $?$
+echo $:$= | cat -e
+echo " $ " | cat -e
+echo ' $ ' | cat -e
+echo $DONTEXIST Hola
+echo "$DONTEXIST" "Makefile"
+echo "$DONTEXIST""Makefile"
+echo "$DONTEXIST"Makefile
+echo $? | echo $? | echo $?
+echo $"HOLA"
+echo $'HOLA'
+echo $hola*
+echo "$"HOME
+echo $"HO""ME"
+echo $"HOME"
+echo $'HO''ME'
+echo $'HOME'
+echo $=HOME
+echo "" $HOME
+echo ""$HOME
+echo "'$HO''ME'"
+echo "$HO""ME"
+echo "$HO"ME
+echo '' $HOME
+echo ''$HOME
+echo '$HO''ME'
+echo '$HO'ME
+echo \$HOME
+echo $""HOME
+echo $''HOME
+echo $HOME
+echo $HOME*
+echo $HOME9
+echo "$USER"
+echo '$USER'
+echo $USER
+echo "$USER $HOME"
+echo "$USER$HOME"
+echo $USER$var\$USER$USER\$USERtest$USER
+""e"'c'ho 'b'"o"nj"o"'u'r"
+"e"'c'ho 'b'"o"nj"o"'u'r
+echo           | cat -e
+echo "         " | cat -e
+echo D*
+echo "hello world"
+echo 'hello world'
+echo hello world
+e"cho hola"
+e'cho hola'
+echo ""             hola
+echo "" hola
+echo ""hola
+echo "'"h'o'la"'"
+echo "'hola'"
+echo "hola"
+echo '"hola"'
+echo '''ho"''''l"a'''
+echo ''h'o'la''
+echo ''hola''
+echo 'hola'
+echo hola
+echo hola""""""""""""
+echo hola"''''''''''" 
+echo hola'""""""""""'
+echo hola''''''''''''
+echo"'hola'"
+echo         Hola
+echo Hola
+echoHola
+echo hola""bonjour
+echo "hola     " | cat -e
+echo hola*hola *
+echo Hola -n
+""''echo hola""'''' que""'' tal""''
+echo    Hola     Que    Tal
+echo Hola Que Tal
+echo Le path de mon HOME est $HOME
+echo my shit terminal is [$TERM]
+echo my shit terminal is [$TERM4
+echo my shit terminal is [$TERM4]
+echo --------n
+echo -n
+echo      \n hola
+echo -n hola
+echo-nhola
+echo "-n" Hola
+echo -n Hola
+echo -nHola
+echo-nHola
+echo -n -n
+echo -n -n Hola Que
+echo -nnn --------n
+echo -nnnn $hola
+echo -n -nnn hola -nnnn
+echo -nnnnn
+echo -nnn --------nnnn
+echo -n -nnn -nnnn
+echo -n -nnn-nnnn
+echo -n-nnn -nnnn
+echo -nnn -----nn---nnnn
+echo -p
+echo *t
+echo "The user is $USER"
+echo *t hola
+echo *Z
+EechoE
+holaCtlr-C 
+HOMEdskjhfkdshfsd 

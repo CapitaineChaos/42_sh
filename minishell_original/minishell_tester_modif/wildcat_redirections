@@ -1,0 +1,259 @@
+echo hola >> hello >> hello > hello
+echo hola >> hello
+echo hola >> hello >> hello > hello
+cat < hello
+echo hola > hello
+echo hola >> hello >> hello >> hello
+echo hola >> hello
+echo hola > hello
+echo hey > outfiles/bonjour
+echo <outfiles/bonjour <hello
+echo hola > hello
+echo hey > outfiles/bonjour
+echo <hello <outfiles/bonjour
+echo hola > outfiles/bonjour
+echo hey > hello
+echo hola > outfiles/bonjour > hello > outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+echo hola > outfiles/bonjour > hello > outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+echo hola > outfiles/bonjour > hello > outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+rm outfiles/bonjour hello
+echo hola > outfiles/bonjour >> hello > outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+echo hola > outfiles/bonjour > hello > outfiles/bonjour
+cat outfiles/bonjour 
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+rm outfiles/bonjour hello
+echo hola > outfiles/bonjour > hello >> outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+echo hola > outfiles/bonjour > hello >> outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+rm outfiles/bonjour hello
+echo hola >> outfiles/bonjour > hello > outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+rm outfiles/bonjour hello
+echo hola >> outfiles/bonjour > hello > outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+echo hola >> outfiles/bonjour > hello > outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+rm outfiles/bonjour hello
+echo hola >> outfiles/bonjour >> hello >> outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+echo hola >> outfiles/bonjour >> hello >> outfiles/bonjour
+cat outfiles/bonjour
+cat hello
+> outfiles/bonjour echo hola outfiles/bonjour
+cat outfiles/bonjour
+>outfiles/bonjour echo > 
+outfiles/hola>outfiles/bonjour>outfiles/hola>>outfiles/bonjour>outfiles/hola hey >outfiles/bonjour 
+hola >outfiles/hola
+cat outfiles/bonjour
+cat outfiles/hola
+echo outfiles/bonjour > outfiles/hola1 ; cat outfiles/hola1
+echo hello > outfiles/hola2  ; cat outfiles/hola2
+echo 2 >outfiles/hola1 >> outfiles/hola2 ; cat outfiles/hola1
+echo 2 >outfiles/hola1 >> outfiles/hola2 ; cat outfiles/hola2
+ls
+echo outfiles/bonjour > hola1  ; cat outfiles/hola1
+echo hello > hola2  ; cat outfiles/hola2
+echo 2 >>hola1 > hola2  ; cat outfiles/hola2
+ls
+cat outfiles/hola1
+cat outfiles/hola2
+> pwd
+ls
+< pwd
+< Makefile . 
+cat <pwd
+cat <src/pwd
+cat <../pwd
+cat >>
+cat >>>
+cat >> <<
+cat >> > >> << >>
+cat < ls
+cat < ls > ls
+cat > ls1 < ls2
+ls
+>>outfiles/hola
+cat outfiles/hola
+echo hola > outfiles/bonjour
+cat < outfiles/bonjour
+echo hola >outfiles/bonjour
+cat <outfiles/bonjour
+echo hola>outfiles/bonjour
+cat<outfiles/bonjour
+echo hola> outfiles/bonjour
+cat< outfiles/bonjour
+echo hola               >outfiles/bonjour
+cat<                     outfiles/bonjour
+echo hola          >     outfiles/bonjour
+cat            <         outfiles/bonjour
+echo hola > src/outfiles/bonjour
+cat < src/outfiles/bonjour
+echo hola >src/outfiles/bonjour
+cat <src/outfiles/bonjour
+echo hola > outfiles/bonjour
+echo que tal >> outfiles/bonjour
+cat < outfiles/bonjour
+echo hola > outfiles/bonjour
+rm outfiles/bonjour
+echo que tal >> outfiles/bonjour
+cat < outfiles/bonjour
+e'c'"h"o hola > outfiles/bonjour
+cat 'bo'"n"jour
+echo hola > outfiles/bonjour\ 1
+ls
+cat outfiles/bonjour\ 1
+echo hola > outfiles/bonjour hey
+ls
+cat outfiles/bonjour
+cat hey
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+>src/outfiles/bonjour >src/hello <sound
+cat src/outfiles/bonjour src/hello
+echo hola > src/outfiles/bonjour 
+echo hey > src/hello
+rm src/outfiles/bonjour src/hello
+>src/outfiles/bonjour >src/hello <sound
+ls src
+cat src/outfiles/bonjour src/hello 
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+>src/outfiles/bonjour <sound >src/hello 
+cat src/outfiles/bonjour 
+cat src/hello
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+rm src/outfiles/bonjour src/hello
+>src/outfiles/bonjour <sound >src/hello 
+ls src
+cat src/outfiles/bonjour
+echo hola > ../outfiles/bonjour
+echo hey > ../hello
+>../outfiles/bonjour >../hello <sound
+cat ../outfiles/bonjour ../hello
+echo hola > ../outfiles/bonjour
+echo hey > ../hello
+rm ../outfiles/bonjour ../hello
+>../outfiles/bonjour >../hello <sound
+ls ..
+cat ../outfiles/bonjour ../hello
+echo hola > ../outfiles/bonjour
+echo hey > ../hello
+>../outfiles/bonjour <sound >../hello 
+cat ../outfiles/bonjour 
+cat ../hello
+echo hola > ../outfiles/bonjour
+echo hey > ../hello
+rm ../outfiles/bonjour ../hello
+>../outfiles/bonjour <sound >../hello 
+ls ..
+cat ../outfiles/bonjour
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+>src/outfiles/bonjour >>src/hello <sound
+cat src/outfiles/bonjour 
+cat src/hello
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+>>src/outfiles/bonjour >src/hello <sound
+cat src/outfiles/bonjour 
+cat src/hello
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+>>src/outfiles/bonjour >>src/hello <sound
+cat src/outfiles/bonjour 
+cat src/hello
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+>src/outfiles/bonjour <sound >>src/hello
+cat src/outfiles/bonjour 
+cat src/hello
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+>>src/outfiles/bonjour <sound >src/hello
+cat src/outfiles/bonjour 
+cat src/hello
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+ >>src/outfiles/bonjour <sound >>src/hello
+cat src/outfiles/bonjour 
+cat src/hello
+echo hola > src/outfiles/bonjour
+echo hey > src/hello
+<sound >>src/outfiles/bonjour >>src/hello
+cat src/outfiles/bonjour 
+cat src/hello
+echo hola > outfiles/bonjour
+echo hey > hello
+<outfiles/bonjour >hello
+cat outfiles/bonjour 
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+>outfiles/bonjour >hello < sound
+cat outfiles/bonjour 
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+rm outfiles/bonjour hello
+>outfiles/bonjour >hello < sound
+cat outfiles/bonjour  
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+>outfiles/bonjour <sound hello
+cat outfiles/bonjour 
+cat hello
+echo hola > outfiles/bonjour
+echo hey > hello
+rm outfiles/bonjour hello
+>outfiles/bonjour <sound hello
+cat outfiles/bonjour 
+echo hola > outfiles/bonjour
+<outfiles/bonjour cat | wc > outfiles/bonjour
+cat outfiles/bonjour
+rm -f outfiles/bonjour
+rm outfiles/bonjour > outfiles/bonjour
+ls -l outfiles/bonjour
+<<<<<<<<<<<<<<<<
+> > > >
+>> >> >> >>
+>>>> >> >> >>
+export HOLA="outfiles/bonjour hello" |  >$HOLA

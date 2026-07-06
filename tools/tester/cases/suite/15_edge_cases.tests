@@ -1,0 +1,27 @@
+""
+''
+" "
+$HOME
+$NONEXISTENT
+echo a>outfiles/b && cat outfiles/b
+export A=1 B=2 C=3 D=4 E=5; echo done
+echo $HOME | cat | cat | cat
+cat test_files/infile | cat | wc -l
+ls -la | grep test | wc -l
+echo "   " | cat -e
+echo hi > outfiles/a >> outfiles/a > outfiles/a && cat outfiles/a
+echo ~
+echo ~/x
+echo ~root
+cat test_files/infile_big | wc -l
+echo `echo hi`
+echo $(echo hi)
+echo "$(echo nested)"
+export "A B"=x; echo $?
+echo a"b"'c'd"e"'f'
+echo $HOME$USER$PWD
+cd test_files && cat infile && cd .. && pwd
+echo trailing spaces
+	echo leading tab
+echo mixed	tabs	and spaces
+echo end

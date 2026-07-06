@@ -1,0 +1,30 @@
+echo hi | cat
+echo hi|cat
+echo hi |cat
+echo hi| cat
+echo hi | cat | cat
+echo hi | cat | cat | cat | cat
+ls | cat
+cat test_files/infile | cat
+echo hello | grep hello
+echo hello | grep nomatch
+echo hi | wc -c
+ls | wc -l
+echo abc | cat | wc -c
+pwd | cat
+echo | cat
+cat test_files/infile | grep -c ''
+echo hi | nonexistentcmd42
+nonexistentcmd42 | echo reached
+echo hi | cat nonexistent_file
+cat nonexistent_file | cat
+false | true; echo $?
+true | false; echo $?
+echo hi | exit
+cd /tmp | pwd
+export A=1 | echo done
+echo one | cat | grep one | cat
+echo hi | cat && echo ok
+echo hi | cat || echo fail
+yes | head -n 3
+seq 1 5 | tail -n 2

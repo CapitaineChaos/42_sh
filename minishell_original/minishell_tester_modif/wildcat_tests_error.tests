@@ -1,0 +1,16 @@
+.
+< *
+> *
+>> *
+cat <minishell.h&ls 
+echo *
+echo $hola*
+echo hola*hola *
+env | grep SHLVL
+export --
+export HOLA=bon&jour
+export | sort | grep -v SHLVL | grep -v "declare -x _" | grep -v "PS.="
+export UNO=1 DOS-2 TRES=3 || env | grep TRES
+ls || cat | echo
+(ls && pwd | wc) < hola
+(ls && pwd | wc) > hola |  cat hola 

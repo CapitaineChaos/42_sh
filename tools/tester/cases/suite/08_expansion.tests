@@ -1,0 +1,39 @@
+echo $HOME
+echo $USER
+echo $PWD
+echo $?
+echo $NONEXISTENT
+echo "$HOME"
+echo '$HOME'
+echo $HOME$USER
+echo $HOME/$USER
+echo pre$HOME
+echo a$HOMEb
+echo ${HOME}
+echo a${HOME}b
+echo $?$?
+echo pre$?post
+false; echo $?
+true; echo $?
+ls nonexistent_xyz; echo $?
+echo $HOME"literal"
+echo "$HOME literal"
+export X=hello; echo $X
+export X=hello; echo "$X world"
+export X="a b c"; echo $X
+export X="a b c"; echo "$X"
+export EMPTY=; echo "[$EMPTY]"
+export X='  spaced  '; echo [$X]
+export X=world; echo hello$X
+export X=/tmp; cd $X && pwd
+echo $
+echo $ end
+echo "$"
+echo ${}
+echo $HO$USER
+echo $1
+echo $12
+echo $-
+echo ${HOME:-default}
+echo $PATH
+export A=B; export B=C; echo $A

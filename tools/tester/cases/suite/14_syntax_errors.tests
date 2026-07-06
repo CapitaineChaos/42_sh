@@ -1,0 +1,32 @@
+|
+| echo hi
+echo hi |
+echo hi | | cat
+||
+&&
+;
+; echo hi
+echo hi ;;
+echo a &&& echo b
+>
+<
+>>
+echo >
+echo <
+cat <
+(
+)
+( echo hi
+echo hi )
+echo hi |
+&& echo hi
+|| echo hi
+echo a ; ; echo b
+> > outfiles/a
+echo hi >>> outfiles/a
+echo )
+echo (
+echo hi && && echo bye
+echo hi || || echo bye
+;;;
+echo hi > < outfiles/a

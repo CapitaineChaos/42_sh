@@ -1,0 +1,26 @@
+echo *
+ls *
+echo test_files/*
+echo *files
+echo test*
+echo ?
+echo test_file?
+echo test_files/inf*
+echo test_files/*.c
+echo test_files/[ie]*
+echo test_files/i?file
+echo test_files/*i*
+echo nonexistent*
+echo *xyz_nomatch*
+echo "*"
+echo '*'
+echo \*
+echo */
+echo test_files/*/
+cd test_files && echo *
+echo */infile
+echo test_files/empty
+echo test_files/*e*
+ls test_files/*.c
+echo a* b* c*
+echo test_files/????le

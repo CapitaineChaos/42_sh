@@ -1,0 +1,25 @@
+cd
+cd .
+cd ..
+cd /
+cd /tmp
+cd test_files
+cd ./test_files
+cd test_files/..
+cd nonexistent_dir_xyz
+cd test_files/infile
+cd ""
+cd -
+cd ~
+cd --
+cd / extra
+cd . .
+cd test_files && pwd
+cd .. && pwd
+cd / && cd - && pwd
+cd /tmp && cd .. && pwd
+cd nonexistent; echo $?
+cd test_files/infile; echo $?
+cd; echo $?
+echo before && cd /tmp && echo after && pwd
+cd /tmp && cd test 2>/dev/null; echo $?

@@ -1,0 +1,64 @@
+echo $oo "oo" $
+echo $oo "oo"   $
+echo $oo   "oo"   $
+echo "$oo"   "oo"   $
+echo '$oo'   "oo"   $
+echo $oo   "oo$"   $
+echo $oo   "o$o"   $
+echo $oo "oo"$
+echo $oo"oo"$
+echo $ oo "oo" o$
+echo $ oo "oo"   o$  $
+echo $ $oo oo $oo "$oo" oo "$" oo
+echo $"oo"
+echo "oo$"
+echo "$"
+echo oo"$"
+echo "$"oo
+echo '$'
+echo $"oo"$
+echo $"oo"$oo
+echo $"oo"$oo $'pp' oo 'pp'$''
+export oo=8; echo "$oo"
+export oo=8; echo "\$oo"
+export oo=8; echo "\\$oo"
+export oo=8; echo "\\\$oo"
+export oo=8; echo "\\\\$oo"
+export oo=8; echo "oo\$oo\\"
+export oo=8; echo "oo\\$oo\\"
+export oo=8; echo "$oo" "oo\\$oo\\"
+export oo=8; echo "oo\\\$oo\\"
+export oo=8; echo "oo\\\\$oo\\"
+export o=8; echo $oo "oo" $
+export o=8; echo $oo "oo"   $
+export o=8; echo $oo   "oo"   $
+export o=8; echo $oo   "oo$"   $
+export o=8; echo $oo   "o$o"   $
+export o=8; echo $oo "oo"$
+export o=8; echo $oo"oo"$
+export o=8; echo $ oo "oo" o$
+export o=8; echo $ oo "oo"   o$  $
+export oo=8; echo $oo "oo" $
+export oo=8; echo $oo "oo"   $
+export oo=8; echo $oo   "oo"   $
+export oo=8; echo $oo   "oo$"   $
+export oo=8; echo $oo   "o$o"   $
+export oo=8; echo $oo "oo"$
+export oo=8; echo $oo"oo"$
+export oo=8; echo $ oo "oo" o$
+export oo=8; echo $ oo "oo"   o$  $
+export ooo=8; echo $oo "oo" $
+export ooo=8; echo $oo "oo"   $
+export ooo=8; echo $oo   "oo"   $
+export ooo=8; echo $oo   "oo$"   $
+export ooo=8; echo $oo   "o$o"   $
+export ooo=8; echo $oo "oo"$
+export ooo=8; echo $oo"oo"$
+export ooo=8; echo $ oo "oo" o$
+export ooo=8; echo $ oo "oo"   o$  $
+export oo=""; echo $oo "oo" $oo
+export oo="   "; echo $oo "oo" $oo
+export oo="      "; echo $oo "oo" $oo
+export oo=""; echo $oo "oo" $oo ooo
+export oo="   "; echo $oo "oo" $oo ooo
+export oo="      "; echo $oo "oo" $oo ooo

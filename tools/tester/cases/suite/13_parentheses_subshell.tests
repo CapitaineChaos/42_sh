@@ -1,0 +1,23 @@
+(echo hi)
+(echo a; echo b)
+(echo a && echo b)
+(false || echo b)
+(exit 5); echo $?
+(cd /tmp && pwd); pwd
+(echo a) && echo b
+(echo a) | cat
+echo a | (cat)
+(echo a | cat)
+((echo nested))
+(echo a)(echo b)
+(   echo spaced   )
+(cd /tmp); pwd
+(exit 3) && echo after; echo $?
+(ls nonexistent); echo $?
+(echo a > outfiles/a); cat outfiles/a
+(echo a && (echo b && echo c))
+(true) && (echo yes)
+(false) || (echo no)
+(echo a; exit 2); echo $?
+(export A=sub); echo "[$A]"
+(cd /tmp) ; (cd / ) ; pwd

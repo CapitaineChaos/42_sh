@@ -1,0 +1,54 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    erreurs_a_tester.txt                               :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: cmassol <cmassol@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/04/08 14:44:56 by cmassol           #+#    #+#              #
+#    Updated: 2025/05/20 11:20:11 by cmassol          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+commande rentree :
+
+----CHECKER----
+
+< com 
+ok
+
+com < 
+ko
+&& com 
+ko
+| com 
+ko
+<< < 
+ko
+
+((a))())
+(<<)
+(((<<)))
+(((<<aa )))
+((( <<aa )))
+((( < aa )))
+( <<aa )
+((( < a )))
+((( ls < aa )))
+
+----end checker----
+
+() ko
+( ) ko
+(ok) OUI
+
+(;) ko
+(ok;) OUI
+
+--------------------HEREDOC----------
+
+<< chat"" cat (ex : pas d affichage de la variable &USER)
+<< chat cat (ex : affichage de la variable &USER)
+
+-----end heredoc-----
+

@@ -1,0 +1,15 @@
+
+$
+$?
+$EMPTY
+$EMPTY echo hi
+$PWD
+"aaa"
+minishell.h
+./missing.out
+missing.out
+README.md
+./test_files
+/test_files
+test_files
+./test_files/invalid_permission

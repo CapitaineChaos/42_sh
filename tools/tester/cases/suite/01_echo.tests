@@ -1,0 +1,43 @@
+echo
+echo hello
+echo hello world
+echo     multiple     spaces
+echo -n
+echo -n hello
+echo -n hello world
+echo -nnn hello
+echo -n -n -n hello
+echo -nx hello
+echo -xn hello
+echo --n hello
+echo - hello
+echo -- hello
+echo "double quoted"
+echo 'single quoted'
+echo "with 'single' inside"
+echo 'with "double" inside'
+echo ""
+echo ''
+echo a"b"c'd'e
+echo abc"   "def
+echo "tab	inside"
+echo \hello
+echo hello\ world
+echo a\	b
+echo "$HOME"
+echo '$HOME'
+echo $HOME
+echo $USER-$HOME
+echo $?
+echo hello$?
+echo "exit is $?"
+echo $NONEXISTENT_VAR
+echo "$NONEXISTENT_VAR"end
+echo -n a
+echo -n first; echo second
+echo $
+echo '$'
+echo "$"
+echo \$HOME
+echo "unterminated \\"
+echo one two three four five six seven eight nine ten

@@ -1,0 +1,13 @@
+unset
+unset A
+unset NONEXISTENT
+export A=1; unset A; echo "[$A]"
+export A=1; unset A; echo $?
+export A=1 B=2 C=3; unset A B; env | grep -E '^(A|B|C)='
+unset 1invalid; echo $?
+unset A=1; echo $?
+unset A B C
+export A=1; unset A A; echo "[$A]"
+export HELLO=world; unset HELLO; env | grep HELLO
+unset PATH; echo still_here
+export A=1; unset -x A; echo $?
