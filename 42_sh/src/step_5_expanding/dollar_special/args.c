@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "module_debug.h"
 #include "all_config.h"
 #include "ft_std.h"
@@ -40,7 +41,8 @@ static char	*get_exit_status(size_t *i)
 	char	*val;
 
 	debug_nano_title(LVL_EXPAND, "Processing exit status");
-	val = ft_itoa(get_mns(NULL)->last_exit_code);
+	if (asprintf(&val, "%d", get_mns(NULL)->last_exit_code) < 0)
+		val = NULL;
 	trace_info_nvnb(LVL_EXPAND, "Exit status", get_mns(NULL)->last_exit_code);
 	(*i)++;
 	return (val);

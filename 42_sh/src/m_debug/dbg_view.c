@@ -12,6 +12,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -21,7 +22,6 @@
 #include "module_ast.h"
 #include "module_token.h"
 #include "ft_deque.h"
-#include "ft_printf_fd.h"
 
 #ifdef DBG_VIEW
 
@@ -172,9 +172,9 @@ static void	put_parts(int fd, t_token *t)
 		if (!first)
 			put_byte(fd, DBG_US);
 		first = 0;
-		ft_printf_fd(fd, "%s", debug_get_token_type(p->type));
+		dprintf(fd, "%s", debug_get_token_type(p->type));
 		put_byte(fd, DBG_RS);
-		ft_printf_fd(fd, "%d", (int)p->offset);
+		dprintf(fd, "%d", (int)p->offset);
 		put_byte(fd, DBG_RS);
 		put_part_flags(fd, p);
 		put_byte(fd, DBG_RS);
@@ -225,18 +225,18 @@ static char	*node_kind_short(t_ast_node *n)
 
 static void	node_row(int fd, t_ast_node *n, int idx)
 {
-	ft_printf_fd(fd, "%d\t%s\t", idx, node_kind_short(n));
+	dprintf(fd, "%d\t%s\t", idx, node_kind_short(n));
 	if (n->tclass == ACL_OPERAND)
 		put_tok_list(fd, &n->t_ast_data.operand.tokens);
 	else
-		ft_printf_fd(fd, "%s", ast_title(n));
+		dprintf(fd, "%s", ast_title(n));
 	put_byte(fd, DBG_TAB);
 	if (n->tclass == ACL_OPERAND)
 		put_redir_list(fd, &n->t_ast_data.operand.redirections);
 	put_byte(fd, DBG_TAB);
-	ft_printf_fd(fd, "%s\t%d\t", ast_title(n), n->arity);
+	dprintf(fd, "%s\t%d\t", ast_title(n), n->arity);
 	if (n->tclass == ACL_OPERATOR)
-		ft_printf_fd(fd, "%d", (int)n->t_ast_data.operator_.precedence);
+		dprintf(fd, "%d", (int)n->t_ast_data.operator_.precedence);
 	put_byte(fd, DBG_NL);
 }
 
@@ -254,16 +254,16 @@ static void	ast_walk(int fd, t_ast_node *n, int depth)
 {
 	if (!n)
 		return ;
-	ft_printf_fd(fd, "%d\t%s\t%s\t", depth, ast_kind(n), ast_title(n));
+	dprintf(fd, "%d\t%s\t%s\t", depth, ast_kind(n), ast_title(n));
 	if (n->tclass == ACL_OPERAND)
 		put_tok_list(fd, &n->t_ast_data.operand.tokens);
 	put_byte(fd, DBG_TAB);
 	if (n->tclass == ACL_OPERAND)
 		put_redir_list(fd, &n->t_ast_data.operand.redirections);
 	put_byte(fd, DBG_TAB);
-	ft_printf_fd(fd, "id=%d", n->id);
+	dprintf(fd, "id=%d", n->id);
 	put_byte(fd, DBG_US);
-	ft_printf_fd(fd, "arity=%d", n->arity);
+	dprintf(fd, "arity=%d", n->arity);
 	put_byte(fd, DBG_NL);
 	ast_walk(fd, n->left, depth + 1);
 	ast_walk(fd, n->right, depth + 1);
@@ -279,10 +279,10 @@ static void	exec_walk(int fd, t_ast_node *n)
 	if (n->tclass == ACL_OPERAND)
 	{
 		op = &n->t_ast_data.operand;
-		ft_printf_fd(fd, "%d\t", n->id);
+		dprintf(fd, "%d\t", n->id);
 		if (op->tokens.head)
 			put_tok_text(fd, op->tokens.head);
-		ft_printf_fd(fd, "\t%d\t%s\t%d\t%d\t%d\t", (int)op->tokens.count,
+		dprintf(fd, "\t%d\t%s\t%d\t%d\t%d\t", (int)op->tokens.count,
 			op->path ? op->path : "", n->exit_code, n->status, n->pid);
 		put_tok_list(fd, &op->tokens);
 		put_byte(fd, DBG_TAB);
@@ -325,7 +325,7 @@ void	dbg_read(t_sstr *inputs)
 		return ;
 	flat = sstrs_flatten(inputs);
 	if (flat)
-		ft_printf_fd(fd, "%s", flat);
+		dprintf(fd, "%s", flat);
 	free(flat);
 	close(fd);
 #else
@@ -347,12 +347,12 @@ void	dbg_tokens(t_tokens *tokens)
 	t = tokens->head;
 	while (t)
 	{
-		ft_printf_fd(fd, "%d\t%s\t%s\t", idx, ltrim(get_tok_family(t->family)),
+		dprintf(fd, "%d\t%s\t%s\t", idx, ltrim(get_tok_family(t->family)),
 			debug_get_token_type(t->type));
 		put_tok_flags(fd, t);
 		put_byte(fd, DBG_TAB);
 		put_tok_text(fd, t);
-		ft_printf_fd(fd, "\t%d\t", (int)t->count);
+		dprintf(fd, "\t%d\t", (int)t->count);
 		put_parts(fd, t);
 		put_byte(fd, DBG_NL);
 		t = t->next;
@@ -419,7 +419,7 @@ void	dbg_footer(int last_exit)
 	fd = open_file(DBG_F_FOOTER);
 	if (fd < 0)
 		return ;
-	ft_printf_fd(fd, "exit=%d", last_exit);
+	dprintf(fd, "exit=%d", last_exit);
 	close(fd);
 #else
 	(void)last_exit;

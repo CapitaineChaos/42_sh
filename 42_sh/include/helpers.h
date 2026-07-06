@@ -17,7 +17,6 @@
 # include "module_minishell.h"
 
 int		get_shell_level(t_mns *mns);
-char	*ft_itoa_positive(int n);
 bool	is_valid_id(const char *s);
 char	*get_identifier(const char *str, size_t *idx);
 

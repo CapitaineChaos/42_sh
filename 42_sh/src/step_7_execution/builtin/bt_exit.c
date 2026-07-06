@@ -55,6 +55,7 @@ int	builtin_exit(t_mns *mns, int argc, char **argv, char **envp)
 	t_logger	lg;
 	intmax_t	exit_status;
 	bool		i_error;
+	char		*end;
 
 	check_nullargs(mns, argc, argv, envp);
 	log_init(&lg);
@@ -63,7 +64,13 @@ int	builtin_exit(t_mns *mns, int argc, char **argv, char **envp)
 		argv++;
 		argc--;
 	}
-	exit_status = ft_atoll_secure(argv[1], &i_error);
+	errno = 0;
+	exit_status = strtoll(argv[1], &end, 10);
+	i_error = (errno == ERANGE || end == argv[1]);
+	while (isspace((unsigned char)*end))
+		end++;
+	if (*end != '\0')
+		i_error = true;
 	if (i_error)
 		exit_and_free_non_numeric(argv[1]);
 	else

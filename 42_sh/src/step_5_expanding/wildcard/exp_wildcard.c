@@ -57,7 +57,7 @@ char	*get_dir_path(const char *pattern)
 
 	slash_pos = last_slash(pattern);
 	if (slash_pos)
-		dir_path = ft_substr(pattern, 0, slash_pos - pattern + 1);
+		dir_path = strndup(pattern, slash_pos - pattern + 1);
 	else
 		dir_path = strdup("./");
 	return (dir_path);

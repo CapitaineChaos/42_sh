@@ -47,9 +47,9 @@ char	*get_env_entry(t_env_node *cur, ssize_t len1, ssize_t len2)
 		entry = malloc(len1 + len2 + 1);
 		if (!entry)
 			return (NULL);
-		ft_strlcpy(entry, cur->key, len1);
+		strlcpy(entry, cur->key, len1);
 		entry[len1 - 1] = '=';
-		ft_strlcpy(entry + len1, cur->value, len2 + 1);	
+		strlcpy(entry + len1, cur->value, len2 + 1);	
 	}
 	else
 	{
@@ -57,7 +57,7 @@ char	*get_env_entry(t_env_node *cur, ssize_t len1, ssize_t len2)
 		entry = malloc(len1 + 1);
 		if (!entry)
 			return (NULL);
-		ft_strlcpy(entry, cur->key, len1);
+		strlcpy(entry, cur->key, len1);
 		entry[len1] = '=';
 	}
 	entry[len1 + len2] = '\0';

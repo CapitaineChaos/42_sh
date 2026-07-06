@@ -158,23 +158,9 @@ SRCS_HELPERS = \
 SRCS_UTILS = \
 				deque/deque \
 				gnl/nano_gnl \
-				printf_fd/ft_printf_fd_process_hex \
-				printf_fd/ft_printf_fd_process_nbr \
-				printf_fd/ft_printf_fd_process_str \
-				printf_fd/ft_printf_fd_setparams \
-				printf_fd/ft_printf_fd \
-				std/ft_atoi \
-				std/ft_atoll \
-				std/ft_cput_fd \
 				std/ft_free \
-				std/ft_len \
-				std/ft_nb_cmp \
 				std/ft_split \
 				std/ft_strjoin \
-				std/ft_strlcpy \
-				std/ft_substr \
-				std/ft_toa \
-				std/ft_toupper \
 				sstr/sstr \
 				strapi/ft_strapi_add_remove \
 				strapi/ft_strapi_append \

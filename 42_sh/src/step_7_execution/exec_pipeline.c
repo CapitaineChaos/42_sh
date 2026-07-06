@@ -15,24 +15,6 @@
 #include "module_signal.h"
 #include <sys/wait.h>
 
-static int	wait_for_children(t_ast_node **cmds, int ncmds)
-{
-	int	i;
-	int	status;
-
-	i = 0;
-	while (i < ncmds)
-	{
-		status = 0;
-		if (cmds[i]->pid > 0)
-			waitpid(cmds[i]->pid, &status, 0);
-		cmds[i]->status = status;
-		i++;
-	}
-	status = cmds[ncmds - 1]->status;
-	free(cmds);
-	return (status);
-}
 
 static int	count_pipeline_cmds(t_ast_node *node)
 {
@@ -58,34 +40,6 @@ static int	collect_pipeline_cmds(t_ast_node *node, t_ast_node **tab, int idx)
 	return (idx);
 }
 
-static int	close_and_exit_parent(bool has_pipe, int *fd, int *prev_in)
-{
-	if (*prev_in != -1)
-		close(*prev_in);
-	if (has_pipe)
-	{
-		close(fd[1]);
-		*prev_in = fd[0];
-	}
-	return (0);
-}
-
-static int	pipe_and_fork(t_ast_node **cmds, bool has_pipe, int *fd, int *pid)
-{
-	if (has_pipe && pipe(fd) < 0)
-	{
-		free(cmds);
-		return (1);
-	}
-	*pid = fork();
-	if (*pid < 0)
-	{
-		free(cmds);
-		return (1);
-	}
-	return (0);
-}
-
 static int	exec_single_pipe(t_ast_node **cmds, int ncmds, int i, int *prev_in)
 {
 	int			fd[2];
@@ -93,8 +47,18 @@ static int	exec_single_pipe(t_ast_node **cmds, int ncmds, int i, int *prev_in)
 	t_ast_node	*node;
 	int			status;
 
-	if (pipe_and_fork(cmds, i < ncmds - 1, fd, &pid) != 0)
+	if ((i < ncmds - 1) && pipe(fd) < 0)
+	{
+		free(cmds);
 		return (1);
+	}
+	pid = fork();
+	if (pid < 0)
+	{
+		free(cmds);
+		return (1);
+	}
+
 	cmds[i]->pid = pid;
 	if (pid == 0)
 	{
@@ -115,7 +79,15 @@ static int	exec_single_pipe(t_ast_node **cmds, int ncmds, int i, int *prev_in)
 		status = exec_node(node);
 		free_and_exit_minishell(status);
 	}
-	return (close_and_exit_parent(i < ncmds - 1, fd, prev_in));
+
+	if (*prev_in != -1)
+		close(*prev_in);
+	if (i < ncmds - 1)
+	{
+		close(fd[1]);
+		*prev_in = fd[0];
+	}
+	return (0);
 }
 
 int	exec_pipeline(t_ast_node *root)
@@ -140,5 +112,18 @@ int	exec_pipeline(t_ast_node *root)
 			return (EXIT_FAILURE);
 		i++;
 	}
-	return (return_full_code(wait_for_children(cmds, ncmds)));
+
+	int	status;
+	i = 0;
+	while (i < ncmds)
+	{
+		status = 0;
+		if (cmds[i]->pid > 0)
+			waitpid(cmds[i]->pid, &status, 0);
+		cmds[i]->status = status;
+		i++;
+	}
+	status = cmds[ncmds - 1]->status;
+	free(cmds);
+	return (return_full_code(status));
 }

@@ -531,7 +531,7 @@ void	debug_tokens_list_str(t_token *list)
 		if (space_left < 0)
 			space_left = 0;
 		/* copie du contenu de buf, tronqué si nécessaire */
-		ft_strlcpy(tmp + prefix_len, buf, space_left + 1);
+		strlcpy(tmp + prefix_len, buf, space_left + 1);
 		safe_strcat(tmp, "|\n", sizeof(tmp));
 		debug_log(tmp);
 
@@ -582,7 +582,7 @@ void	debug_tokens_list_stream(t_token *list)
 		space_left = sizeof(tmp) - prefix_len - 3; /* pour "|\\n" et \0 */
 		if (space_left < 0)
 			space_left = 0;
-		ft_strlcpy(tmp + prefix_len, buf, space_left + 1);
+		strlcpy(tmp + prefix_len, buf, space_left + 1);
 		safe_strcat(tmp, "|\n", sizeof(tmp));
 		debug_log(tmp);
 

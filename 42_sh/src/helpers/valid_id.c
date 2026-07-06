@@ -63,6 +63,6 @@ char	*get_identifier(const char *str, size_t *idx)
 		(*idx)++;
 		len++;
 	}
-	id = ft_substr(start, 0, len);
+	id = strndup(start, len);
 	return (id);
 }

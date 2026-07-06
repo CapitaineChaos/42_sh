@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "module_debug.h"
 #include "module_env.h"
 #include "module_minishell.h"
@@ -73,12 +74,14 @@ void	update_shell_level(t_mns *mns, t_env_lst *lst)
 	if (n < 0)
 		n = 0;
 	n++;
-	tmp = ft_itoa_positive(n);
+	if (asprintf(&tmp, "%d", n) < 0)
+		tmp = NULL;
 	env_list_set(lst, "SHLVL", tmp);
 	free(tmp);
 	n = get_shell_level(mns) + 1;
 	mns->level = n;
-	tmp = ft_itoa_positive(n);
+	if (asprintf(&tmp, "%d", n) < 0)
+		tmp = NULL;
 	env_list_set(lst, "LW_SHLVL", tmp);
 	hide_node_key(lst, "LW_SHLVL");
 	free(tmp);

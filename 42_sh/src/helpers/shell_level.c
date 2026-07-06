@@ -29,27 +29,3 @@ int	get_shell_level(t_mns *mns)
 		shell_level = 0;
 	return (shell_level);
 }
-
-char	*ft_itoa_positive(int n)
-{
-	char	*str;
-	int		len;
-	int		temp;
-
-	if (n < 0)
-		return (NULL);
-	len = 1;
-	temp = n;
-	while (temp >= 10 && len++)
-		temp /= 10;
-	str = (char *)malloc(sizeof(char) * (len + 1));
-	if (!str)
-		return (NULL);
-	str[len] = '\0';
-	while (len--)
-	{
-		str[len] = (n % 10) + '0';
-		n /= 10;
-	}
-	return (str);
-}

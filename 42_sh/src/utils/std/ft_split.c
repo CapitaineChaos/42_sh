@@ -80,7 +80,7 @@ char	**ft_split(char const *s, char c)
 	{
 		s = get_start(s, c);
 		wdlen = get_wdlen(s, c);
-		tab[i] = ft_substr(s, 0, wdlen);
+		tab[i] = strndup(s, wdlen);
 		s = s + wdlen;
 		if (!tab[i])
 			return (free_tab(tab, i));
