@@ -41,7 +41,6 @@ SRCS_DEBUG = \
 				convert_tok_type \
 				convert_tok_tclass \
 				print_arg \
-				print_deque \
 				print_tokens \
 				print_ast_node \
 				print_ast_tree \
@@ -88,14 +87,9 @@ SRCS_LEXER = \
 
 SRCS_PARSER = \
 				convert \
-				parse_control \
-				parse_operator \
-				parse_struct \
-				parse_word \
 				parser_lifecycle \
 				prs_run \
-				prs_tk_nodes \
-				shunting_yard
+				rd_parser
 
 SRCS_EXPANDER = \
 				dollar/exp_heredoc \
@@ -160,7 +154,6 @@ SRCS_AST = \
 				ast_create \
 				ast_helpers \
 				ast_lifecycle \
-				build_ast \
 				push_swap
 
 SRCS_NORMALIZE = \

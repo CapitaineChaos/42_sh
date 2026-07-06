@@ -56,25 +56,3 @@ t_ast_type	get_ast_type(t_tk_type type)
 	else
 		return (AST_UNKNOWN);
 }
-
-t_ast_class	get_ast_class(t_tk_type type)
-{
-	if (type == TOK_PIPE)
-		return (ACL_OPERATOR);
-	else if (type == TOK_AND_IF)
-		return (ACL_OPERATOR);
-	else if (type == TOK_OR_IF)
-		return (ACL_OPERATOR);
-	else if (type == TOK_SEMI)
-		return (ACL_CONTROL);
-	else if (type == TOK_NEWLINE)
-		return (ACL_CONTROL);
-	else if (type == TOK_LPAREN)
-		return (ACL_OPERATOR);
-	else if (type == TOK_RPAREN)
-		return (ACL_OPERAND);
-	else if (type == TOK_WORD)
-		return (ACL_OPERAND);
-	else
-		return (ACL_OPERAND);
-}

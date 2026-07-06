@@ -86,31 +86,18 @@ void		free_ast_node(t_ast_node *node);
 
 t_ast_node	*create_cmd_word_operand(t_ast_type type);
 t_ast_node	*create_operator(t_ast_type type, t_token *token);
-t_ast_node	*create_struct(t_ast_type type, t_token *token);
-t_ast_node	*create_subshell(t_ast_node *old);
 t_ast_node	*create_control(t_ast_type type, t_token *token);
-
-/**
- * BUILD
- */
-
-void		build_ast(t_deque *final, t_deque *output);
 
 /**
  * HELPERS
  */
 
 t_ast_node	*peek_head(t_deque *deque);
-t_ast_node	*peek_tail(t_deque *deque);
-t_ast_node	*get_ast_node(t_dq_n *node);
 
 /**
  * PUSH_SWAP FUNCTIONS
  */
 
 void		ps_push_front_create(t_deque *deque, t_ast_node *token);
-void		ps_push_back_create(t_deque *deque, t_ast_node *token);
-t_ast_node	*ps_pop_front_release(t_deque *deque);
-t_ast_node	*ps_pop_back_release(t_deque *deque);
 
 #endif

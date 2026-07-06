@@ -63,24 +63,24 @@ static void	chk_env(t_env_lst *lst, char *key, char *content, bool hidden)
 
 void	update_shell_level(t_mns *mns, t_env_lst *lst)
 {
-	int		real_shell_level;
 	char	*tmp;
+	int		n;
 
-	tmp = ft_getenv(lst, "LW_SHLVL");
-	if (tmp == NULL)
-	{
-		mns->level = 2;
-		env_lst_add_entry_hid(lst, "LW_SHLVL", "1");
-		env_list_set(lst, "SHLVL", "1");
-		return ;
-	}
-	hide_node_key(lst, "LW_SHLVL");
-	real_shell_level = get_shell_level(mns);
-	real_shell_level++;
-	mns->level = real_shell_level;
-	tmp = ft_itoa_positive(real_shell_level);
-	env_list_set(lst, "LW_SHLVL", tmp);
+	tmp = ft_getenv(lst, "SHLVL");
+	n = 0;
+	if (tmp != NULL)
+		n = ft_atoi(tmp);
+	if (n < 0)
+		n = 0;
+	n++;
+	tmp = ft_itoa_positive(n);
 	env_list_set(lst, "SHLVL", tmp);
+	free(tmp);
+	n = get_shell_level(mns) + 1;
+	mns->level = n;
+	tmp = ft_itoa_positive(n);
+	env_list_set(lst, "LW_SHLVL", tmp);
+	hide_node_key(lst, "LW_SHLVL");
 	free(tmp);
 }
 

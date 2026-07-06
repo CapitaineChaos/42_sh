@@ -19,48 +19,16 @@ void	parser_init(t_parser *p, int lv)
 {
 	if (lv < 4)
 		return ;
-	p->deques.input.head = NULL;
-	p->deques.input.tail = NULL;
-	p->deques.input.size = 0;
-	p->deques.input.name = "input";
-	p->deques.output.head = NULL;
-	p->deques.output.tail = NULL;
-	p->deques.output.size = 0;
-	p->deques.output.name = "output";
 	p->deques.final.head = NULL;
 	p->deques.final.tail = NULL;
 	p->deques.final.size = 0;
 	p->deques.final.name = "final";
-	p->deques.operators.head = NULL;
-	p->deques.operators.tail = NULL;
-	p->deques.operators.size = 0;
-	p->deques.operators.name = "operators";
 	trace_ok(LVL_PARSER, "Parser init done");
 }
 
-/**
- * @brief Libère la mémoire allouée pour les pstacks.
- * @param stacks Les pstacks à libérer.
- * @note Libère également les tokens associés aux nœuds de l'arbre AST.
- */
 void	free_pdeques(t_pdeques *deques)
 {
 	trace_info(LVL_PARSER, ">> Freeing pstacks");
-	if (deques->input.size > 0)
-	{
-		trace_info(LVL_PARSER, "Freeing " "[   input   ]" " stack");
-		deque_free(&deques->input, (void *)free_ast_node);
-	}
-	if (deques->output.size > 0)
-	{
-		trace_info(LVL_PARSER, "Freeing " "[  out-put  ]" " stack");
-		deque_free(&deques->output, (void *)free_ast_node);
-	}
-	if (deques->operators.size > 0)
-	{
-		trace_info(LVL_PARSER, "Freeing " "[ operators ]" " stack");
-		deque_free(&deques->operators, (void *)free_ast_node);
-	}
 	if (deques->final.size > 0)
 	{
 		trace_info(LVL_PARSER, "Freeing " "[   final   ]" " stack");
@@ -75,13 +43,7 @@ void	parser_free(t_parser *p, int lv)
 		return ;
 	trace_info(LVL_PARSER, "Freeing parser");
 	free_pdeques(&p->deques);
-	p->deques.output.head = NULL;
-	p->deques.output.tail = NULL;
-	p->deques.output.size = 0;
 	p->deques.final.head = NULL;
 	p->deques.final.tail = NULL;
 	p->deques.final.size = 0;
-	p->deques.operators.head = NULL;
-	p->deques.operators.tail = NULL;
-	p->deques.operators.size = 0;
 }

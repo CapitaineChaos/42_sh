@@ -223,38 +223,30 @@ static char	*node_kind_short(t_ast_node *n)
 	return ("ctrl");
 }
 
-/*
- * Liste plate des nœuds issus de tokens_to_nodes, avant le shunting-yard.
- * Une ligne/nœud : idx TAB kind TAB label TAB redirs TAB type TAB arity TAB prec.
- * label = argv (US-liste) pour un operand, sinon le type de l'opérateur.
- */
-static void	nodes_walk(int fd, t_deque *input)
+static void	node_row(int fd, t_ast_node *n, int idx)
 {
-	t_dq_n		*dn;
-	t_ast_node	*n;
-	int			idx;
+	ft_printf_fd(fd, "%d\t%s\t", idx, node_kind_short(n));
+	if (n->tclass == ACL_OPERAND)
+		put_tok_list(fd, &n->t_ast_data.operand.tokens);
+	else
+		ft_printf_fd(fd, "%s", ast_title(n));
+	put_byte(fd, DBG_TAB);
+	if (n->tclass == ACL_OPERAND)
+		put_redir_list(fd, &n->t_ast_data.operand.redirections);
+	put_byte(fd, DBG_TAB);
+	ft_printf_fd(fd, "%s\t%d\t", ast_title(n), n->arity);
+	if (n->tclass == ACL_OPERATOR)
+		ft_printf_fd(fd, "%d", (int)n->t_ast_data.operator_.precedence);
+	put_byte(fd, DBG_NL);
+}
 
-	dn = input->head;
-	idx = 0;
-	while (dn)
-	{
-		n = dn->node;
-		ft_printf_fd(fd, "%d\t%s\t", idx, node_kind_short(n));
-		if (n->tclass == ACL_OPERAND)
-			put_tok_list(fd, &n->t_ast_data.operand.tokens);
-		else
-			ft_printf_fd(fd, "%s", ast_title(n));
-		put_byte(fd, DBG_TAB);
-		if (n->tclass == ACL_OPERAND)
-			put_redir_list(fd, &n->t_ast_data.operand.redirections);
-		put_byte(fd, DBG_TAB);
-		ft_printf_fd(fd, "%s\t%d\t", ast_title(n), n->arity);
-		if (n->tclass == ACL_OPERATOR)
-			ft_printf_fd(fd, "%d", (int)n->t_ast_data.operator_.precedence);
-		put_byte(fd, DBG_NL);
-		dn = dn->next;
-		idx++;
-	}
+static void	nodes_walk(int fd, t_ast_node *n, int *idx)
+{
+	if (!n)
+		return ;
+	node_row(fd, n, (*idx)++);
+	nodes_walk(fd, n->left, idx);
+	nodes_walk(fd, n->right, idx);
 }
 
 /* Parcours préfixe : depth TAB kind TAB title TAB argv TAB redirs TAB meta. */
@@ -372,18 +364,20 @@ void	dbg_tokens(t_tokens *tokens)
 #endif
 }
 
-void	dbg_nodes(t_deque *input)
+void	dbg_nodes(t_ast_node *root)
 {
 #ifdef DBG_VIEW
 	int	fd;
+	int	idx;
 
 	fd = open_file(DBG_F_NODES);
 	if (fd < 0)
 		return ;
-	nodes_walk(fd, input);
+	idx = 0;
+	nodes_walk(fd, root, &idx);
 	close(fd);
 #else
-	(void)input;
+	(void)root;
 #endif
 }
 

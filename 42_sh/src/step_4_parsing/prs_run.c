@@ -26,15 +26,18 @@ void	print_wildcat_error(char *str)
 	trace_logger_flush(-1, &lg, true);
 }
 
-/**
- * @brief Fonction principale de la phase de parsing.
- * @param mns La structure de données principale du minishell.
- * @return true si le parsing a réussi, false sinon.
- * @note Cette fonction vérifie si la liste de tokens est vide, puis
- * 	 prépare la structure de parsing et construit l'arbre AST.
- */
+static bool	is_empty_command(t_ast_node *root)
+{
+	return (root && root->tclass == ACL_OPERAND && root->type == AST_CMD
+		&& root->left == NULL
+		&& root->t_ast_data.operand.tokens.count == 0
+		&& root->t_ast_data.operand.redirections.count == 0);
+}
+
 bool	run_parser(t_parser *prs, t_tokens *tkns, int lv)
 {
+	t_ast_node	*root;
+
 	if (lv < 4)
 		return (false);
 	debug_title(LVL_PARSER, "[  Parsing  ]");
@@ -43,18 +46,12 @@ bool	run_parser(t_parser *prs, t_tokens *tkns, int lv)
 		trace_info(LVL_PARSER, "Aucun token à parser");
 		return (false);
 	}
-	tokens_to_nodes(tkns, &prs->deques.input);
-	dbg_nodes(&prs->deques.input);
-	debug_deque(&prs->deques.input, "INPUT");
-	apply_shunting_yard(&prs->deques);
-	debug_deque(&prs->deques.input, "IN (empty) Shunting yard");
-	debug_deque(&prs->deques.operators, "OPS (empty) Shunting yard");
-	debug_deque(&prs->deques.output, "RPN OUT Shunting yard");
-	build_ast(&prs->deques.final, &prs->deques.output);
+	root = rd_parse(tkns);
+	if (is_empty_command(root))
+		return (free_ast(root), false);
+	ps_push_front_create(&prs->deques.final, root);
 	debug_ast_tree(&prs->deques.final);
+	dbg_nodes(root);
 	dbg_ast(&prs->deques.final);
-	debug_check_integrity(prs);
-	if (prs->deques.final.size == 0)
-		return (false);
 	return (true);
 }

@@ -21,10 +21,7 @@
 
 typedef struct s_pdeques
 {
-	t_deque	input;
-	t_deque	output;
 	t_deque	final;
-	t_deque	operators;
 }	t_pdeques;
 
 typedef struct s_parser
@@ -44,15 +41,11 @@ void		free_pdeques(t_pdeques *stacks);
  * PREPARSE / PARSE
  */
 
-bool		apply_shunting_yard(t_pdeques *deques);
-void		tokens_to_nodes(t_tokens *tokens, t_deque *deque);
 void		print_wildcat_error(char *str);
 bool		run_parser(t_parser *prs, t_tokens *tkns, int lv);
 
-bool		parse_word(t_tokens *tokens, t_deque *input);
-bool		parse_operator(t_tokens *tokens, t_deque *input);
-bool		parse_struct(t_tokens *tokens, t_deque *input);
-bool		parse_control(t_tokens *tokens, t_deque *input);
+t_ast_node	*rd_parse(t_tokens *tokens);
+void		find_redirs(t_tokens *tokens);
 
 /**
  * CONVERT
@@ -60,7 +53,6 @@ bool		parse_control(t_tokens *tokens, t_deque *input);
 
 size_t		get_precedence(t_ast_type type);
 t_ast_type	get_ast_type(t_tk_type type);
-t_ast_class	get_ast_class(t_tk_type type);
 
 /**
  * PROTOTYPES EXTERNES
