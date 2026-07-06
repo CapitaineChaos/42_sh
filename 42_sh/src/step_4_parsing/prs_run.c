@@ -44,6 +44,7 @@ bool	run_parser(t_parser *prs, t_tokens *tkns, int lv)
 		return (false);
 	}
 	tokens_to_nodes(tkns, &prs->deques.input);
+	dbg_nodes(&prs->deques.input);
 	debug_deque(&prs->deques.input, "INPUT");
 	apply_shunting_yard(&prs->deques);
 	debug_deque(&prs->deques.input, "IN (empty) Shunting yard");

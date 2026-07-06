@@ -28,7 +28,8 @@ body {
   background:var(--btn); color:var(--fg); border:1px solid var(--line);
   border-radius:6px; padding:5px 12px; font:inherit; cursor:pointer;
 }
-#bar button:hover { background:var(--btnh); }
+#bar button:hover:not(:disabled) { background:var(--btnh); }
+#bar button:disabled { opacity:.5; cursor:default; }
 #main { flex:1; display:flex; min-height:0; min-width:0; overflow:hidden; }
 #left {
   flex:0 0 640px; min-width:120px; background:#000; overflow:hidden;
@@ -43,6 +44,9 @@ body {
   background:var(--panel2); border:1px solid var(--line); border-radius:8px;
   white-space:pre-wrap;
 }
+#compilebox.run { color:var(--hdr); border-color:var(--hdr); }
+#compilebox.ok { color:#a6e3a1; border-color:#a6e3a1; }
+#compilebox.err { color:#f38ba8; border-color:#f38ba8; }
 #panels { flex:1; min-height:0; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:10px; }
 section {
   background:var(--panel); border:1px solid var(--line); border-radius:8px;
@@ -126,7 +130,6 @@ section.max .iconbtn[data-act="max"] { color:var(--hdr); }
 .tree .irow {
   color:var(--fg); text-align:left; white-space:normal; word-break:break-word;
 }
-.tree .alist .irow::before { content:"·"; color:var(--dim); margin-right:6px; }
 .tree .rlist .irow { color:var(--accent); }
 .tree .empty { color:var(--dim); }
 .tree .nfoot {
@@ -144,10 +147,14 @@ section.max .iconbtn[data-act="max"] { color:var(--hdr); }
 .ttab tbody tr { cursor:pointer; }
 .ttab tbody tr:hover { background:var(--panel3); }
 .ttab tbody tr.selected { background:rgba(137,180,250,.16); box-shadow:inset 3px 0 0 var(--hdr); }
-.ttab .ti { color:var(--dim); text-align:right; }
+.ttab .ti { color:var(--dim); text-align:left; }
 .ttab .tt { color:var(--fg); white-space:pre; }
 .ttab .ecell { white-space:normal; }
 .etab td:not(.ecell), .etab th:not(:last-child) { width:1%; white-space:nowrap; }
+/* # / GROUP / TYPE / FLAG au contenu ; TEXT prend le reste. */
+.tktab td:not(.tt), .tktab th:not(:last-child) { width:1%; white-space:nowrap; }
+/* # / KIND au contenu ; CONTENT + REDIRS prennent le reste. */
+.ndtab td:not(.tt), .ndtab th:nth-child(-n+2) { width:1%; white-space:nowrap; }
 .ttab .erow { color:var(--fg); white-space:nowrap; }
 .ttab .erow.erd { color:var(--accent); }
 .tf { letter-spacing:2px; }
@@ -198,7 +205,6 @@ section.max .iconbtn[data-act="max"] { color:var(--hdr); }
 #inspect .kv .v { color:var(--fg); }
 #inspect code { color:var(--fg); }
 #inspect .ilist { list-style:none; margin:0; padding:0 0 0 6px; }
-#inspect .alist li::before { content:"·"; color:var(--dim); margin-right:6px; }
 #inspect .rlist li { color:var(--accent); }
 #inspect .ptab { border-collapse:collapse; width:100%; margin-top:2px; }
 #inspect .ptab th {

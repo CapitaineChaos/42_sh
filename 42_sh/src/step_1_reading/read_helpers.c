@@ -91,6 +91,7 @@ int	main_finalize(t_main_data *data)
 	set_tokens_parts_ptrs(data->lx->tokens.head, data->stream);
 	debug_tokens(&data->lx->tokens, data->lv);
 	dbg_reset();
+	dbg_read(data->inputs);
 	dbg_tokens(&data->lx->tokens);
 	trace_info(LVL_INPUT, "  Fin user input  ");
 	lexer_soft_reset(data->lx, data->lv);

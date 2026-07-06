@@ -24,6 +24,7 @@ typedef struct s_deque t_deque;
 typedef struct s_ast_node t_ast_node;
 typedef struct s_checker t_checker;
 typedef struct s_parser t_parser;
+typedef struct s_sstr t_sstr;
 
 
 void	debug_lx_pendings(t_lexer *lx);
@@ -53,7 +54,9 @@ void	debug_log_init(void);
 void	trace_logger_flush(int fd, t_logger *lg, bool to_file);
 
 void	dbg_reset(void);
+void	dbg_read(t_sstr *inputs);
 void	dbg_tokens(t_tokens *tokens);
+void	dbg_nodes(t_deque *input);
 void	dbg_ast(t_deque *final);
 void	dbg_exec(t_ast_node *root);
 void	dbg_footer(int last_exit);

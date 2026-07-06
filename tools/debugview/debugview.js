@@ -82,22 +82,59 @@ const es = new EventSource("/stream");
 es.onmessage = (e) => term.write(b64bytes(e.data));
 term.onData((d) => fetch("/input", { method: "POST", body: d }));
 
-document.getElementById("compile").onclick = async () => {
-  const j = await (await fetch("/compile", { method: "POST" })).json();
-  const box = document.getElementById("compilebox");
-  if (j.ok) {
-    box.hidden = true;
-    box.textContent = "";
-  } else {
-    box.textContent = (j.out || "erreur").trim();
-    box.hidden = false;
+const compileBtn = document.getElementById("compile");
+const restartBtn = document.getElementById("restart");
+const compilebox = document.getElementById("compilebox");
+let busy = false;
+
+/* Verrouille les deux boutons pendant une opération : pas de compile+restart
+ * qui se chevauchent (le linker réécrit le binaire pendant que restart l'exec). */
+function setBusy(on) {
+  busy = on;
+  compileBtn.disabled = on;
+  restartBtn.disabled = on;
+}
+function showStatus(text, kind) {
+  compilebox.hidden = false;
+  compilebox.className = kind;
+  compilebox.textContent = text;
+}
+
+compileBtn.onclick = async () => {
+  if (busy) return;
+  setBusy(true);
+  compileBtn.textContent = "compilation…";
+  showStatus("compilation en cours…", "run");
+  try {
+    const j = await (await fetch("/compile", { method: "POST" })).json();
+    if (j.ok)
+      showStatus("compilation terminée — Relancer pour charger le binaire", "ok");
+    else
+      showStatus((j.out || "erreur de compilation").trim(), "err");
+  } catch (e) {
+    showStatus("échec de la requête de compilation", "err");
+  } finally {
+    compileBtn.textContent = "Compiler";
+    setBusy(false);
   }
 };
-document.getElementById("restart").onclick = async () => {
-  postResize();
-  await fetch("/restart", { method: "POST" });
-  term.reset();
-  postResize();
+restartBtn.onclick = async () => {
+  if (busy) return;
+  setBusy(true);
+  restartBtn.textContent = "redémarrage…";
+  try {
+    postResize();
+    await fetch("/restart", { method: "POST" });
+    term.reset();
+    postResize();
+    compilebox.hidden = true;
+    compilebox.textContent = "";
+  } catch (e) {
+    showStatus("échec du redémarrage", "err");
+  } finally {
+    restartBtn.textContent = "Relancer";
+    setBusy(false);
+  }
 };
 
 const US = "\x1f";
@@ -142,6 +179,10 @@ function list(items, cls) {
   return `<ul class="ilist ${cls}">` +
     items.map((v) => `<li>${color(v)}</li>`).join("") + "</ul>";
 }
+/* Préfixe chaque argv de son indice [N] (N = position réelle dans argv). */
+function numbered(items, start) {
+  return items.map((v, i) => `[${i + (start || 0)}] ${v}`);
+}
 function cardList(items, cls) {
   return `<div class="ilist ${cls}">` +
     items.map((v) => `<div class="irow">${color(v)}</div>`).join("") + "</div>";
@@ -169,7 +210,8 @@ function nodeBody(nd) {
   let h = `<div class="nhead" style="background:${col}">${nd.title}</div>`;
   h += `<div class="nbody">`;
   if (argv.length)
-    h += `<div class="sec"><div class="lbl">argv</div>${cardList(argv, "alist")}</div>`;
+    h += `<div class="sec"><div class="lbl">argv</div>` +
+      `${cardList(numbered(argv, 0), "alist")}</div>`;
   if (redirs.length)
     h += `<div class="sec"><div class="lbl">redir · ${redirs.length}</div>` +
       `${cardList(redirs, "rlist")}</div>`;
@@ -209,7 +251,7 @@ function treeHTML(text, name) {
 
 function tokenTable(text, name) {
   const rows = text.split("\n").filter((l) => l.length);
-  let h = `<div class="hscroll"><table class="ttab"><thead><tr><th>#</th>` +
+  let h = `<div class="hscroll"><table class="ttab tktab"><thead><tr><th>#</th>` +
     `<th>GROUP</th><th>TYPE</th><th>FLAG</th><th>TEXT</th></tr></thead><tbody>`;
   for (const l of rows) {
     const f = l.split("\t");
@@ -251,7 +293,8 @@ function execTable(text, name) {
       ? ` <span class="dim">sig ${+o.exit - 128}</span>` : "";
     const args = o.args ? o.args.split("\x1f").filter((x) => x.length) : [];
     const redirs = o.redirs ? o.redirs.split("\x1f").filter((x) => x.length) : [];
-    const cell = args.map((a) => `<div class="erow">${color(a)}</div>`).join("") +
+    const cell = numbered(args, 0)
+      .map((a) => `<div class="erow">${color(a)}</div>`).join("") +
       redirs.map((r) => `<div class="erow erd">${color(r)}</div>`).join("");
     h += `<tr data-key="${key}"><td class="ti">${esc(o.seq)}</td>` +
       `<td class="type">${esc(o.cmd)}</td>` +
@@ -267,7 +310,7 @@ function execTable(text, name) {
 
 function nodesTable(text, name) {
   const rows = text.split("\n").filter((l) => l.length);
-  let h = `<div class="hscroll"><table class="ttab"><thead><tr><th>#</th>` +
+  let h = `<div class="hscroll"><table class="ttab ndtab"><thead><tr><th>#</th>` +
     `<th>KIND</th><th>CONTENT</th><th>REDIRS</th></tr></thead><tbody>`;
   rows.forEach((l, i) => {
     const f = l.split("\t");
@@ -278,7 +321,8 @@ function nodesTable(text, name) {
     const key = `nodei:${name}:${i}`;
     INSPECT[key] = o;
     const content = o.k === "cmd"
-      ? o.label.split("\x1f").filter((x) => x.length).join(" ") : o.label;
+      ? numbered(o.label.split("\x1f").filter((x) => x.length), 0).join(" ")
+      : o.label;
     const rd = o.redirs.split("\x1f").filter((x) => x.length).join(" ");
     h += `<tr data-key="${key}"><td class="ti">${esc(o.idx)}</td>` +
       `<td class="type">${esc(o.k.toUpperCase())}</td>` +
@@ -330,7 +374,8 @@ function inspectNode(o) {
     const i = m.indexOf("=");
     return [esc(m.slice(0, i)), esc(m.slice(i + 1))];
   }));
-  if (argv.length) h += `<div class="lbl">argv · ${argv.length}</div>${list(argv, "alist")}`;
+  if (argv.length)
+    h += `<div class="lbl">argv · ${argv.length}</div>${list(numbered(argv, 0), "alist")}`;
   if (redirs.length) h += `<div class="lbl">redir · ${redirs.length}</div>${list(redirs, "rlist")}`;
   return h;
 }
@@ -347,7 +392,8 @@ function inspectExec(o) {
     ["path", o.path ? esc(o.path) : "(builtin / none)"],
     ["argc", esc(o.argc)],
   ]);
-  if (args.length) h += `<div class="lbl">args · ${args.length}</div>${list(args, "alist")}`;
+  if (args.length)
+    h += `<div class="lbl">args · ${args.length}</div>${list(numbered(args, 0), "alist")}`;
   if (redirs.length) h += `<div class="lbl">redir · ${redirs.length}</div>${list(redirs, "rlist")}`;
   return h;
 }
@@ -360,7 +406,8 @@ function inspectNodeI(o) {
   const kv = [["kind", esc(o.k)], ["type", esc(o.type)], ["arity", esc(o.arity)]];
   if (o.prec) kv.push(["précédence", esc(o.prec)]);
   h += kvRows(kv);
-  if (args.length) h += `<div class="lbl">argv · ${args.length}</div>${list(args, "alist")}`;
+  if (args.length)
+    h += `<div class="lbl">argv · ${args.length}</div>${list(numbered(args, 0), "alist")}`;
   if (redirs.length) h += `<div class="lbl">redir · ${redirs.length}</div>${list(redirs, "rlist")}`;
   return h;
 }

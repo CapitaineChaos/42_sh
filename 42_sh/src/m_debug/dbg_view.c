@@ -12,28 +12,27 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "all_config.h"
+#include "utils.h"
 #include "module_debug.h"
 #include "module_ast.h"
 #include "module_token.h"
 #include "ft_deque.h"
 #include "ft_printf_fd.h"
 
-/*
- * Writers pour le debugview web (tools/debugview). Chaque phase du pipeline
- * dépose un fichier dans DBG_VIEW_DIR ; debugserve.py les relit et le viewer
- * les rend en panneaux. Format (source de vérité : debugview.js) :
- *   lignes = '\n', champs = TAB, sous-listes = US (0x1f), sous-champs = RS (0x1e).
- * Le texte des mots vit dans part->stream (pré-expansion) ; op->tokens /
- * op->redirections persistent dans le parent (contrairement à op->argv, bâti
- * dans l'enfant forké). Actif uniquement en build debug (-DDBG_VIEW).
- */
-
 #ifdef DBG_VIEW
 
 # define DBG_VIEW_DIR "/dev/shm/sh42_dbg"
+
+# define DBG_F_READ DBG_VIEW_DIR "/00_read"
+# define DBG_F_TOKENS DBG_VIEW_DIR "/01_tokens"
+# define DBG_F_NODES DBG_VIEW_DIR "/02_nodes"
+# define DBG_F_AST DBG_VIEW_DIR "/03_ast"
+# define DBG_F_EXEC DBG_VIEW_DIR "/04_exec"
+# define DBG_F_FOOTER DBG_VIEW_DIR "/footer"
 # define DBG_TAB '\t'
 # define DBG_US '\x1f'
 # define DBG_RS '\x1e'
@@ -97,8 +96,39 @@ static void	put_tok_text(int fd, t_token *t)
 		put_clean(fd, t->str);
 }
 
-/* Liste de tokens en US-liste (argv de commande, redirections). */
+/* Émet une US-liste à partir d'un token de tête (argv, mots). */
+static void	put_tok_seq(int fd, t_token *t)
+{
+	int	first;
+
+	first = 1;
+	while (t)
+	{
+		if (!first)
+			put_byte(fd, DBG_US);
+		first = 0;
+		put_tok_text(fd, t);
+		t = t->next;
+	}
+}
+
+/* Liste de tokens en US-liste (argv de commande, mots). */
 static void	put_tok_list(int fd, t_tokens *toks)
+{
+	put_tok_seq(fd, toks->head);
+}
+
+static int	is_redir_op(t_token *t)
+{
+	return (t->type == TOK_REDIR_IN || t->type == TOK_REDIR_OUT
+		|| t->type == TOK_REDIR_APPEND || t->type == TOK_REDIR_HEREDOC);
+}
+
+/*
+ * Redirections groupées : chaque opérateur (>, >>, <, <<) est collé à sa cible
+ * dans un même élément US ("> o"), pour ne pas les afficher comme deux redirs.
+ */
+static void	put_redir_list(int fd, t_tokens *toks)
 {
 	t_token	*t;
 	int		first;
@@ -111,6 +141,12 @@ static void	put_tok_list(int fd, t_tokens *toks)
 			put_byte(fd, DBG_US);
 		first = 0;
 		put_tok_text(fd, t);
+		if (is_redir_op(t) && t->next)
+		{
+			put_byte(fd, ' ');
+			t = t->next;
+			put_tok_text(fd, t);
+		}
 		t = t->next;
 	}
 }
@@ -175,6 +211,52 @@ static char	*ast_kind(t_ast_node *n)
 	return ("control");
 }
 
+/* Kind court attendu par nodesTable : "cmd" déclenche le split argv (US). */
+static char	*node_kind_short(t_ast_node *n)
+{
+	if (n->tclass == ACL_OPERAND)
+		return ("cmd");
+	if (n->tclass == ACL_OPERATOR)
+		return ("op");
+	if (n->tclass == ACL_STRUCT)
+		return ("struct");
+	return ("ctrl");
+}
+
+/*
+ * Liste plate des nœuds issus de tokens_to_nodes, avant le shunting-yard.
+ * Une ligne/nœud : idx TAB kind TAB label TAB redirs TAB type TAB arity TAB prec.
+ * label = argv (US-liste) pour un operand, sinon le type de l'opérateur.
+ */
+static void	nodes_walk(int fd, t_deque *input)
+{
+	t_dq_n		*dn;
+	t_ast_node	*n;
+	int			idx;
+
+	dn = input->head;
+	idx = 0;
+	while (dn)
+	{
+		n = dn->node;
+		ft_printf_fd(fd, "%d\t%s\t", idx, node_kind_short(n));
+		if (n->tclass == ACL_OPERAND)
+			put_tok_list(fd, &n->t_ast_data.operand.tokens);
+		else
+			ft_printf_fd(fd, "%s", ast_title(n));
+		put_byte(fd, DBG_TAB);
+		if (n->tclass == ACL_OPERAND)
+			put_redir_list(fd, &n->t_ast_data.operand.redirections);
+		put_byte(fd, DBG_TAB);
+		ft_printf_fd(fd, "%s\t%d\t", ast_title(n), n->arity);
+		if (n->tclass == ACL_OPERATOR)
+			ft_printf_fd(fd, "%d", (int)n->t_ast_data.operator_.precedence);
+		put_byte(fd, DBG_NL);
+		dn = dn->next;
+		idx++;
+	}
+}
+
 /* Parcours préfixe : depth TAB kind TAB title TAB argv TAB redirs TAB meta. */
 static void	ast_walk(int fd, t_ast_node *n, int depth)
 {
@@ -185,7 +267,7 @@ static void	ast_walk(int fd, t_ast_node *n, int depth)
 		put_tok_list(fd, &n->t_ast_data.operand.tokens);
 	put_byte(fd, DBG_TAB);
 	if (n->tclass == ACL_OPERAND)
-		put_tok_list(fd, &n->t_ast_data.operand.redirections);
+		put_redir_list(fd, &n->t_ast_data.operand.redirections);
 	put_byte(fd, DBG_TAB);
 	ft_printf_fd(fd, "id=%d", n->id);
 	put_byte(fd, DBG_US);
@@ -212,7 +294,7 @@ static void	exec_walk(int fd, t_ast_node *n)
 			op->path ? op->path : "", n->exit_code, n->status, n->pid);
 		put_tok_list(fd, &op->tokens);
 		put_byte(fd, DBG_TAB);
-		put_tok_list(fd, &op->redirections);
+		put_redir_list(fd, &op->redirections);
 		put_byte(fd, DBG_NL);
 	}
 	exec_walk(fd, n->left);
@@ -226,10 +308,36 @@ void	dbg_reset(void)
 #ifdef DBG_VIEW
 	if (mkdir(DBG_VIEW_DIR, 0755) < 0 && errno != EEXIST)
 		return ;
-	trunc_file(DBG_VIEW_DIR "/tokens");
-	trunc_file(DBG_VIEW_DIR "/ast");
-	trunc_file(DBG_VIEW_DIR "/exec");
-	trunc_file(DBG_VIEW_DIR "/footer");
+	trunc_file(DBG_F_READ);
+	trunc_file(DBG_F_TOKENS);
+	trunc_file(DBG_F_NODES);
+	trunc_file(DBG_F_AST);
+	trunc_file(DBG_F_EXEC);
+	trunc_file(DBG_F_FOOTER);
+#endif
+}
+
+/*
+ * Entrée brute reconstruite depuis data->inputs (chunks pré-lexer). On ne peut
+ * pas relire data->stream : le lexer y insère des '\0' en place, ce qui le
+ * tronque au premier délimiteur. Rendu par le fallback <pre> du viewer.
+ */
+void	dbg_read(t_sstr *inputs)
+{
+#ifdef DBG_VIEW
+	int		fd;
+	char	*flat;
+
+	fd = open_file(DBG_F_READ);
+	if (fd < 0)
+		return ;
+	flat = sstrs_flatten(inputs);
+	if (flat)
+		ft_printf_fd(fd, "%s", flat);
+	free(flat);
+	close(fd);
+#else
+	(void)inputs;
 #endif
 }
 
@@ -240,7 +348,7 @@ void	dbg_tokens(t_tokens *tokens)
 	int		idx;
 	t_token	*t;
 
-	fd = open_file(DBG_VIEW_DIR "/tokens");
+	fd = open_file(DBG_F_TOKENS);
 	if (fd < 0)
 		return ;
 	idx = 0;
@@ -264,12 +372,27 @@ void	dbg_tokens(t_tokens *tokens)
 #endif
 }
 
+void	dbg_nodes(t_deque *input)
+{
+#ifdef DBG_VIEW
+	int	fd;
+
+	fd = open_file(DBG_F_NODES);
+	if (fd < 0)
+		return ;
+	nodes_walk(fd, input);
+	close(fd);
+#else
+	(void)input;
+#endif
+}
+
 void	dbg_ast(t_deque *final)
 {
 #ifdef DBG_VIEW
 	int	fd;
 
-	fd = open_file(DBG_VIEW_DIR "/ast");
+	fd = open_file(DBG_F_AST);
 	if (fd < 0)
 		return ;
 	ast_walk(fd, peek_head(final), 0);
@@ -284,7 +407,7 @@ void	dbg_exec(t_ast_node *root)
 #ifdef DBG_VIEW
 	int	fd;
 
-	fd = open_file(DBG_VIEW_DIR "/exec");
+	fd = open_file(DBG_F_EXEC);
 	if (fd < 0)
 		return ;
 	exec_walk(fd, root);
@@ -299,7 +422,7 @@ void	dbg_footer(int last_exit)
 #ifdef DBG_VIEW
 	int	fd;
 
-	fd = open_file(DBG_VIEW_DIR "/footer");
+	fd = open_file(DBG_F_FOOTER);
 	if (fd < 0)
 		return ;
 	ft_printf_fd(fd, "exit=%d", last_exit);
