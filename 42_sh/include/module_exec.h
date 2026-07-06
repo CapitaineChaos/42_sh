@@ -41,10 +41,7 @@ int		exec_redirects_only(t_ast_node *node);
  * PIPELINE
  */
 
-int		wait_for_children(t_ast_node **cmds, int ncmds);
 int		exec_pipeline(t_ast_node *node);
-int		collect_pipeline_cmds(t_ast_node *node, t_ast_node **tab, int idx);
-int		get_pipeline_cmds_count(t_ast_node *node, int *count);
 
 /**
  * MSGS

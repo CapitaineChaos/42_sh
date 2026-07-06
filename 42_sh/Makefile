@@ -71,13 +71,8 @@ SRCS_CHECKER = \
 
 SRCS_LEXER = \
 				helpers \
-				lex_dquoted \
-				lex_squoted \
-				lex_unquoted \
-				lx_run \
-				lx_tokenize_struct \
-				lx_tokenize_op_rd \
-				lexer_lifecycle
+				tokenize \
+				lexer
 
 SRCS_PARSER = \
 				convert \
@@ -122,8 +117,7 @@ SRCS_EXECUTOR = \
 				exec_cmd \
 				exec_codes \
 				exec_msgs \
-				exec_pipe \
-				exec_pipe_aux \
+				exec_pipeline \
 				exec_run \
 				execute_builtin \
 				redirs_apply

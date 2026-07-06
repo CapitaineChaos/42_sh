@@ -70,19 +70,6 @@ bool	is_backslash(t_lexer *lx);
 bool	is_backtick(t_lexer *lx);
 bool	is_comment(t_lexer *lx);
 
-bool	lex_operator(t_lexer *lx);
-bool	lex_redirection(t_lexer *lx);
-bool	lex_struct(t_lexer *lx);
-
-void	lex_unquoted(t_lexer *lx);
-bool	lex_squotes(t_lexer *lx);
-
-void	lex_until_unquoted_end(t_lexer *lx);
-void	lex_until_dquotes_end(t_lexer *lx);
-bool	lex_dquotes_start(t_lexer *lx);
-void	lex_until_squotes_end(t_lexer *lx);
-bool	lex_squotes_start(t_lexer *lx);
-
 /**
  * EXTERNAL PROTOTYPES
  */

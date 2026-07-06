@@ -57,7 +57,7 @@ static bool	handle_comment(t_lexer *lx)
 
 void	lex_until_unquoted_end(t_lexer *lx)
 {
-	bool	had_char;
+	bool	had_char = false;
 
 	while (!is_eof(lx))
 	{
