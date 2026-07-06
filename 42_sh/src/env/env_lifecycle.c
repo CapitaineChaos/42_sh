@@ -23,7 +23,7 @@ void	env_list_unset(t_env_lst *lst, const char *key)
 	cur = lst->head;
 	while (cur)
 	{
-		if (ft_strcmp(cur->key, key) == 0)
+		if (strcmp(cur->key, key) == 0)
 		{
 			if (cur->hidden == false)
 				env_list_rem_node(lst, cur);
@@ -64,8 +64,8 @@ void	env_list_init(t_env_lst *lst, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		entry = ft_strdup(envp[i]);
-		eq = ft_strchr(entry, '=');
+		entry = strdup(envp[i]);
+		eq = strchr(entry, '=');
 		*eq = '\0';
 		env_list_set(lst, entry, eq + 1);
 		free(entry);

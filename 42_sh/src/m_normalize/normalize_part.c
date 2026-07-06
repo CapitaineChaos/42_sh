@@ -75,7 +75,7 @@ char	*normalize_part(t_tk_part *part)
 	char	*str;
 
 	if (part->str && part->type == TOK_SQUOTE)
-		return (ft_strdup(part->str));
+		return (strdup(part->str));
 	else if (part->str && part->type == TOK_DQUOTE)
 		return (format_dquoted(part->str));
 	else if (part->str && part->type == TOK_UQUOTE)

@@ -59,7 +59,7 @@ char	*get_dir_path(const char *pattern)
 	if (slash_pos)
 		dir_path = ft_substr(pattern, 0, slash_pos - pattern + 1);
 	else
-		dir_path = ft_strdup("./");
+		dir_path = strdup("./");
 	return (dir_path);
 }
 
@@ -83,7 +83,7 @@ int	add_matches_from_dir(t_token **result, DIR *dir, char *dir_path,
 	int				i;
 
 	i = 0;
-	if (ft_strcmp(dir_path, "./") == 0)
+	if (strcmp(dir_path, "./") == 0)
 		show_prefix = false;
 	else
 		show_prefix = true;
@@ -95,7 +95,7 @@ int	add_matches_from_dir(t_token **result, DIR *dir, char *dir_path,
 			if (show_prefix)
 				full_path = ft_strjoin(dir_path, entry->d_name);
 			else
-				full_path = ft_strdup(entry->d_name);
+				full_path = strdup(entry->d_name);
 			insert_sorted(result, tk_glob_emit(full_path));
 			i++;
 		}

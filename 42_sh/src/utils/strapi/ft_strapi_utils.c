@@ -34,10 +34,10 @@ size_t	exstr_endswith(t_strapi *api, const char *s)
 	if (!api || !s)
 		return (0);
 	ex = &api->data;
-	slen = ft_strlen(s);
+	slen = strlen(s);
 	if (slen > ex->len)
 		return (0);
-	return (ft_strncmp(ex->str + ex->len - slen, s, slen) == 0);
+	return (strncmp(ex->str + ex->len - slen, s, slen) == 0);
 }
 
 size_t	exstr_startswith(t_strapi *api, const char *s)
@@ -48,10 +48,10 @@ size_t	exstr_startswith(t_strapi *api, const char *s)
 	if (!api || !s)
 		return (0);
 	ex = &api->data;
-	slen = ft_strlen(s);
+	slen = strlen(s);
 	if (slen > ex->len)
 		return (0);
-	return (ft_strncmp(ex->str, s, slen) == 0);
+	return (strncmp(ex->str, s, slen) == 0);
 }
 
 void	exstr_trim_first(t_strapi *api, size_t n)
@@ -68,7 +68,7 @@ void	exstr_trim_first(t_strapi *api, size_t n)
 			ex->str[0] = '\0';
 		return ;
 	}
-	ft_memmove(ex->str, ex->str + n, ex->len - n);
+	memmove(ex->str, ex->str + n, ex->len - n);
 	ex->len -= n;
 	ex->str[ex->len] = '\0';
 }

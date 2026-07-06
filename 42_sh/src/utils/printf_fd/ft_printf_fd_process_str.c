@@ -43,7 +43,7 @@ void	process_str_fd(va_list args, t_format *ft, t_env *env)
 		apply_str_fd("", ft, env);
 		return ;
 	}
-	set_strparams_fd(ft_strlen(str), ft->precision, ft);
+	set_strparams_fd(strlen(str), ft->precision, ft);
 	apply_str_fd(str, ft, env);
 }
 

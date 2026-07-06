@@ -25,7 +25,7 @@
  */
 void	log_init(t_logger *lg)
 {
-	ft_memset(lg, 0, sizeof(t_logger));
+	memset(lg, 0, sizeof(t_logger));
 }
 
 /**

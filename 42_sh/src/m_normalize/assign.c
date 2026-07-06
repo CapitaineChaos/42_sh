@@ -23,7 +23,7 @@ void	assign_string(t_token *token)
 	{
 		if (part->str == NULL && part->stream)
 		{
-			part->str = ft_strdup(part->stream);
+			part->str = strdup(part->stream);
 			part->stream = NULL;
 		}
 		part = part->next;

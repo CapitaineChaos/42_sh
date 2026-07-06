@@ -41,7 +41,7 @@ static void	tag_dollar(t_token *token)
 	while (p)
 	{
 		if (p->str && p->next && (p->type == TOK_UQUOTE)
-			&& !ft_strcmp(p->str, "$"))
+			&& !strcmp(p->str, "$"))
 			p->str[0] = '\0';
 		else if (p->str && (p->type == TOK_UQUOTE || p->type == TOK_DQUOTE))
 		{

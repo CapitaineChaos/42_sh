@@ -30,7 +30,7 @@ char	*ft_getenv(t_env_lst *env, char *name)
 		return (NULL);
 	while (cur)
 	{
-		if (ft_strcmp(cur->key, name) == 0)
+		if (strcmp(cur->key, name) == 0)
 			return (cur->value);
 		cur = cur->next;
 	}

@@ -40,7 +40,7 @@ char	*get_ps1(void)
 		log_puts(&lg, RD " $" RT " ");
 	else
 		log_puts(&lg, GN " $" RT " ");
-	return (ft_strdup(lg.buf));
+	return (strdup(lg.buf));
 }
 
 char	*get_prompt(t_contexts *ctxs, int lv)

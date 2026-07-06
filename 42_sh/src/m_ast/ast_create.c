@@ -26,7 +26,7 @@ t_ast_node	*create_cmd_word_operand(t_ast_type type)
 {
 	t_ast_node	*node;
 
-	node = ft_calloc(1, sizeof(t_ast_node));
+	node = calloc(1, sizeof(t_ast_node));
 	if (!node)
 	{
 		free_and_exit_minishell(EXIT_FAILURE);
@@ -41,7 +41,7 @@ t_ast_node	*create_control(t_ast_type type, t_token *token)
 {
 	t_ast_node	*node;
 
-	node = ft_calloc(1, sizeof(t_ast_node));
+	node = calloc(1, sizeof(t_ast_node));
 	if (!node)
 	{
 		free_and_exit_minishell(EXIT_FAILURE);
@@ -65,7 +65,7 @@ t_ast_node	*create_operator(t_ast_type type, t_token *token)
 {
 	t_ast_node	*node;
 
-	node = ft_calloc(1, sizeof(t_ast_node));
+	node = calloc(1, sizeof(t_ast_node));
 	if (!node)
 	{
 		free_and_exit_minishell(EXIT_FAILURE);

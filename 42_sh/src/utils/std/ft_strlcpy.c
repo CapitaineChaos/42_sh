@@ -17,13 +17,13 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t siz)
 	size_t	src_len;
 	size_t	nb;
 
-	src_len = ft_strlen(src);
+	src_len = strlen(src);
 	if (siz > 0)
 	{
 		nb = src_len;
 		if (siz < src_len + 1)
 			nb = siz - 1;
-		ft_memcpy(dest, src, nb);
+		memcpy(dest, src, nb);
 		dest[nb] = '\0';
 	}
 	return (src_len);

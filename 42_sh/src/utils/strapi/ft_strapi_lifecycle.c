@@ -25,7 +25,7 @@ void	exstr_move(t_strapi *dst, t_strapi *src)
 
 void	strapi_init(size_t step, t_strapi *api)
 {
-	ft_memset(api, 0, sizeof(t_strapi));
+	memset(api, 0, sizeof(t_strapi));
 	api->data.step = step;
 	api->append_str = &exstr_append_str;
 	api->append_strn = &exstr_append_strn;
@@ -53,7 +53,7 @@ void	exstr_clear(t_strapi *api)
 	ex = &api->data;
 	ex->len = 0;
 	if (ex->str)
-		ft_bzero(ex->str, ex->cap);
+		memset(ex->str, 0, ex->cap);
 }
 
 void	exstr_free(t_strapi *api)

@@ -27,7 +27,7 @@ void	hide_node_key(t_env_lst *lst, const char *key)
 	cur = lst->head;
 	while (cur)
 	{
-		if (ft_strcmp(cur->key, key) == 0)
+		if (strcmp(cur->key, key) == 0)
 		{
 			cur->hidden = true;
 			return ;
@@ -42,8 +42,8 @@ char	*get_env_entry(t_env_node *cur, ssize_t len1, ssize_t len2)
 
 	if (cur->value != NULL)
 	{
-		len1 = ft_strlen(cur->key) + 1;
-		len2 = ft_strlen(cur->value);
+		len1 = strlen(cur->key) + 1;
+		len2 = strlen(cur->value);
 		entry = malloc(len1 + len2 + 1);
 		if (!entry)
 			return (NULL);
@@ -53,7 +53,7 @@ char	*get_env_entry(t_env_node *cur, ssize_t len1, ssize_t len2)
 	}
 	else
 	{
-		len1 = ft_strlen(cur->key) + 1;
+		len1 = strlen(cur->key) + 1;
 		entry = malloc(len1 + 1);
 		if (!entry)
 			return (NULL);
@@ -120,8 +120,8 @@ void	envp_to_env_list(t_env_lst *lst, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		entry = ft_strdup(envp[i]);
-		eq = ft_strchr(entry, '=');
+		entry = strdup(envp[i]);
+		eq = strchr(entry, '=');
 		if (eq)
 			env_list_set(lst, entry, eq + 1);
 		else

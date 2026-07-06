@@ -25,7 +25,7 @@ void	debug_nano_title(int LVL, char *title)
 
 	if (DLVL < LVL || title == NULL)
 		return ;
-	title_len = ft_strlen(title);
+	title_len = strlen(title);
 	max = 55;
 	log_init(&lg);
 	log_puts(&lg, "\n-");
@@ -59,7 +59,7 @@ void	debug_pico_title(int LVL, char *title, char *color)
 
 	if (DLVL < LVL || title == NULL)
 		return ;
-	title_len = ft_strlen(title);
+	title_len = strlen(title);
 	max = 55;
 	log_init(&lg);
 	log_puts(&lg, "x");
@@ -98,7 +98,7 @@ void	debug_mini_title(int LVL, char *title)
 
 	if (DLVL < LVL || title == NULL)
 		return ;
-	title_len = ft_strlen(title);
+	title_len = strlen(title);
 	max = 55;
 	log_init(&lg);
 	log_puts(&lg, "\no");
@@ -132,7 +132,7 @@ void	debug_title(int LVL, char *title)
 
 	if (DLVL < LVL || title == NULL)
 		return ;
-	title_len = ft_strlen(title);
+	title_len = strlen(title);
 	max = 55;
 	log_init(&lg);
 	log_puts(&lg, "\n");

@@ -47,7 +47,7 @@ char	*ft_utoa_base(size_t nb, char *base)
 	size_t	base_len;
 	char	*snum;
 
-	base_len = ft_strlen(base);
+	base_len = strlen(base);
 	if (base_len < 2)
 		return (NULL);
 	len = ft_unblen(nb, base_len);

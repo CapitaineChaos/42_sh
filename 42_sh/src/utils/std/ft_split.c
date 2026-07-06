@@ -30,7 +30,7 @@ static size_t	get_nb(const char *s, char c)
 		s = get_start(s, c);
 		if (*s)
 			nb++;
-		s = ft_strchr(s, c);
+		s = strchr(s, c);
 		if (!s)
 			return (nb);
 	}
@@ -53,12 +53,12 @@ static void	*free_tab(char **tab, size_t pos)
 
 static size_t	get_wdlen(const char *s, char c)
 {
-	size_t	len;
-	char	*end;
+	size_t		len;
+	const char	*end;
 
-	end = ft_strchr(s, c);
+	end = strchr(s, c);
 	if (!end)
-		end = ft_strchr(s, '\0');
+		end = strchr(s, '\0');
 	len = (size_t)(end - s);
 	return (len);
 }

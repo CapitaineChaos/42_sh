@@ -22,7 +22,7 @@ void	checker_init(t_checker *checker, int lv)
 	if (lv < 2)
 		return ;
 	trace_info(LVL_CHK, "Checker init");
-	ft_memset(checker, 0, sizeof(t_checker));
+	memset(checker, 0, sizeof(t_checker));
 	checker->proceed_loop = true;
 }
 

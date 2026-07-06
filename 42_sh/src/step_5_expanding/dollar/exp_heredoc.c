@@ -58,9 +58,9 @@ char	*expand_heredoc(char *src, bool is_quoted)
 	char		*tmp;
 
 	if (!src)
-		return (ft_strdup(""));
+		return (strdup(""));
 	if (is_quoted)
-		return (ft_strdup(src));
+		return (strdup(src));
 	strapi_init(L_BUFFER_SIZE, &out);
 	i = 0;
 	process_heredoc(src, &i, &out);

@@ -34,7 +34,7 @@ void	split_part(t_tokens *out, t_token *current, t_tk_part *part)
 			tk_list_append(out, current);
 		}
 		p = tk_part_new(TOK_UQUOTE, 0);
-		p->str = ft_strdup(words[i]);
+		p->str = strdup(words[i]);
 		tk_append_part_tok(current, p);
 		if (i + 1 < n)
 			current = NULL;
@@ -74,7 +74,7 @@ t_tokens	split_parts(t_token *tok)
 	t_tk_part	*part;
 	t_tk_part	*next;
 
-	ft_bzero(&out, sizeof(t_tokens));
+	memset(&out, 0, sizeof(t_tokens));
 	current = NULL;
 	part = tok->head;
 	while (part)

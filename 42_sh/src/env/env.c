@@ -25,13 +25,13 @@ void	env_list_set(t_env_lst *lst, const char *key, const char *value)
 	cur = lst->head;
 	while (cur)
 	{
-		if (ft_strcmp(cur->key, key) == 0)
+		if (strcmp(cur->key, key) == 0)
 		{
 			free(cur->value);
 			if (value == NULL)
 				cur->value = NULL;
 			else
-				cur->value = ft_strdup(value);
+				cur->value = strdup(value);
 			return ;
 		}
 		cur = cur->next;
@@ -69,7 +69,7 @@ void	update_shell_level(t_mns *mns, t_env_lst *lst)
 	tmp = ft_getenv(lst, "SHLVL");
 	n = 0;
 	if (tmp != NULL)
-		n = ft_atoi(tmp);
+		n = atoi(tmp);
 	if (n < 0)
 		n = 0;
 	n++;

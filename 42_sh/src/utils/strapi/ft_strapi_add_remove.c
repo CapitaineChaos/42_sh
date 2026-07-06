@@ -31,7 +31,7 @@ void	exstr_delete_char_at(t_strapi *api, size_t idx)
 	ex = &api->data;
 	if (ex->len == 0 || idx >= ex->len)
 		return ;
-	ft_memmove(&ex->str[idx], &ex->str[idx + 1], ex->len - idx);
+	memmove(&ex->str[idx], &ex->str[idx + 1], ex->len - idx);
 	ex->len--;
 	ex->str[ex->len] = '\0';
 }
@@ -45,7 +45,7 @@ void	exstr_insert_char_at(t_strapi *api, size_t idx, char c)
 		idx = ex->len;
 	if (ex->len + 2 >= ex->cap)
 		exstr_expand(ex, 1);
-	ft_memmove(&ex->str[idx + 1], &ex->str[idx], ex->len - idx + 1);
+	memmove(&ex->str[idx + 1], &ex->str[idx], ex->len - idx + 1);
 	ex->str[idx] = c;
 	ex->len++;
 }

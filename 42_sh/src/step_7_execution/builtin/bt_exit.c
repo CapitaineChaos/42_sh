@@ -58,7 +58,7 @@ int	builtin_exit(t_mns *mns, int argc, char **argv, char **envp)
 
 	check_nullargs(mns, argc, argv, envp);
 	log_init(&lg);
-	if (ft_strcmp(argv[1], "--") == 0)
+	if (strcmp(argv[1], "--") == 0)
 	{
 		argv++;
 		argc--;

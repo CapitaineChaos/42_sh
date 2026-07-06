@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smaitre <smaitre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,34 +12,6 @@
 
 #include "ft_std.h"
 
-static int	tonum(char c)
-{
-	return ((int)(c - '0'));
-}
-
-int	ft_atoi(const char *nptr)
-{
-	int		signe;
-	long	nb;
-
-	signe = 1;
-	nb = 0;
-	while (ft_isspace((unsigned char)*nptr))
-		nptr++;
-	if (*nptr == '+' || *nptr == '-')
-	{
-		if (*nptr == '-')
-			signe = -1;
-		nptr++;
-	}
-	while (*nptr && ft_isdigit((unsigned char)*nptr))
-	{
-		nb = nb * 10 + tonum(*nptr);
-		nptr++;
-	}
-	return ((int)(signe * nb));
-}
-
 int	ft_atoi_secure(const char *nptr, bool *error)
 {
 	int		signe;
@@ -48,7 +20,7 @@ int	ft_atoi_secure(const char *nptr, bool *error)
 	signe = 1;
 	nb = 0;
 	*error = false;
-	while (ft_isspace((unsigned char)*nptr))
+	while (isspace((unsigned char)*nptr))
 		nptr++;
 	if (*nptr == '+' || *nptr == '-')
 	{
@@ -56,9 +28,9 @@ int	ft_atoi_secure(const char *nptr, bool *error)
 			signe = -1;
 		nptr++;
 	}
-	while (*nptr && ft_isdigit((unsigned char)*nptr))
+	while (*nptr && isdigit((unsigned char)*nptr))
 	{
-		nb = nb * 10 + tonum(*nptr++);
+		nb = nb * 10 + (*nptr++ - '0');
 		if (signe == 1 && nb > 2147483647)
 			*error = true;
 		if (signe == -1 && nb > 2147483648)

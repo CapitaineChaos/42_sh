@@ -39,7 +39,7 @@ int	get_uid_from_proc(void)
 
 	if (ft_rd("/proc/self/loginuid", buf, sizeof(buf), &n) < 0)
 		return (-1);
-	return (ft_atoi(buf));
+	return (atoi(buf));
 }
 
 int	get_fd_soft_limit_from_proc(void)
@@ -53,11 +53,11 @@ int	get_fd_soft_limit_from_proc(void)
 	start = buf;
 	while (start && *start)
 	{
-		if (ft_strncmp(start, "Max open files", 14) == 0)
+		if (strncmp(start, "Max open files", 14) == 0)
 		{
 			while (*start && (*start < '0' || *start > '9'))
 				start++;
-			return (ft_atoi(start));
+			return (atoi(start));
 		}
 		while (*start && *start != '\n')
 			start++;

@@ -33,8 +33,8 @@ char	*sstrs_flatten_sep(t_sstr *first_str, char sep)
 	tmp = first_str;
 	while (tmp)
 	{
-		part_len = ft_strlen(tmp->line);
-		ft_memcpy(p, tmp->line, part_len);
+		part_len = strlen(tmp->line);
+		memcpy(p, tmp->line, part_len);
 		p += part_len;
 		tmp = tmp->next;
 		if (tmp)
@@ -61,8 +61,8 @@ char	*sstrs_flatten(t_sstr *first_str)
 	tmp = first_str;
 	while (tmp)
 	{
-		len = ft_strlen(tmp->line);
-		ft_memcpy(p, tmp->line, len);
+		len = strlen(tmp->line);
+		memcpy(p, tmp->line, len);
 		p += len;
 		tmp = tmp->next;
 	}

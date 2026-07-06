@@ -508,16 +508,16 @@ void	debug_tokens_list_str(t_token *list)
 	int			space_left;
 	char		titre[64];
 
-	ft_bzero(titre, 64);
+	memset(titre, 0, 64);
 	snprintf(titre, 64, "LISTE TOKENS STR (%zd parts)", list->count);
 	idx = 0;
 	while (list)
 	{
-		ft_bzero(buf, 74);
+		memset(buf, 0, 74);
 		get_tkpart_content_str(list->head, buf, 74);
 		print_token_kind_family(list, typebuf, sizeof(typebuf));
 		debug_mini_title(LVL_OK, titre);
-		snprintf(typebuf + ft_strlen(typebuf), sizeof(typebuf) - ft_strlen(typebuf),
+		snprintf(typebuf + strlen(typebuf), sizeof(typebuf) - strlen(typebuf),
 			"\n        quoted:%d  tilde:%d  dollar:%d  glob:%d\n",
 			list->has_quoted_part, list->has_tilde, list->has_dollar, list->has_glob);
 		debug_log(typebuf);
@@ -561,16 +561,16 @@ void	debug_tokens_list_stream(t_token *list)
 	int			space_left;
 	char		titre[64];
 
-	ft_bzero(titre, 64);
+	memset(titre, 0, 64);
 	snprintf(titre, 64, "LISTE TOKENS STREAM (%zd parts)", list->count);
 	idx = 0;
 	while (list)
 	{
-		ft_bzero(buf, 74);
+		memset(buf, 0, 74);
 		get_tkpart_content_str(list->head, buf, 74);
 		print_token_kind_family(list, typebuf, sizeof(typebuf));
 		debug_mini_title(LVL_OK, titre);
-		snprintf(typebuf + ft_strlen(typebuf), sizeof(typebuf) - ft_strlen(typebuf),
+		snprintf(typebuf + strlen(typebuf), sizeof(typebuf) - strlen(typebuf),
 			"\n        quoted:%d  tilde:%d  dollar:%d  glob:%d\n",
 			list->has_quoted_part, list->has_tilde, list->has_dollar, list->has_glob);
 		debug_log(typebuf);

@@ -23,7 +23,7 @@ char	*exstr_get_dup(t_strapi *api)
 {
 	if (!api || !api->data.str)
 		return (NULL);
-	return (ft_strdup(api->data.str));
+	return (strdup(api->data.str));
 }
 
 char	*exstr_get_dup_n(t_strapi *api, size_t n)
@@ -32,7 +32,7 @@ char	*exstr_get_dup_n(t_strapi *api, size_t n)
 		return (NULL);
 	if (n > api->data.len)
 		n = api->data.len;
-	return (ft_strndup(api->data.str, n));
+	return (strndup(api->data.str, n));
 }
 
 size_t	exstr_length(t_strapi *api)

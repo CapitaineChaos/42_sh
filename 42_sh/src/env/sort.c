@@ -15,7 +15,7 @@
 
 int	env_key_cmp(t_env_node *a, t_env_node *b)
 {
-	return (ft_strcmp(a->key, b->key));
+	return (strcmp(a->key, b->key));
 }
 
 static void	env_lst_insert_sorted(t_env_node **sorted, t_env_node *node)

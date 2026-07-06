@@ -105,7 +105,7 @@ t_tk_part	*tk_part_new(t_tk_type type, size_t offset)
 {
 	t_tk_part	*wp;
 
-	wp = ft_calloc(1, sizeof(*wp));
+	wp = calloc(1, sizeof(*wp));
 	if (!wp)
 	{
 		free_and_exit_minishell(EXIT_FAILURE);

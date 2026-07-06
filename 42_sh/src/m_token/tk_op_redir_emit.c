@@ -30,7 +30,7 @@ void	tk_heredoc_body_emit(t_lexer *lx, t_token *next, char *body)
 	token->family = TKF_HEREDOC_BODY;
 	token->group = TKG_OTHER;
 	if (body)
-		token->str = ft_strdup(body);
+		token->str = strdup(body);
 	tk_list_insert(&lx->tokens, next, token);
 	trace_info_nvstr(LVL_LEXER, "Token heredoc body emitted", debug_get_token_type(token->type));
 }
@@ -49,7 +49,7 @@ void	tk_struct_emit(t_lexer *lx, char *s, t_tk_type type)
 	token->kind = TKD_STRUCT;
 	token->family = TKF_SUBSHELL;
 	token->group = TKG_OTHER;
-	token->str = ft_strdup(s);
+	token->str = strdup(s);
 	tk_list_append(&lx->tokens, token);
 	trace_info_nvstr(LVL_LEXER, "Token struct emitted", debug_get_token_type(token->type));
 }
@@ -68,7 +68,7 @@ void	tk_redir_emit(t_lexer *lx, char *str, t_tk_type type)
 	token->kind = TKD_OPERAND;
 	token->family = TKF_REDIRECT;
 	token->group = TKG_OTHER;
-	token->str = ft_strdup(str);
+	token->str = strdup(str);
 	if (type == TOK_REDIR_HEREDOC)
 	{
 		token->tk_flag = true;

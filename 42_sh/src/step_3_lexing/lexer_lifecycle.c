@@ -23,7 +23,7 @@ void	lexer_init(t_lexer *lx, char *ifs, int lv)
 	if (lv < 3)
 		return ;
 	trace_start(LVL_LEXER, "Init");
-	ft_memset(lx, 0, sizeof (t_lexer));
+	memset(lx, 0, sizeof (t_lexer));
 	lx->ifs = ifs;
 	trace_ok(LVL_LEXER, "Init");
 }

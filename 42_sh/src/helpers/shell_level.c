@@ -24,7 +24,7 @@ int	get_shell_level(t_mns *mns)
 	str = ft_getenv(&mns->env, "LW_SHLVL");
 	if (str == NULL)
 		return (0);
-	shell_level = ft_atoi(str);
+	shell_level = atoi(str);
 	if (shell_level < 0)
 		shell_level = 0;
 	return (shell_level);

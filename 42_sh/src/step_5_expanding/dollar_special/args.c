@@ -57,9 +57,9 @@ static char	*get_numeric_arg(size_t *i, char *s)
 	(*i)++;
 	mns = get_mns(NULL);
 	if (mns->argc > idx)
-		val = ft_strdup(mns->argv[idx]);
+		val = strdup(mns->argv[idx]);
 	else
-		val = ft_strdup("");
+		val = strdup("");
 	return (val);
 }
 
@@ -71,14 +71,14 @@ static char	*get_positional_args(void)
 	mns = get_mns(NULL);
 	if (mns->argc > 1)
 		return (join_args(mns));
-	return (ft_strdup(""));
+	return (strdup(""));
 }
 
 char	*fetch_special_var(char *s, size_t *i)
 {
 	if (s[*i] == '?')
 		return (get_exit_status(i));
-	if (ft_isdigit((unsigned char)s[*i]))
+	if (isdigit((unsigned char)s[*i]))
 		return (get_numeric_arg(i, s));
 	if (s[*i] == '*' || s[*i] == '@')
 	{

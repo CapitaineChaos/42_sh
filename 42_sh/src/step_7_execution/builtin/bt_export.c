@@ -42,7 +42,7 @@ static bool	try_set_env(t_mns *mns, char *arg)
 	char		*eq;
 	char		*val;
 
-	eq = ft_strchr(arg, '=');
+	eq = strchr(arg, '=');
 	if (eq)
 	{
 		*eq = '\0';
@@ -73,7 +73,7 @@ static void	export_list_print(t_env_lst *lst)
 	cur = lst->head;
 	while (cur)
 	{
-		if (!cur->hidden && ft_strcmp(cur->key, "_") && cur->value)
+		if (!cur->hidden && strcmp(cur->key, "_") && cur->value)
 		{
 			log_init(&logger);
 			log_puts(&logger, "export ");
@@ -111,15 +111,15 @@ int	builtin_export(t_mns *mns, int argc, char **argv, char **envp)
 	int			i;
 	int			status;
 
-	if (!argv[1] || (ft_strcmp(argv[1], "--") == 0 && argc == 2))
+	if (!argv[1] || (strcmp(argv[1], "--") == 0 && argc == 2))
 		return (export_list_print(&mns->env), 0);
-	if ((ft_strncmp(argv[1], "--", 2) == 0 && argv[1][2] != '\0') ||
+	if ((strncmp(argv[1], "--", 2) == 0 && argv[1][2] != '\0') ||
 		(argv[1][0] == '-' && argv[1][1] && argv[1][1] != '-'))
 	{
 		print_invalid_export(envp);
 		return (2);
 	}
-	if ((ft_strcmp(argv[1], "--") == 0))
+	if ((strcmp(argv[1], "--") == 0))
 		i = 2;
 	else
 		i = 1;

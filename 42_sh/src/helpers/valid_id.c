@@ -24,12 +24,12 @@ bool	is_valid_id(const char *s)
 {
 	size_t	i;
 
-	if (!s || !(ft_isalpha((unsigned char)s[0]) || s[0] == '_'))
+	if (!s || !(isalpha((unsigned char)s[0]) || s[0] == '_'))
 		return (false);
 	i = 1;
 	while (s[i])
 	{
-		if (!(ft_isalnum((unsigned char)s[i]) || s[i] == '_'))
+		if (!(isalnum((unsigned char)s[i]) || s[i] == '_'))
 			return (false);
 		i++;
 	}
@@ -54,11 +54,11 @@ char	*get_identifier(const char *str, size_t *idx)
 	if (!str || !idx)
 		return (NULL);
 	len = 0;
-	if (!(ft_isalpha((unsigned char)str[*idx]) || str[*idx] == '_'))
+	if (!(isalpha((unsigned char)str[*idx]) || str[*idx] == '_'))
 		return (NULL);
 	start = str + *idx;
 	while (str[*idx]
-		&& (ft_isalnum((unsigned char)str[*idx]) || str[*idx] == '_'))
+		&& (isalnum((unsigned char)str[*idx]) || str[*idx] == '_'))
 	{
 		(*idx)++;
 		len++;

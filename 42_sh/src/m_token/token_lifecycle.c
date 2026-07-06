@@ -20,7 +20,7 @@ t_token	*token_new(t_tk_type type)
 {
 	t_token	*tok;
 
-	tok = ft_calloc(1, sizeof(*tok));
+	tok = calloc(1, sizeof(*tok));
 	if (!tok)
 	{
 		free_and_exit_minishell(EXIT_FAILURE);

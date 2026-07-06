@@ -71,7 +71,7 @@ char	*expand_dollar(char *src)
 	char		*tmp;
 
 	if (!src)
-		return (ft_strdup(""));
+		return (strdup(""));
 	debug_pico_title(LVL_EXPAND, "Processing dollar variables", "\033[93m");
 	trace_info_nvstr(LVL_EXPAND, "Source string", src);
 	strapi_init(L_BUFFER_SIZE, &out);

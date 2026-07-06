@@ -27,7 +27,7 @@ void	ps_push_front_create(t_deque *deque, t_ast_node *token)
 
 	if (!token)
 		return ;
-	cell = (t_dq_n *)ft_calloc(1, sizeof(*cell));
+	cell = (t_dq_n *)calloc(1, sizeof(*cell));
 	if (!cell)
 	{
 		free_and_exit_minishell(EXIT_FAILURE);

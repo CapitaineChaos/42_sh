@@ -24,12 +24,12 @@ int	exstr_expand(t_exstr *ex, size_t need)
 			new_cap = ex->step;
 		while (ex->len + need >= new_cap)
 			new_cap += ex->step;
-		new = ft_calloc(new_cap, 1);
+		new = calloc(new_cap, 1);
 		if (!new)
 			return (0);
 		if (ex->str)
 		{
-			ft_memcpy(new, ex->str, ex->len);
+			memcpy(new, ex->str, ex->len);
 			free(ex->str);
 		}
 		new[ex->len] = '\0';
@@ -61,10 +61,10 @@ void	exstr_append_str(t_strapi *api, const char *s)
 	if (!api || !s)
 		return ;
 	ex = &api->data;
-	need = ft_strlen(s);
+	need = strlen(s);
 	if (!exstr_expand(ex, need))
 		return ;
-	ft_memcpy(ex->str + ex->len, s, need);
+	memcpy(ex->str + ex->len, s, need);
 	ex->len += need;
 	ex->str[ex->len] = '\0';
 }
@@ -78,7 +78,7 @@ void	exstr_append_strn(t_strapi *api, const char *s, size_t n)
 	ex = &api->data;
 	if (!exstr_expand(ex, n))
 		return ;
-	ft_memcpy(ex->str + ex->len, s, n);
+	memcpy(ex->str + ex->len, s, n);
 	ex->len += n;
 	ex->str[ex->len] = '\0';
 }

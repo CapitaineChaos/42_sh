@@ -50,13 +50,3 @@ size_t	ft_unblen(unsigned long long int nb, size_t base_len)
 	}
 	return (len);
 }
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
-}

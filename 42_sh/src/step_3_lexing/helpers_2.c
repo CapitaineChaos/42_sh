@@ -17,7 +17,7 @@ bool	is_wsp(t_lexer *lx)
 {
 	if (lx->pending_dquote || lx->pending_squote || lx->pending_escape)
 		return (false);
-	if (!is_eof(lx) && ft_strchr(lx->ifs, get_char(&lx->inp)))
+	if (!is_eof(lx) && strchr(lx->ifs, get_char(&lx->inp)))
 		return (true);
 	return (false);
 }
@@ -26,7 +26,7 @@ bool	is_sep(t_lexer *lx)
 {
 	if (lx->pending_dquote || lx->pending_squote || lx->pending_escape)
 		return (false);
-	if (ft_strchr(lx->ifs, lx->inp.stream[lx->inp.pos]))
+	if (strchr(lx->ifs, lx->inp.stream[lx->inp.pos]))
 		return (true);
 	return (false);
 }

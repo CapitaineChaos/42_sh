@@ -25,11 +25,11 @@ static int	cd_update_pwd(t_mns *mns, char *oldpwd, const char *arg_raw)
 
 	phys = getcwd(NULL, 0);
 	if (!phys)
-		phys = ft_strdup("");
+		phys = strdup("");
 	if (arg_raw && arg_raw[0] == '/' && arg_raw[1] == '/' && arg_raw[2] != '/')
 	{
 		if (arg_raw[2] == '\0')
-			newpwd = ft_strdup("//");
+			newpwd = strdup("//");
 		else
 			newpwd = ft_strjoin("//", phys + 1);
 		free(phys);
@@ -56,8 +56,8 @@ static int	check_args(t_mns *mns, int argc, char **argv, char **envp)
 		log_flush(STDERR_FILENO, &logger, false);
 		return (1);
 	}
-	if (argc == 2 && argv[1][0] == '-' && argv[1][1] && ft_strcmp(argv[1], "-")
-		&& ft_strcmp(argv[1], "--"))
+	if (argc == 2 && argv[1][0] == '-' && argv[1][1] && strcmp(argv[1], "-")
+		&& strcmp(argv[1], "--"))
 	{
 		log_init(&logger);
 		log_puts(&logger, "🐰: cd: ");
@@ -75,9 +75,9 @@ const char	*get_target(t_mns *mns, int argc, char **argv)
 	const char	*target;
 	t_logger	logger;
 
-	if (argc == 1 || (argc == 2 && !ft_strcmp(argv[1], "--")))
+	if (argc == 1 || (argc == 2 && !strcmp(argv[1], "--")))
 		target = ft_getenv(&mns->env, "HOME");
-	else if (argc == 2 && !ft_strcmp(argv[1], "-"))
+	else if (argc == 2 && !strcmp(argv[1], "-"))
 	{
 		target = ft_getenv(&mns->env, "OLDPWD");
 		if (target)
@@ -100,7 +100,7 @@ static int	check_target(const char **target, int argc, char **argv, char *old)
 	if (!*target)
 	{
 		log_init(&logger);
-		if (argc == 1 || !ft_strcmp(argv[1], "--"))
+		if (argc == 1 || !strcmp(argv[1], "--"))
 			log_puts(&logger, "🐰: cd: HOME not set\n");
 		else
 			log_puts(&logger, "🐰: cd: OLDPWD not set\n");
@@ -131,7 +131,7 @@ int	builtin_cd(t_mns *mns, int argc, char **argv, char **envp)
 		return (ret);
 	save_oldpwd = getcwd(NULL, 0);
 	if (!save_oldpwd)
-		save_oldpwd = ft_strdup("");
+		save_oldpwd = strdup("");
 	target = get_target(mns, argc, argv);
 	ret = check_target(&target, argc, argv, save_oldpwd);
 	if (ret != 0)

@@ -52,7 +52,7 @@ int	exec_builtin(t_ast_node *node, char **argv, t_operand *op)
 		return (return_code(EXIT_FAILURE, "dup"));
 	if (check_app_r(node, sv_in, sv_out) != EXIT_SUCCESS)
 		return (EXIT_FAILURE);
-	if (ft_strcmp(op->argv[0], "exit") == 0)
+	if (strcmp(op->argv[0], "exit") == 0)
 		return (do_exit_builtin(argv, op, sv_in, sv_out));
 	ret = execute_builtin(op->argc, argv);
 	dup2(sv_in, STDIN_FILENO);

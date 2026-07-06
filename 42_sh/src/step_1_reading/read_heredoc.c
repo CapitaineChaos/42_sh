@@ -28,7 +28,7 @@ char	*get_heredoc_prompt(int i, int count)
 	log_putlong(&lg, count);
 	log_puts(&lg, ")> ");
 	log_putch(&lg, '\0');
-	return (ft_strdup(lg.buf));
+	return (strdup(lg.buf));
 }
 
 void	print_cancel(int line, char *delim)
@@ -61,7 +61,7 @@ static char	*get_line(char *prompt)
 		line = nano_get_next_line(STDIN_FILENO);
 		if (line && line[0])
 		{
-			len = ft_strlen(line);
+			len = strlen(line);
 			if (len && line[len - 1] == '\n')
 				line[len - 1] = '\0';
 		}
@@ -96,14 +96,14 @@ bool	read_heredoc_body(char *prompt, char *delim, t_sstr **body, int lc)
 		}
 		if (content == NULL)
 			return (print_cancel(lc, delim), false);
-		if (ft_strcmp(content, delim) == 0 || g_signal_flag == 1)
+		if (strcmp(content, delim) == 0 || g_signal_flag == 1)
 		{
 			trace_info(LVL_PARSER, "[  Fin heredoc  ]");
 			free(content);
 			return (g_signal_flag == 0);
 		}
 		sstrs_append(body, content);
-		sstrs_append(body, ft_strdup("\n"));
+		sstrs_append(body, strdup("\n"));
 	}
 	return (true);
 }

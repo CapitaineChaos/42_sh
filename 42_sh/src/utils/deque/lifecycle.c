@@ -24,7 +24,7 @@ t_dq_n	*dstn_new(void *foreign_node)
 {
 	t_dq_n	*new_node;
 
-	new_node = (t_dq_n *)ft_calloc(1, sizeof(t_dq_n));
+	new_node = (t_dq_n *)calloc(1, sizeof(t_dq_n));
 	if (!new_node)
 		return (NULL);
 	new_node->node = foreign_node;

@@ -54,22 +54,22 @@ intmax_t	ft_atoll_secure(const char *s, bool *error)
 	*error = false;
 	sign = 1;
 	acc = 0;
-	while (ft_isspace((unsigned char)*s))
+	while (isspace((unsigned char)*s))
 		++s;
 	process_sign(&s, &sign);
-	if (!ft_isdigit((unsigned char)*s))
+	if (!isdigit((unsigned char)*s))
 	{
 		*error = true;
 		return (0);
 	}
-	while (ft_isdigit((unsigned char)*s))
+	while (isdigit((unsigned char)*s))
 	{
 		if (is_overflow(acc, s, sign, error))
 			return (0);
 		acc = acc * 10 + *s - '0';
 		++s;
 	}
-	while (ft_isspace((unsigned char)*s))
+	while (isspace((unsigned char)*s))
 		++s;
 	if (*s != '\0')
 	{

@@ -34,12 +34,12 @@ t_env_node	*env_list_create_node(const char *k, const char *value)
 {
 	t_env_node	*node;
 
-	node = ft_calloc(1, sizeof(*node));
+	node = calloc(1, sizeof(*node));
 	if (!node)
 		free_and_exit_minishell(EXIT_FAILURE);
-	node->key = ft_strdup(k);
+	node->key = strdup(k);
 	if (value != NULL)
-		node->value = ft_strdup(value);
+		node->value = strdup(value);
 	node->hidden = false;
 	node->prev = NULL;
 	node->next = NULL;

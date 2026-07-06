@@ -21,7 +21,7 @@ size_t	sstrs_total_len(t_sstr *first_str)
 	len = 0;
 	while (first_str)
 	{
-		len += ft_strlen(first_str->line);
+		len += strlen(first_str->line);
 		first_str = first_str->next;
 	}
 	return (len);

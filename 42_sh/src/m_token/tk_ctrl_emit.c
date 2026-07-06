@@ -29,7 +29,7 @@ void	tk_operator_emit(t_lexer *lx, char *s, t_tk_type type)
 	token->kind = TKD_OPERATOR;
 	token->family = TKF_OPERATOR;
 	token->group = TKG_OTHER;
-	token->str = ft_strdup(s);
+	token->str = strdup(s);
 	tk_list_append(&lx->tokens, token);
 	trace_info_nvstr(LVL_LEXER, "Token op emitted", debug_get_token_type(token->type));
 }
@@ -48,7 +48,7 @@ void	tk_control_emit(t_lexer *lx, char *s, t_tk_type type)
 	token->kind = TKD_OPERATOR;
 	token->family = TKF_CONTROL;
 	token->group = TKG_OTHER;
-	token->str = ft_strdup(s);
+	token->str = strdup(s);
 	tk_list_append(&lx->tokens, token);
 	trace_info_nvstr(LVL_LEXER, "Token ctrl emitted", debug_get_token_type(token->type));
 }

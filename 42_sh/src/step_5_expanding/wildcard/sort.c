@@ -20,9 +20,9 @@
 
 static void	advance_ptrs(char **a, char **b)
 {
-	while (**a && !ft_isalnum(**a))
+	while (**a && !isalnum(**a))
 		(*a)++;
-	while (**b && !ft_isalnum(**b))
+	while (**b && !isalnum(**b))
 		(*b)++;
 }
 
@@ -40,8 +40,8 @@ static int	glob_cmp(char *new_str, char *existing)
 		cb = *existing;
 		if (!ca || !cb)
 			break ;
-		la = ft_tolower((ca));
-		lb = ft_tolower(cb);
+		la = tolower((ca));
+		lb = tolower(cb);
 		if (la != lb)
 			return (la - lb);
 		if ((ca) != cb)

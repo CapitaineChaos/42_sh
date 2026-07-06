@@ -197,20 +197,14 @@ SRCS_UTILS = \
 				std/ft_atoi \
 				std/ft_atoll \
 				std/ft_cput_fd \
-				std/ft_char_is \
-				std/ft_dup \
 				std/ft_free \
 				std/ft_len \
-				std/ft_mem \
 				std/ft_nb_cmp \
 				std/ft_split \
-				std/ft_str_cmp \
-				std/ft_striteri \
 				std/ft_strjoin \
 				std/ft_strlcpy \
 				std/ft_substr \
 				std/ft_toa \
-				std/ft_tolower \
 				std/ft_toupper \
 				sstr/sstr_aux \
 				sstr/sstr \
@@ -295,7 +289,9 @@ WT = \033[0;97m
 
 
 export OBJ_COUNT := $(words $(OBJ_FILES))
-MAX := $(shell v=$$(expr $(shell stty size | awk '{print $$2}') - 12); [ $$v -gt 100 ] && echo 100 || echo $$v)
+TERM_COLS := $(shell stty size 2>/dev/null | awk '{print $$2}')
+TERM_COLS := $(if $(TERM_COLS),$(TERM_COLS),80)
+MAX := $(shell v=$$(expr $(TERM_COLS) - 12); [ $$v -gt 100 ] && echo 100 || echo $$v)
 MIN := $(shell expr $(MAX) - 30)
 COUNT ?= 0
 
@@ -326,7 +322,7 @@ $(NAME): $(OBJ_FILES)
 		printf "\033[14$(GN)          ( . ) $(RT)\n"; \
 		printf "\033[15$(GN)           n n  $(RT)\n"; \
 		printf "\033[16$(MG)>>>>> $(NAME) linked successfully!$(RT)\n\n"; \
-		tput cnorm; \
+		tput cnorm 2>/dev/null || true; \
 	else \
 		printf ""; \
 		printf "\033[12$(BK)         ()_() $(RT)"; \
@@ -334,14 +330,14 @@ $(NAME): $(OBJ_FILES)
 		printf "\033[14$(BK)         ( $(RD)x$(RT) $(BK)) $(RT)"; \
 		printf "\033[15$(BK)          n n  $(RT)"; \
 		printf "\033[16$(RD)>>>>> Linking failed for $(NAME)$(RT)\n\n"; \
-		tput cnorm; \
+		tput cnorm 2>/dev/null || true; \
 		exit 1; \
 	fi
 
 withcat:
 	@export COUNT=0
-	@clear
-	@tput civis
+	@clear 2>/dev/null || true
+	@tput civis 2>/dev/null || true
 	@printf "\033[1;0H$(YL) **** >>>>> linking: $(NAME) <<<<< **** $(RT)"
 	@printf "\033[2;0H\033[K"
 	@printf "\033[3;0H      _._     _,-'\"\"\`-._\033[K"
@@ -351,11 +347,11 @@ withcat:
 	@if make -q $(NAME) 2>/dev/null; then \
 		printf ">>>>>  Nothing to be done in Minishell;\n" ; \
 		printf "The cat is sleeping, so please do not wake him up.\n\n"; \
-		tput cnorm; \
+		tput cnorm 2>/dev/null || true; \
 	else \
 		printf "\n\n"; \
 		$(MAKE) $(NAME); \
-		tput cnorm; \
+		tput cnorm 2>/dev/null || true; \
 	fi
 	
 
@@ -387,7 +383,7 @@ $(OBJ_BASE)/%.o: $(SRC_BASE)/%.c
 		echo "$(GN)           n n  $(RT)"; \
 		echo "$(MG)>>>>> Erreur de compilation détectée dans $(RD)$(UN)$(BD)$<$(RT)"; \
 		echo "" ; \
-		cput cnorm; \
+		tput cnorm 2>/dev/null || true; \
 		exit 1; \
 	}
 

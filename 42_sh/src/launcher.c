@@ -29,7 +29,7 @@ void	launch_animation(t_mns *mns)
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
 		return ;
 	lvl = ft_getenv(&mns->env, "LW_SHLVL");
-	if (ft_atoi(lvl) > 1)
+	if (atoi(lvl) > 1)
 		return ;
 	get_terminal_size(&cols, &rows);
 	if (cols >= 122)
@@ -78,7 +78,7 @@ int	main(int ac, char **av, char **envp)
 	lv = 7;
 	debug_log_init();
 	trace_debug_level();
-	init_mns(&mns, ft_strdup(" \t\n"), envp, lv);
+	init_mns(&mns, strdup(" \t\n"), envp, lv);
 	first_time_init();
 	mns.argv = av;
 	mns.argc = ac;

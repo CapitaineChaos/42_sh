@@ -26,7 +26,7 @@ void	context_add_(t_contexts *ctxs, t_ctx_ ctx_name)
 		trace_info(LVL_CHK, "Context is hidden");
 		return ;
 	}
-	ctx_node = (t_context *)ft_calloc(1, sizeof(t_context));
+	ctx_node = (t_context *)calloc(1, sizeof(t_context));
 	if (!ctx_node)
 	{
 		trace_info(LVL_FAIL, "Computer memory failure");

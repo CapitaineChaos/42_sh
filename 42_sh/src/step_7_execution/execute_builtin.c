@@ -43,7 +43,7 @@ bool	is_builtin(char *cmd)
 	i = 0;
 	while (builtins[i].fn != NULL)
 	{
-		if (ft_strcmp(cmd, builtins[i].name) == 0)
+		if (strcmp(cmd, builtins[i].name) == 0)
 		{
 			trace_info_nvstr(LVL_EXEC, "    >  Found Built-in name", (char *)builtins[i].name);
 			return (true);
@@ -70,7 +70,7 @@ int	execute_builtin(int argc, char **argv)
 	i = 0;
 	while (builtins[i].fn != NULL)
 	{
-		if (ft_strcmp(argv[0], builtins[i].name) == 0)
+		if (strcmp(argv[0], builtins[i].name) == 0)
 		{
 			mns = get_mns(NULL);
 			return (builtins[i].fn(mns, argc, argv, NULL));

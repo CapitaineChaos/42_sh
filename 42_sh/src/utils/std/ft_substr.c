@@ -20,15 +20,15 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 	if (!s)
 		return (NULL);
-	slen = ft_strlen(s);
+	slen = strlen(s);
 	if (start >= slen)
-		return (ft_strdup(""));
+		return (strdup(""));
 	if (slen - start < len)
 		len = slen - start;
 	str = (char *)malloc((len + 1) * sizeof(char));
 	if (!str)
 		return (NULL);
-	ft_memcpy(str, s + start, len);
+	memcpy(str, s + start, len);
 	str[len] = '\0';
 	return (str);
 }

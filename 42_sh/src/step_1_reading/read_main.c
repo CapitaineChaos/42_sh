@@ -59,7 +59,7 @@ static void	manage_pendings(t_main_data *data)
 		}
 		trace_info(LVL_LEXER, "  Escape pending -> + <NL> ");
 		data->total_input.append_str(&data->total_input, "\n");
-		sstrs_append(&data->inputs, ft_strdup("\n"));
+		sstrs_append(&data->inputs, strdup("\n"));
 		data->lx->inp.pos += 1;
 	}
 }

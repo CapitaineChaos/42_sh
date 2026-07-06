@@ -52,7 +52,7 @@ int	apply_redir_heredoc(char *content)
 
 	if (pipe(fd) < 0)
 		return (perror("pipe"), EXIT_FAILURE);
-	len = (ssize_t)ft_strlen(content);
+	len = (ssize_t)strlen(content);
 	written = 0;
 	while (written < len)
 	{

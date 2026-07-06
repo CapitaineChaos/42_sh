@@ -25,7 +25,7 @@ int	builtin_unset(t_mns *mns, int argc, char **argv, char **envp)
 	log_init(&logger);
 	if (argv[1] == NULL)
 		return (0);
-	if (ft_strcmp(argv[1], "--") == 0)
+	if (strcmp(argv[1], "--") == 0)
 		return (0);
 	if (argv[1][0] == '-' && argv[1][1] != '\0')
 	{

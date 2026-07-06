@@ -25,9 +25,9 @@ int	check_pwd_args(t_mns *mns, int argc, char **argv, char **envp)
 	(void)mns;
 	(void)argc;
 	(void)envp;
-	if (argc < 2 || !ft_strcmp(argv[1], "-") || !ft_strcmp(argv[1], "--"))
+	if (argc < 2 || !strcmp(argv[1], "-") || !strcmp(argv[1], "--"))
 		return (0);
-	else if (!ft_strncmp(argv[1], "-", 1))
+	else if (!strncmp(argv[1], "-", 1))
 	{
 		log_init(&logger);
 		log_puts(&logger, "🐰: pwd: invalid option\n");
@@ -107,9 +107,9 @@ int	builtin_pwd(t_mns *mns, int argc, char **argv, char **envp)
 
 	opt_p = false;
 	opt_l = false;
-	if (argc == 2 && !ft_strcmp(argv[1], "-P"))
+	if (argc == 2 && !strcmp(argv[1], "-P"))
 		opt_p = true;
-	else if (argc == 2 && !ft_strcmp(argv[1], "-L"))
+	else if (argc == 2 && !strcmp(argv[1], "-L"))
 		opt_l = true;
 	else if (check_pwd_args(mns, argc, argv, envp) != 0)
 		return (2);
@@ -118,7 +118,7 @@ int	builtin_pwd(t_mns *mns, int argc, char **argv, char **envp)
 		return (ret);
 	if (opt_l && pwd && *pwd)
 		return (pwd_print_phys(pwd), free(phys), 0);
-	if (pwd && *pwd && (!ft_strcmp(pwd, phys) || (ft_strncmp(pwd, "//", 2) == 0
+	if (pwd && *pwd && (!strcmp(pwd, phys) || (strncmp(pwd, "//", 2) == 0
 				&& phys[0] == '/' && phys[1] == '\0')))
 		pwd_print_phys(pwd);
 	else

@@ -20,7 +20,7 @@ static size_t	calc_total_lenline(t_tk_part *wp, char *line)
 	len = 0;
 	while (wp)
 	{
-		len += ft_strlen(wp->offset + line);
+		len += strlen(wp->offset + line);
 		wp = wp->next;
 	}
 	return (len);
@@ -42,8 +42,8 @@ char	*aggregate_wordparts_to_strline(t_tk_part *first, char *line)
 	part = first;
 	while (part)
 	{
-		len = ft_strlen(part->offset + line);
-		ft_memcpy(s + i, part->offset + line, len);
+		len = strlen(part->offset + line);
+		memcpy(s + i, part->offset + line, len);
 		i += len;
 		part = part->next;
 	}

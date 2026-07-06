@@ -35,7 +35,7 @@ void	print_anim2(int c_printed, int t_c_print, const char **lines, int size)
 	i = -1;
 	while (++i < size)
 	{
-		chars_to_print_in_line = ft_strlen(lines[i]);
+		chars_to_print_in_line = strlen(lines[i]);
 		if (t_c_print > c_printed)
 		{
 			print_count = t_c_print - c_printed;
@@ -88,13 +88,13 @@ void	select_animation(char *name)
 	const char	*edge_lines_micro[] = {T9_01, T9_02, T9_03, T9_04, T9_05,
 		T9_06, T9_07, T9_08, T9_09, T9_10, T9_11, T9_12, (void *)0};
 
-	if (ft_strcmp(name, "gits_lines") == 0)
+	if (strcmp(name, "gits_lines") == 0)
 		print_animation(edge_lines, 1200, 1);
-	else if (ft_strcmp(name, "gits_lines_middle") == 0)
+	else if (strcmp(name, "gits_lines_middle") == 0)
 		print_animation(edge_lines_middle, 800, 2);
-	else if (ft_strcmp(name, "gits_lines_mini") == 0)
+	else if (strcmp(name, "gits_lines_mini") == 0)
 		print_animation(edge_lines_mini, 400, 6);
-	else if (ft_strcmp(name, "gits_lines_micro") == 0)
+	else if (strcmp(name, "gits_lines_micro") == 0)
 		print_animation(edge_lines_micro, 400, 7);
 	else
 		ft_wputstr_fd("Invalid animation name\n", 2);

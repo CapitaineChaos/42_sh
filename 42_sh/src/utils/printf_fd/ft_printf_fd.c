@@ -40,7 +40,7 @@ static const char	*extract_flags(const char *str, t_format *format)
 	format->flags.space = 0;
 	format->flags.plus = 0;
 	str++;
-	while (ft_strchr("-0# +", *str))
+	while (strchr("-0# +", *str))
 	{
 		if (*str == '-')
 			format->flags.dash = 1;
@@ -70,14 +70,14 @@ static const char	*extract_dims(const char *str, t_format *format)
 	format->precision = -1;
 	if (*str == '\0')
 		return (str);
-	format->width = ft_atoi(str);
-	while (ft_isdigit(*str))
+	format->width = atoi(str);
+	while (isdigit(*str))
 		str++;
 	if (*str == '.')
 	{
 		str++;
-		format->precision = ft_atoi(str);
-		while (ft_isdigit(*str))
+		format->precision = atoi(str);
+		while (isdigit(*str))
 			str++;
 	}
 	if (format->precision > 0)

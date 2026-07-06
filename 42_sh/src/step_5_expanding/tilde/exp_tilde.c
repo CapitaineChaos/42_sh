@@ -31,7 +31,7 @@ static char	*expand_pwd_variant(const char *w)
 	if (!base || !*base)
 		return (NULL);
 	if (w[2] == '\0')
-		return (ft_strdup(base));
+		return (strdup(base));
 	return (ft_strjoin(base, w + 2));
 }
 
@@ -45,7 +45,7 @@ static char	*expand_home_variant(const char *w)
 	if (!base || !*base)
 		return (NULL);
 	if (w[1] == '\0')
-		return (ft_strdup(base));
+		return (strdup(base));
 	return (ft_strjoin(base, w + 1));
 }
 

@@ -34,7 +34,7 @@ static void	aggregate_tokens(t_tokens *tk, t_sstr **acc)
 			frag = part->stream;
 			if (frag)
 			{
-				sstrs_append(acc, ft_strdup(frag));
+				sstrs_append(acc, strdup(frag));
 				trace_info_nvstr(LVL_EXPAND, "Token part (FRAG)", frag);
 			}
 			part = part->next;
@@ -55,7 +55,7 @@ char	*aggregate_cmdline(t_tokens *cmds, t_tokens *redirs)
 	if (redirs && redirs->head)
 		aggregate_tokens(redirs, &acc);
 	if (acc == NULL)
-		return (ft_strdup("(Background process)"));
+		return (strdup("(Background process)"));
 	total = sstrs_flatten_sep(acc, ' ');
 	sstr_free(&acc);
 	return (total);
@@ -76,7 +76,7 @@ char	*aggregate_final_token_parts(t_tk_part *first)
 	{
 		frag = part->str;
 		if (frag)
-			sstrs_append(&acc, ft_strdup(frag));
+			sstrs_append(&acc, strdup(frag));
 		part = part->next;
 	}
 	if (acc == NULL)

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_toupper.c                                       :+:      :+:    :+:   */
+/*   toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smaitre <smaitre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,21 +12,11 @@
 
 #include "ft_std.h"
 
-int	ft_toupper(int c)
-{
-	if (c >= 'a' && c <= 'z')
-		return (c - 32);
-	return (c);
-}
-
-static void	ft_toupper_wrapper(unsigned int index, char *s)
-{
-	(void) index;
-	*s = (char)ft_toupper(*s);
-	return ;
-}
-
 void	ft_strtoupper(char *str)
 {
-	ft_striteri(str, &ft_toupper_wrapper);
+	while (str && *str)
+	{
+		*str = (char)toupper((unsigned char)*str);
+		str++;
+	}
 }
