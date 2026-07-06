@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
 import signal as signalmod
 import subprocess
 import tempfile
@@ -70,8 +71,10 @@ def run_shell(argv: list[str], steps, cwd: Path, env: dict, timeout: float,
     # chemin rapide (threadé, sûr pour les grosses sorties) : un seul send, pas de signal
     simple = (len(steps) == 1 and steps[0].signal is None
               and not steps[0].eof)
+    run_env = dict(env)
+    run_env["PWD"] = str(cwd)
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE, cwd=cwd, env=env,
+                            stderr=subprocess.PIPE, cwd=cwd, env=run_env,
                             start_new_session=needs_group)
     with RUNNING_LOCK:
         RUNNING.add(proc)
@@ -205,26 +208,29 @@ def run_one(case: Case, args, base_env: dict) -> Result:
     with tempfile.TemporaryDirectory(prefix="sh42_test_",
                                      dir=args.tmpdir) as tmp:
         tmp = Path(tmp)
-        sh42_dir = tmp / "mini"
-        bash_dir = tmp / "bash"
-        sh42_dir.mkdir()
-        bash_dir.mkdir()
-        build_sandbox(sh42_dir)
-        build_sandbox(bash_dir)
+        run_dir = tmp / "run"
+        sh42_outfiles = tmp / "sh42_outfiles"
 
         vlog = (tmp / "valgrind.log") if args.valgrind else None
+        run_dir.mkdir()
+        build_sandbox(run_dir)
         sh42_out, sh42_err, res.sh42_code = run_shell(
-            [str(SH42)], case.steps, sh42_dir, base_env, args.timeout, vlog)
+            [str(SH42)], case.steps, run_dir, base_env, args.timeout, vlog)
+        shutil.copytree(run_dir / "outfiles", sh42_outfiles)
+
+        shutil.rmtree(run_dir)
+        run_dir.mkdir()
+        build_sandbox(run_dir)
         bash_out, bash_err, res.bash_code = run_shell(
             ["bash", "--posix", "--noprofile", "--norc"],
-            case.steps, bash_dir, base_env, args.timeout, None)
+            case.steps, run_dir, base_env, args.timeout, None)
 
         res.sh42_out = sh42_out.rstrip("\n")
         res.bash_out = bash_out.rstrip("\n")
         res.sh42_err = clean_stderr(sh42_err)
         res.bash_err = clean_stderr(bash_err)
         res.outfiles_diff = outfiles_brief_diff(
-            sh42_dir / "outfiles", bash_dir / "outfiles")
+            sh42_outfiles, run_dir / "outfiles")
         res.is_segfault = res.sh42_code == 139
         if args.valgrind and res.sh42_code != res.bash_code:
             res.critical = classify_valgrind(res.sh42_code, vlog)
