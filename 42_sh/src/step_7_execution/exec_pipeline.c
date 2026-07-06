@@ -86,21 +86,6 @@ static int	pipe_and_fork(t_ast_node **cmds, bool has_pipe, int *fd, int *pid)
 	return (0);
 }
 
-static void	close_child(int *fd, int prev_in, bool has_output)
-{
-	if (prev_in != -1)
-	{
-		dup2(prev_in, STDIN_FILENO);
-		close(prev_in);
-	}
-	if (has_output)
-	{
-		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
-	}
-}
-
 static int	exec_single_pipe(t_ast_node **cmds, int ncmds, int i, int *prev_in)
 {
 	int			fd[2];
@@ -115,7 +100,17 @@ static int	exec_single_pipe(t_ast_node **cmds, int ncmds, int i, int *prev_in)
 	{
 		node = cmds[i];
 		sig_reset();
-		close_child(fd, *prev_in, i < ncmds - 1);
+		if (*prev_in != -1)
+		{
+			dup2(*prev_in, STDIN_FILENO);
+			close(*prev_in);
+		}
+		if (i < ncmds - 1)
+		{
+			close(fd[0]);
+			dup2(fd[1], STDOUT_FILENO);
+			close(fd[1]);
+		}
 		free(cmds);
 		status = exec_node(node);
 		free_and_exit_minishell(status);
