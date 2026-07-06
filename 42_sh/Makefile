@@ -46,9 +46,7 @@ SRCS_DEBUG = \
 				print_ast_tree \
 				print_pendings \
 				print_title \
-				trace_1 \
-				trace_2 \
-				trace_3 \
+				trace \
 				trace_debug_lvl \
 				write_file \
 				dbg_view
@@ -64,10 +62,7 @@ SRCS_READING = \
 				read
 
 SRCS_CHECKER = \
-				ctx/ctx_convert \
-				ctx/ctx_helpers \
-				ctx/ctx_lifecycle \
-				ctx/ctx_ops \
+				ctx/contexts \
 				checker_aux \
 				checker_core \
 				checker_lifecycle \
@@ -75,8 +70,7 @@ SRCS_CHECKER = \
 				checker
 
 SRCS_LEXER = \
-				helpers_1 \
-				helpers_2 \
+				helpers \
 				lex_dquoted \
 				lex_squoted \
 				lex_unquoted \
@@ -99,10 +93,7 @@ SRCS_EXPANDER = \
 				wildcard/exp_wild_run \
 				wildcard/exp_wildcard \
 				wildcard/sort \
-				split/splitt_aux \
-				split/splitt_parts \
-				split/splitt_token \
-				split/splitt \
+				split/split \
 				aggregate \
 				aux \
 				process_exp \
@@ -124,7 +115,7 @@ SRCS_EXECUTOR = \
 				builtin/bt_pwd \
 				builtin/bt_unset \
 				aux \
-				exec_and_or \
+				exec_control \
 				exec_cmd_builtin \
 				exec_cmd_empty \
 				exec_cmd_external \
@@ -134,8 +125,6 @@ SRCS_EXECUTOR = \
 				exec_pipe \
 				exec_pipe_aux \
 				exec_run \
-				exec_sequence \
-				exec_subshell \
 				execute_builtin \
 				redirs_apply
 
@@ -402,5 +391,5 @@ re: fclean all
 .PHONY: all clean fclean re
 
 # >>>HIDE_START
-include Makefile.debug
+include Makefile.debug.mk
 # <<<HIDE_END

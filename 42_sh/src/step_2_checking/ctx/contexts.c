@@ -1,21 +1,98 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ctx_ops.c                                          :+:      :+:    :+:   */
+/*   contexts.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smaitre <smaitre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 19:21:58 by smaitre           #+#    #+#             */
-/*   Updated: 2025/05/23 03:10:25 by smaitre          ###   ########.fr       */
+/*   Updated: 2025/05/30 01:16:46 by smaitre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "module_debug.h"
-#include "module_context.h"
-#include "module_minishell.h"
 #include "ft_strapi.h"
-#include "ft_std.h"
+#include "module_context.h"
+#include "module_debug.h"
+#include "module_minishell.h"
 #include <stdlib.h>
+
+static char	*ctx_names[] = {
+	"concat",
+	"squote",
+	"dquote",
+	"subshell",
+	"cmdand",
+	"cmdor",
+	"pipe",
+	"none",
+};
+
+static char	*ctx_symbols[] = {
+	"\\",
+	"'",
+	"\"",
+	"(",
+	"&&",
+	"||",
+	"|",
+	"none",
+};
+
+char	*convert_ctx(t_ctx_ ctx)
+{
+	if (ctx < CTX___ESCAPE || ctx > CTX___NONE)
+		return ("UNKNOWN");
+	return (ctx_names[ctx]);
+}
+
+char	*convert_ctx_to_sym(t_ctx_ ctx)
+{
+	if (ctx < CTX___ESCAPE || ctx > CTX___NONE)
+		return ("UNKNOWN");
+	return (ctx_symbols[ctx]);
+}
+
+bool	is_hidden_context(t_ctx_ ctx_name)
+{
+	return (ctx_name == CTX___NONE);
+}
+
+bool	ctx_is_now(t_contexts *ctxs, t_ctx_ ctx_name)
+{
+	return (ctxs->tail && ctxs->tail->ctx_name == ctx_name);
+}
+
+void	contexts_init(t_contexts *ctxs)
+{
+	trace_start(LVL_CHK, "Checker contexts init");
+	ctxs->head = NULL;
+	ctxs->tail = NULL;
+	ctxs->count = 0;
+}
+
+void	contexts_free(t_contexts *ctxs)
+{
+	t_context	*ctx;
+
+	trace_start(LVL_CHK, "Checker contexts free");
+	if (ctxs->count == 0 || ctxs->head == NULL)
+	{
+		trace_info(LVL_CHK, "Checker contexts free : None");
+		return ;
+	}
+	trace_info_nvnb(LVL_CHK, "Checker contexts to free : ", ctxs->count);
+	while (ctxs->head)
+	{
+		ctx = ctxs->head;
+		ctxs->head = ctx->next;
+		free(ctx);
+		ctxs->count--;
+	}
+	ctxs->tail = NULL;
+	if (ctxs->count != 0)
+		trace_info(LVL_FAIL, "  @@@ Memory leak in checker ctx  ");
+	ctxs->count = 0;
+}
 
 void	context_add_(t_contexts *ctxs, t_ctx_ ctx_name)
 {
@@ -26,14 +103,13 @@ void	context_add_(t_contexts *ctxs, t_ctx_ ctx_name)
 		trace_info(LVL_CHK, "Context is hidden");
 		return ;
 	}
-	ctx_node = (t_context *)calloc(1, sizeof(t_context));
+	ctx_node = calloc(1, sizeof(t_context));
 	if (!ctx_node)
 	{
 		trace_info(LVL_FAIL, "Computer memory failure");
 		free_and_exit_minishell(EXIT_FAILURE);
 	}
 	ctx_node->ctx_name = ctx_name;
-	ctx_node->next = NULL;
 	ctx_node->prev = ctxs->tail;
 	if (ctxs->tail)
 		ctxs->tail->next = ctx_node;
@@ -48,14 +124,8 @@ bool	remove_matching_context(t_contexts *ctxs, t_ctx_ ctx_name)
 	t_context	*ctx_node;
 
 	ctx_node = ctxs->tail;
-	if (!ctx_node)
-		return (false);
-	while (ctx_node)
-	{
-		if (ctx_node->ctx_name == ctx_name)
-			break ;
+	while (ctx_node && ctx_node->ctx_name != ctx_name)
 		ctx_node = ctx_node->prev;
-	}
 	if (!ctx_node)
 		return (false);
 	if (ctx_node->prev)
@@ -76,14 +146,10 @@ bool	context_remove_last_(t_contexts *ctxs, t_ctx_ ctx_name)
 	t_context	*ctx_node;
 
 	ctx_node = ctxs->tail;
+	while (ctx_node && is_hidden_context(ctx_node->ctx_name))
+		ctx_node = ctx_node->prev;
 	if (!ctx_node)
 		return (false);
-	while (is_hidden_context(ctx_node->ctx_name))
-	{
-		ctx_node = ctx_node->prev;
-		if (!ctx_node)
-			return (false);
-	}
 	if (ctx_node->ctx_name != ctx_name)
 	{
 		trace_info(LVL_FAIL, "@@@ Context not matching");
@@ -99,12 +165,6 @@ bool	context_remove_last_(t_contexts *ctxs, t_ctx_ ctx_name)
 	return (true);
 }
 
-/**
- * @brief Retourne une chaine de caractères représentant le contexte
- * @param ctx_name Le nom du contexte
- * @return La chaîne de caractères représentant le contexte
- * @note Il faut libérer la chaîne de caractères retournée après utilisation
- */
 char	*convert_contexts_to_str_(t_contexts *ctxs)
 {
 	t_strapi	s;

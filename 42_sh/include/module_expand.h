@@ -45,8 +45,6 @@ void		tag_tokens_globs(t_token *first);
  * AUX
  */
 
-bool		part_needs_split(t_tk_part *part);
-char		*dup_word(char *start, int len);
 bool		repl_and_free_str(t_tk_part *part, char *new_str);
 void		copy_char(t_strapi *out, char *s, size_t *i);
 void		*return_and_free(t_strapi *out);
@@ -114,11 +112,7 @@ int			expand_redir_tildes(t_tokens *tokens);
  * SPLIT
  */
 
-bool		is_splittable_part(t_tk_part *part);;
 int			is_unescaped_delim(char *str, int pos, char *delims);
 int			split_tokens(t_tokens *tokens, bool is_redir);
-t_tokens	split_parts(t_token *tok);
-char		**split_unescaped(char *str, char *delims, int *nb);
-void		free_split(char **split);
 
 #endif
