@@ -73,7 +73,7 @@ int	builtin_exit(t_mns *mns, int argc, char **argv, char **envp)
 			log_puts(&lg, "exit: too many arguments\n");
 			log_flush(STDERR_FILENO, &lg, false);
 			trace_logger_flush(-1, &lg, true);
-			return (1);
+			return (2);
 		}
 		free_and_exit_minishell (exit_status);
 	}

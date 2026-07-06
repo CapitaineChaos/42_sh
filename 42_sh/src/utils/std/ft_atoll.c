@@ -69,5 +69,12 @@ intmax_t	ft_atoll_secure(const char *s, bool *error)
 		acc = acc * 10 + *s - '0';
 		++s;
 	}
+	while (ft_isspace((unsigned char)*s))
+		++s;
+	if (*s != '\0')
+	{
+		*error = true;
+		return (0);
+	}
 	return (sign * acc);
 }
