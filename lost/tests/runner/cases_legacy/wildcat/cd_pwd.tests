@@ -1,0 +1,63 @@
+  cd ./././.
+cd
+cd '/'
+cd *
+cd -
+cd --
+cd --- 
+cd .
+cd ..
+cd ../
+cd ../.
+cd ../..
+cd ../../../../../../..
+cd .././././.
+cd ./
+cd ././././
+cd /
+cd _
+cd ~
+cd ~/
+cd $HOME
+cd $HOME $HOME 
+cd $HOME/42_works
+cd "$PWD/srcs"
+cd '$PWD/srcs'
+cd .././../.././../bin/ls
+cd / | echo $?
+cd ~/ | echo $? ; pwd
+cd '/etc'
+cd /e"tc"
+cd /e'tc'
+cd Makefile
+cd ../minishell 
+cd /minishell
+cd minishell Docs crashtest.c
+cd '//' ; pwd
+cd '////////' ; pwd
+cd / ; pwd
+cd // ; pwd
+cd /// ; pwd
+cd /////// ; pwd
+cd sr
+cd "srcs"
+cd 'srcs'
+cd srcs
+cd srcs objs
+echo $OLDPWD
+echo $PWD
+mkdir a ; mkdir a/b ; cd a/b ; rm -rf ../../a ; cd ..
+pwd
+pwd ./hola
+pwd hola
+pwd hola que tal
+pwd ls
+pwd ls env
+pwd -- p
+pwd ---p
+pwd --p
+pwd -p
+pwd pwd pwd
+unset HOME ; cd $HOME
+unset HOME ; export HOME ; cd $HOME
+unset HOME ; export HOME= ; cd $HOME

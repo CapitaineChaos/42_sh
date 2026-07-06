@@ -1,0 +1,9 @@
+(exit 42); echo $?
+unset PATH ; ls
+mkdir -p outfiles/test_dir ; cd outfiles/test_dir ; rm -rf ../test_dir ; pwd
+touch outfiles/file{1..5}.txt ; ls outfiles/file*.txt
+/bin/echo -e "outlines/line1\noutlines/line2\noutlines/line3" > outlines/multiline
+cat <minishell.h&ls
+/bin/nonexistentcommand; echo $?
+/bin/ls nonexistentfile; echo $?
+echo "outlines/line1\noutlines/line2\noutlines/line3";

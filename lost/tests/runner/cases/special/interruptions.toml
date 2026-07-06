@@ -1,0 +1,46 @@
+# Tests spéciaux : signaux injectés dans une séquence.
+#
+# Un cas est une liste de `steps` jouées dans l'ordre. Un step `signal` n'est
+# PAS temporisé : le testeur attend que le groupe de processus soit quiescent
+# (shell bloqué en lecture, ou enfant en sleep) puis envoie le signal. C'est
+# reproductible — aucun chrono à régler — et les deux shells sont traités à
+# l'identique, donc la comparaison différentielle reste stricte et stable.
+#
+# `signal` accepte n'importe quel nom (INT, QUIT, TERM, TSTP, USR1, ...).
+# CTRL-\ = QUIT, CTRL-Z = TSTP. CTRL-D (EOF) : voir heredocs.toml.
+
+[[test]]
+name = "CTRL-C au milieu d'un heredoc"
+steps = [
+  { send = "cat << EOF\nligne1\n" },
+  { signal = "INT" },
+  { send = "echo apres\n" },
+]
+
+[[test]]
+name = "CTRL-backslash au milieu d'un heredoc"
+steps = [
+  { send = "cat << EOF\ndebut\n" },
+  { signal = "QUIT" },
+  { send = "echo suite\n" },
+]
+
+[[test]]
+name = "CTRL-C pendant sleep"
+steps = [
+  { send = "sleep 5\n" },
+  { signal = "INT" },
+]
+
+[[test]]
+name = "CTRL-C pendant cat | cat"
+steps = [
+  { send = "cat | cat\n" },
+  { signal = "INT" },
+]
+
+# Sucre équivalent : input + signal (le signal suit, sync automatique).
+[[test]]
+name = "SIGTERM pendant sleep (sucre)"
+input = "sleep 5"
+signal = "TERM"

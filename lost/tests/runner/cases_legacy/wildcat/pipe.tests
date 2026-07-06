@@ -1,0 +1,54 @@
+cat | cat | cat | ls
+cat ../Makefile | cat -e | cat -e
+cat ../Makefile | grep pr | head -n 5 | cd file_not_exist 
+cat ../Makefile | grep pr | head -n 5 | hello
+cat ../Makefile | grep src | cat -e
+cat ../Makefile | grep src | grep src | cat -e 
+cd .. | echo "hola"
+cd / | echo "hola"
+cd .. | pwd
+echo | echo
+ech|o hola | cat
+echo hola | cat 
+echo hola || cat 
+echo hola ||| cat
+echo hola |cat
+echo hola| cat
+echo hola|cat
+echo hola | cat | cat | cat | cat | cat | grep hola 
+echo hola | cat -e | cat -e | cat -e
+echo hola | echo que tal
+echo hola > outfiles/bonjour
+echo hola > outfiles/bonjour ; cat -e outfiles/bonjour | exit
+echo hola > outfiles/bonjour ; cat outfiles/bonjour | exit
+echo oui | cat -e
+echo oui | echo non | echo hola | grep hola
+echo oui | echo non | echo hola | grep non
+echo oui | echo non | echo hola | grep oui
+echo test.c | cat -e| cat -e| cat -e| cat -e| cat -e| cat -e| cat -e| cat -e|cat -e|cat -e|cat -e
+env | echo hola
+exit | cat -e outefiles/bonjour
+exit | ls
+exit | sleep 1
+export HOLA=bonjour | cat -e | cat -e
+export HOLA | echo hola
+ifconfig | grep ":"
+ifconfig | grep hola
+ls | exit
+ls | exit 42
+ls | hola
+ls | hola | ls
+ls -la | grep "'.'"
+ls -la | grep "."
+ls | ls | echo hola | rev
+ls | ls | hola
+ls | ls hola
+ls | ls | hola | rev
+ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls 
+pwd | echo hola
+pwd | pwd
+sleep 1 | exit
+sleep 1 | sleep 1 
+time sleep 1 | sleep 1
+unset HOLA | cat -e 
+whoami | grep $USER

@@ -1,0 +1,46 @@
+# Tests spéciaux : entrées multi-lignes et heredocs.
+# Chaque [[test]] : `input` (obligatoire), `name` (libellé), et pour une
+# interruption `signal` ("INT", "TERM"...) + `delay` (s avant le signal).
+# Comparaison différentielle avec bash (stdout, exit code, stderr, outfiles).
+
+[[test]]
+name = "heredoc simple"
+input = """
+cat << EOF
+bonjour
+monde
+EOF
+"""
+
+[[test]]
+name = "heredoc avec expansion"
+input = """
+cat << EOF
+home=$HOME
+EOF
+"""
+
+[[test]]
+name = "heredoc quote (pas d'expansion)"
+input = """
+cat << 'EOF'
+brut $HOME $USER
+EOF
+"""
+
+[[test]]
+name = "deux heredocs enchaines"
+input = """
+cat << A && cat << B
+premier
+A
+second
+B
+"""
+
+[[test]]
+name = "heredoc non termine (EOF / CTRL-D)"
+input = """
+cat << FIN
+ligne unique
+"""

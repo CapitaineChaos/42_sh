@@ -1,0 +1,7 @@
+# binaire minishell copié à chaque run (ancré : le fichier ici, pas un dossier)
+/minishell
+# artefacts python
+__pycache__/
+*.pyc
+# rapport d'échecs
+failures.log

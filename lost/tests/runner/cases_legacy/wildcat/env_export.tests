@@ -1,0 +1,94 @@
+export ""
+export ""=""
+export "="="=" 
+export %
+export ''='' 
+export '='='='
+export -
+export --
+export =
+export $?
+export ?=2
+export 9HOLA=
+export - ALLO
+export | grep "HOME"
+export HOL\\\$A=bonjour
+export +HOLA=bonjour 
+export --HOLA=bonjour
+export -HOLA=bonjour
+export HO!LA=bonjour
+export HO#LA=bonjour
+export HO*LA=bonjour
+export HO-LA=bonjour
+export HO@LA=bonjour
+export HO\\\\LA=bonjour
+export HOL+A=bonjour 
+export HOL.A=bonjour
+export HOL\~A=bonjour
+export HOL{A=bonjour
+export HOL}A=bonjour
+export HOLA = bonjour 
+export HOLA =bonjour 
+export HOLA-=bonjour
+export HOLA=bon!jour
+export HOLA=bon&jour
+export HOLA=bon()jour
+export HOLA=bon(jour
+export hola | unset hola | echo $?
+export HOL@=bonjour
+export --Me
+export =TEST
+export TEST ; echo $TEST
+export TEST= ; echo $TEST
+export TEST=newvalue ; echo $TEST
+export TEST=\"quoted\" ; echo $TEST
+export TEST=value ; env | grep TEST
+export TEST="with spaces" ; echo $TEST
+export -- YEAH
+export YEAH -
+export YEAH --
+unset ++++++
+unset -
+unset --
+unset =
+unset ======
+unset _______ 
+unset $HOLA
+unset $PWD
+unset 9HOLA
+unset cd
+unset echo
+unset export
+unset - hello
+unset -- hello
+unset --helloooo
+unset HOL@
+unset HOL$?A
+unset -HOLA
+unset _HOLA
+unset HOL!A
+unset HOL#A
+unset HOL*A
+unset HOL+A
+unset HOL-A
+unset HOL.A
+unset HOL;A
+unset HOL=A
+unset HOL?A
+unset HOL\\\\A
+unset HOL\~A
+unset HOL^A
+unset HOL_A
+unset HOL{A
+unset HOL}A
+unset HOLA=
+unset HOLA_
+unset HOLA9
+unset HOL?A HOL.A
+unset HOL?A HOLA
+unset HOLA HOL?A
+unset PATH ; ls
+unset pwd
+unset sudo
+unset TEST ; echo $TEST
+unset unset

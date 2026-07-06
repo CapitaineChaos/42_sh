@@ -1,0 +1,11 @@
+exit -9223372036854775807
+exit 9223372036854775807
+exit -9223372036854775808
+exit 9223372036854775808
+exit -9223372036854775809
+export HELLO=123 A- WORLD=456
+export | sort | grep -v SHLVL | grep -v "declare -x _" | grep -v "PS.="
+export UNO=1 DOS-2 TRES=3 || env | grep TRES
+unset  A-
+unset HELLO=
+unset  HELLO A- WORLD
