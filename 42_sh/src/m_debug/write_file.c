@@ -31,7 +31,7 @@ void	debug_log(const char *msg)
 
 	if (DLVL < 0)
 		return ;
-	fd = open("/dev/shm/minishell/minishell_debug.log", O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd = open("/dev/shm/sh42_dbg/.trace.log", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
 		return ;
 
@@ -70,8 +70,8 @@ void	debug_log(const char *msg)
 
 void	debug_log_init(void)
 {
-	const char *dir  = "/dev/shm/minishell";
-	const char *file = "/dev/shm/minishell/minishell_debug.log";
+	const char *dir  = "/dev/shm/sh42_dbg";
+	const char *file = "/dev/shm/sh42_dbg/.trace.log";
 	int				fd;
 	struct timeval	tv;
 	struct tm		*t;

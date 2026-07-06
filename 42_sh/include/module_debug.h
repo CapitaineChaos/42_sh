@@ -52,6 +52,12 @@ void	debug_log(const char *msg);
 void	debug_log_init(void);
 void	trace_logger_flush(int fd, t_logger *lg, bool to_file);
 
+void	dbg_reset(void);
+void	dbg_tokens(t_tokens *tokens);
+void	dbg_ast(t_deque *final);
+void	dbg_exec(t_ast_node *root);
+void	dbg_footer(int last_exit);
+
 char	*get_ast_typestr(t_ast_type type);
 char	*debug_get_token_type(t_tk_type type);
 char	*debug_get_tok_kind(t_tk_kind kind);

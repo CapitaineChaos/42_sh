@@ -90,6 +90,8 @@ int	main_finalize(t_main_data *data)
 	data->stream = data->total_input.get(&data->total_input);
 	set_tokens_parts_ptrs(data->lx->tokens.head, data->stream);
 	debug_tokens(&data->lx->tokens, data->lv);
+	dbg_reset();
+	dbg_tokens(&data->lx->tokens);
 	trace_info(LVL_INPUT, "  Fin user input  ");
 	lexer_soft_reset(data->lx, data->lv);
 	trace_info_nvstr(LVL_MNS, "Stream", data->stream);

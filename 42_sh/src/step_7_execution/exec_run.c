@@ -34,6 +34,8 @@ bool	run_exec(t_ast_node *first, int lv)
 	debug_mini_title(LVL_EXEC, "Execution complete");
 	trace_info_nvnb(LVL_EXEC, "Execution code", code);
 	set_code(code);
+	dbg_exec(first);
+	dbg_footer(code);
 	return (true);
 }
 

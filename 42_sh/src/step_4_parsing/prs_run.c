@@ -51,6 +51,7 @@ bool	run_parser(t_parser *prs, t_tokens *tkns, int lv)
 	debug_deque(&prs->deques.output, "RPN OUT Shunting yard");
 	build_ast(&prs->deques.final, &prs->deques.output);
 	debug_ast_tree(&prs->deques.final);
+	dbg_ast(&prs->deques.final);
 	debug_check_integrity(prs);
 	if (prs->deques.final.size == 0)
 		return (false);

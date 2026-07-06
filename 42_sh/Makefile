@@ -51,7 +51,8 @@ SRCS_DEBUG = \
 				trace_2 \
 				trace_3 \
 				trace_debug_lvl \
-				write_file
+				write_file \
+				dbg_view
 # <<<HIDE_END
 
 SRCS_READING = \

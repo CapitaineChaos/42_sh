@@ -20,7 +20,7 @@ CTRL = re.compile(r"[\r\x00-\x08\x0b-\x1f]")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(os.path.dirname(os.path.dirname(HERE)), "42_sh")
-DBG_DIR = "/tmp/sh42_debug"
+DBG_DIR = "/dev/shm/sh42_dbg"
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8765
 STATIC = {
     "/": ("debugview.html", "text/html; charset=utf-8"),
@@ -188,8 +188,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             clear_debug()
             return self._bytes(200, "text/plain", b"ok")
         if self.path.startswith("/compile"):
-            p = subprocess.run(["make"], cwd=ROOT, capture_output=True,
-                               text=True)
+            p = subprocess.run(["make", "debug_build"], cwd=ROOT,
+                               capture_output=True, text=True)
             out = CTRL.sub("", ANSI.sub("", p.stdout + p.stderr))
             noise = ("stty:", "expr:", "/bin/sh:")
             out = "\n".join(l for l in out.split("\n") if l.strip()
