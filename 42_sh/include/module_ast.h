@@ -78,7 +78,6 @@ typedef struct s_ast_node
  */
 
 void		free_ast(t_ast_node *node);
-void		free_ast_node(t_ast_node *node);
 
 /**
  * CREATE

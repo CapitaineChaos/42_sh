@@ -35,7 +35,6 @@ typedef struct s_parser
 
 void		parser_init(t_parser *p, int lv);
 void		parser_free(t_parser *p, int lv);
-void		free_pdeques(t_pdeques *stacks);
 
 /**
  * PREPARSE / PARSE

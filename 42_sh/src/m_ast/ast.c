@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_create.c                                       :+:      :+:    :+:   */
+/*   ast.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smaitre <smaitre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 01:39:30 by smaitre           #+#    #+#             */
-/*   Updated: 2025/05/30 00:05:18 by smaitre          ###   ########.fr       */
+/*   Updated: 2026/07/06 00:00:00 by codex            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "module_ast.h"
+#include "module_debug.h"
 #include "module_minishell.h"
 #include "module_parser.h"
 #include "module_token.h"
 #include "ft_std.h"
-#include <stdlib.h>
 
-/**
- * @brief Crée un nœud d'opérande de commande.
- * @param type Le type d'opérande de commande.
- * @return Un pointeur vers le nœud créé.
- */
 t_ast_node	*create_cmd_word_operand(t_ast_type type)
 {
 	t_ast_node	*node;
@@ -55,12 +50,6 @@ t_ast_node	*create_control(t_ast_type type, t_token *token)
 	return (node);
 }
 
-/**
- * @brief Crée un nœud d'opérateur.
- * @param type Le type d'opérateur.
- * @param token Le token associé au nœud.
- * @return Un pointeur vers le nœud créé.
- */
 t_ast_node	*create_operator(t_ast_type type, t_token *token)
 {
 	t_ast_node	*node;
@@ -77,4 +66,50 @@ t_ast_node	*create_operator(t_ast_type type, t_token *token)
 	node->t_ast_data.operator_.precedence = get_precedence(type);
 	node->t_ast_data.operator_.token = token;
 	return (node);
+}
+
+t_ast_node	*peek_head(t_deque *deque)
+{
+	if (deque->size == 0)
+		return (NULL);
+	return ((t_ast_node *)deque->head->node);
+}
+
+static void	free_ast_node(t_ast_node *node)
+{
+	trace_info(LVL_AST, "Freeing AST node");
+	if (!node)
+		return ;
+	if (node->tclass == ACL_OPERAND)
+	{
+		free_token_list(&node->t_ast_data.operand.tokens);
+		free_token_list(&node->t_ast_data.operand.redirections);
+		trace_info(LVL_AST, "Freeing operand argv");
+		free(node->t_ast_data.operand.argv);
+		node->t_ast_data.operand.argv = NULL;
+		trace_info(LVL_AST, "Freeing operand envp");
+		if (node->t_ast_data.operand.envp != NULL)
+			free_char_array(node->t_ast_data.operand.envp);
+		node->t_ast_data.operand.envp = NULL;
+		trace_info(LVL_AST, "Freeing operand path");
+		free(node->t_ast_data.operand.path);
+		trace_info(LVL_AST, "Operand path freed");
+		node->t_ast_data.operand.path = NULL;
+	}
+	else
+	{
+		free_token(node->t_ast_data.operator_.token);
+		node->t_ast_data.operator_.token = NULL;
+	}
+	trace_info(LVL_AST, "AST node freed");
+	free(node);
+}
+
+void	free_ast(t_ast_node *node)
+{
+	if (!node)
+		return ;
+	free_ast(node->left);
+	free_ast(node->right);
+	free_ast_node(node);
 }

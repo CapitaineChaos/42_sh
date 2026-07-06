@@ -15,7 +15,7 @@
 #include "module_lexer.h"
 #include "module_input.h"
 
-static bool	match_control(t_lexer *lx, char *str, t_tk_type type)
+static bool	emit_control_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
 	if (!match_str(&lx->inp, str))
 		return (false);
@@ -26,7 +26,7 @@ static bool	match_control(t_lexer *lx, char *str, t_tk_type type)
 	return (true);
 }
 
-static bool	match_operator(t_lexer *lx, char *str, t_tk_type type)
+static bool	emit_operator_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
 	if (!match_str(&lx->inp, str))
 		return (false);
@@ -37,20 +37,20 @@ static bool	match_operator(t_lexer *lx, char *str, t_tk_type type)
 	return (true);
 }
 
-static bool	lex_operator(t_lexer *lx)
+static bool	emit_control_operator(t_lexer *lx)
 {
-	if (match_operator(lx, "&&", TOK_AND_IF))
+	if (emit_operator_if_present(lx, "&&", TOK_AND_IF))
 		return (add_context(lx, TOK_AND_IF), true);
-	if (match_operator(lx, "||", TOK_OR_IF))
+	if (emit_operator_if_present(lx, "||", TOK_OR_IF))
 		return (add_context(lx, TOK_OR_IF), true);
-	if (match_operator(lx, "|", TOK_PIPE))
+	if (emit_operator_if_present(lx, "|", TOK_PIPE))
 		return (add_context(lx, TOK_PIPE), true);
-	if (match_control(lx, ";", TOK_SEMI))
+	if (emit_control_if_present(lx, ";", TOK_SEMI))
 		return (true);
 	return (false);
 }
 
-static bool	match_redir(t_lexer *lx, char *str, t_tk_type type)
+static bool	emit_redirection_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
 	if (!match_str(&lx->inp, str))
 		return (false);
@@ -60,20 +60,20 @@ static bool	match_redir(t_lexer *lx, char *str, t_tk_type type)
 	return (true);
 }
 
-static bool	lex_redirection(t_lexer *lx)
+static bool	emit_redirection(t_lexer *lx)
 {
-	if (match_redir(lx, ">>", TOK_REDIR_APPEND))
+	if (emit_redirection_if_present(lx, ">>", TOK_REDIR_APPEND))
 		return (true);
-	if (match_redir(lx, "<<", TOK_REDIR_HEREDOC))
+	if (emit_redirection_if_present(lx, "<<", TOK_REDIR_HEREDOC))
 		return (true);
-	if (match_redir(lx, ">", TOK_REDIR_OUT))
+	if (emit_redirection_if_present(lx, ">", TOK_REDIR_OUT))
 		return (true);
-	if (match_redir(lx, "<", TOK_REDIR_IN))
+	if (emit_redirection_if_present(lx, "<", TOK_REDIR_IN))
 		return (true);
 	return (false);
 }
 
-static bool	match_struct(t_lexer *lx, char *str, t_tk_type type)
+static bool	emit_struct_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
 	if (!peek_str_(&lx->inp, str))
 		return (false);
@@ -83,11 +83,11 @@ static bool	match_struct(t_lexer *lx, char *str, t_tk_type type)
 	return (true);
 }
 
-static bool	lex_struct(t_lexer *lx)
+static bool	emit_struct(t_lexer *lx)
 {
-	if (match_struct(lx, "(", TOK_LPAREN))
+	if (emit_struct_if_present(lx, "(", TOK_LPAREN))
 		return (add_context(lx, TOK_LPAREN), true);
-	if (match_struct(lx, ")", TOK_RPAREN))
+	if (emit_struct_if_present(lx, ")", TOK_RPAREN))
 	{
 		rem_sub_context(lx);
 		rem_op_context(lx);
@@ -96,7 +96,7 @@ static bool	lex_struct(t_lexer *lx)
 	return (false);
 }
 
-static void	lex_until_dquotes_end(t_lexer *lx)
+static void	read_double_quoted_body(t_lexer *lx)
 {
 	while (!is_dquote(lx))
 	{
@@ -112,7 +112,7 @@ static void	lex_until_dquotes_end(t_lexer *lx)
 	trace_info(LVL_LEXER, "Ending lex dquote");
 }
 
-static bool	lex_dquotes_start(t_lexer *lx)
+static bool	read_double_quoted_part(t_lexer *lx)
 {
 	if (lx->pending_squote || !is_dquote(lx))
 		return (false);
@@ -122,11 +122,11 @@ static bool	lex_dquotes_start(t_lexer *lx)
 	rem_op_context(lx);
 	add_context(lx, TOK_DQUOTE);
 	tk_temp_part_create(lx, TOK_DQUOTE);
-	lex_until_dquotes_end(lx);
+	read_double_quoted_body(lx);
 	return (true);
 }
 
-static void	lex_until_squotes_end(t_lexer *lx)
+static void	read_single_quoted_body(t_lexer *lx)
 {
 	while (!is_squote(lx))
 	{
@@ -140,7 +140,7 @@ static void	lex_until_squotes_end(t_lexer *lx)
 	trace_info(LVL_LEXER, "Ending lex squote");
 }
 
-static bool	lex_squotes_start(t_lexer *lx)
+static bool	read_single_quoted_part(t_lexer *lx)
 {
 	if (lx->pending_dquote || !is_squote(lx))
 		return (false);
@@ -150,11 +150,11 @@ static bool	lex_squotes_start(t_lexer *lx)
 	rem_op_context(lx);
 	add_context(lx, TOK_SQUOTE);
 	tk_temp_part_create(lx, TOK_SQUOTE);
-	lex_until_squotes_end(lx);
+	read_single_quoted_body(lx);
 	return (true);
 }
 
-static bool	handle_backslash(t_lexer *lx)
+static bool	consume_escape(t_lexer *lx)
 {
 	if (!is_backslash(lx))
 		return (false);
@@ -168,7 +168,7 @@ static bool	handle_backslash(t_lexer *lx)
 	return (true);
 }
 
-static bool	handle_comment(t_lexer *lx)
+static bool	consume_comment(t_lexer *lx)
 {
 	if ((lx->pending_dquote || lx->pending_squote) && !lx->pending_escape)
 		return (false);
@@ -182,14 +182,15 @@ static bool	handle_comment(t_lexer *lx)
 	return (true);
 }
 
-static void	lex_until_unquoted_end(t_lexer *lx)
+static void	read_unquoted_body(t_lexer *lx)
 {
 	bool	had_char;
 
 	had_char = false;
 	while (!is_eof(lx))
 	{
-		if (lex_operator(lx) || lex_redirection(lx) || lex_struct(lx))
+		if (emit_control_operator(lx) || emit_redirection(lx)
+			|| emit_struct(lx))
 		{
 			if (had_char)
 				tk_word_emit(lx);
@@ -200,7 +201,7 @@ static void	lex_until_unquoted_end(t_lexer *lx)
 			trace_info(LVL_LEXER, "End lex unquoted");
 			return ;
 		}
-		if (handle_backslash(lx))
+		if (consume_escape(lx))
 			continue ;
 		advance_(&lx->inp);
 		had_char = true;
@@ -208,7 +209,7 @@ static void	lex_until_unquoted_end(t_lexer *lx)
 	trace_info(LVL_LEXER, "End lex unquoted");
 }
 
-static void	skip_spaces(t_lexer *lx, bool *had_sep)
+static void	consume_separators(t_lexer *lx, bool *had_sep)
 {
 	while (is_wsp(lx))
 	{
@@ -227,7 +228,7 @@ static void	skip_spaces(t_lexer *lx, bool *had_sep)
 	}
 }
 
-static void	lex_unquoted(t_lexer *lx)
+static void	read_unquoted_part(t_lexer *lx)
 {
 	bool	had_sep;
 
@@ -237,43 +238,43 @@ static void	lex_unquoted(t_lexer *lx)
 		return ;
 	}
 	had_sep = false;
-	skip_spaces(lx, &had_sep);
-	if (had_sep || handle_comment(lx))
+	consume_separators(lx, &had_sep);
+	if (had_sep || consume_comment(lx))
 		return ;
 	trace_info(LVL_LEXER, "Start lex unquoted");
 	trace_info_nvstr(LVL_LEXER, " -- ", get_ptr(&lx->inp));
 	if (!is_eof(lx))
 		tk_temp_part_create(lx, TOK_UQUOTE);
 	rem_op_context(lx);
-	lex_until_unquoted_end(lx);
+	read_unquoted_body(lx);
 }
 
-static void	manage_pendings(t_lexer *lx)
+static void	resume_pending_quote(t_lexer *lx)
 {
 	debug_lx_pendings(lx);
 	rem_esc_context(lx);
 	lx->pending_escape = false;
 	if (lx->pending_dquote)
-		lex_until_dquotes_end(lx);
+		read_double_quoted_body(lx);
 	else if (lx->pending_squote)
-		lex_until_squotes_end(lx);
+		read_single_quoted_body(lx);
 }
 
-static void	do_lexing(t_lexer *lx)
+static void	tokenize_input(t_lexer *lx)
 {
 	while (!is_eof(lx))
 	{
-		if (lex_squotes_start(lx))
+		if (read_single_quoted_part(lx))
 			continue ;
-		if (lex_dquotes_start(lx))
+		if (read_double_quoted_part(lx))
 			continue ;
-		if (lex_operator(lx))
+		if (emit_control_operator(lx))
 			continue ;
-		if (lex_redirection(lx))
+		if (emit_redirection(lx))
 			continue ;
-		if (lex_struct(lx))
+		if (emit_struct(lx))
 			continue ;
-		lex_unquoted(lx);
+		read_unquoted_part(lx);
 	}
 }
 
@@ -285,8 +286,8 @@ void	run_lexer(t_lexer *lx, int lv)
 	lx->heredoc_count = 0;
 	if (is_eof(lx))
 		return ;
-	manage_pendings(lx);
-	do_lexing(lx);
+	resume_pending_quote(lx);
+	tokenize_input(lx);
 	debug_lx_pendings(lx);
 	if (lx->pending_escape)
 		add_context(lx, TOK_ESCAPE);

@@ -20,7 +20,6 @@
 # include "module_ast.h"
 # include "module_minishell.h"
 
-char	**create_cmd_argv(t_tokens *tokens, int *argc);
 int		assemble_node(t_ast_node *node);
 
 #endif

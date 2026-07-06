@@ -1,23 +1,53 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   signals.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smaitre <smaitre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 04:42:53 by smaitre           #+#    #+#             */
-/*   Updated: 2025/05/30 02:16:26 by smaitre          ###   ########.fr       */
+/*   Updated: 2026/07/06 00:00:00 by codex            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "module_debug.h"
 #include "module_signal.h"
+#include "utils.h"
 #include <readline/readline.h>
-#include "module_context.h"
-#include "module_lexer.h"
-#include "module_token.h"
 
 volatile sig_atomic_t	g_signal_flag = 0;
+
+void	sigint_standard(int status)
+{
+	(void)status;
+	rl_done = 1;
+	g_signal_flag = 1;
+}
+
+void	ignore_sigquit(void)
+{
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+}
+
+void	sigint_heredoc(int status)
+{
+	(void)status;
+	rl_replace_line("", 0);
+	rl_redisplay();
+	rl_done = 1;
+	g_signal_flag = 1;
+}
+
+int	sig_event(void)
+{
+	ignore_sigquit();
+	return (EXIT_SUCCESS);
+}
 
 void	sig_parent_ignore(t_sigaction *saved)
 {
@@ -38,9 +68,6 @@ void	sig_parent_restore(t_sigaction *saved)
 	sigaction(SIGQUIT, &saved[1], NULL);
 }
 
-/*
-**	Réinitialisation complète dans chaque fork avant exec/builtin
-*/
 void	sig_reset(void)
 {
 	struct sigaction	sa;
@@ -54,9 +81,6 @@ void	sig_reset(void)
 	sigaction(SIGPIPE, &sa, NULL);
 }
 
-/*
-**	Configuration du shell interactif (processus père)
-*/
 void	first_time_init(void)
 {
 	struct sigaction	sa;

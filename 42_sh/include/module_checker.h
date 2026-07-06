@@ -48,31 +48,9 @@ void	checker_init(t_checker *checker, int lv);
 void	checker_reset(t_checker *checker, int lv);
 
 /**
- * AUX
- */
-
-void	disp_stronly(t_main_data *data, t_token *error);
-void	disp_nomultiline(t_main_data *data, t_token *error);
-bool	check_parens_count(t_checker *chk, int add);
-void	*set_states(t_checker *chk, int rdy, int cls, int cmd);
-
-/**
- * CORE
- */
-
-t_token	*c_checke(t_main_data *data, t_token *cur);
-t_token	*inner_checker(t_checker *chk, t_token **cur);
-bool	check_lparentheses(t_checker *chk, t_token **cur, t_token **ret);
-bool	check_parentheses(t_checker *chk, t_token **cur, t_token **ret);
-bool	check_cmd(t_checker *chk, t_token **cur, t_token **ret);
-bool	check_else(t_checker *chk, t_token **cur, t_token **ret);
-
-/**
  * MAIN
  */
 
-bool	is_bad_redir(t_token **token);
-bool	is_bad_cmd(t_token **token);
 int		special_checker(t_main_data *data, t_tokens *tokens);
 
 /**

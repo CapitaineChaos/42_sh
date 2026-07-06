@@ -15,6 +15,32 @@
 #include "ft_std.h"
 #include <stdlib.h>
 
+size_t	sstrs_total_len(t_sstr *first_str)
+{
+	size_t	len;
+
+	len = 0;
+	while (first_str)
+	{
+		len += strlen(first_str->line);
+		first_str = first_str->next;
+	}
+	return (len);
+}
+
+size_t	sstrs_count(t_sstr *first_str)
+{
+	size_t	count;
+
+	count = 0;
+	while (first_str)
+	{
+		count++;
+		first_str = first_str->next;
+	}
+	return (count);
+}
+
 char	*sstrs_flatten_sep(t_sstr *first_str, char sep)
 {
 	t_sstr	*tmp;

@@ -36,10 +36,7 @@ SRCS_ROOT = \
 
 # >>>HIDE_START
 SRCS_DEBUG = \
-				convert_ast_types \
-				convert_dbg_level \
-				convert_tok_type \
-				convert_tok_tclass \
+				debug_converters \
 				print_arg \
 				print_tokens \
 				print_ast_node \
@@ -63,9 +60,6 @@ SRCS_READING = \
 
 SRCS_CHECKER = \
 				ctx/contexts \
-				checker_aux \
-				checker_core \
-				checker_lifecycle \
 				checker_shortcuts \
 				checker
 
@@ -76,8 +70,7 @@ SRCS_LEXER = \
 
 SRCS_PARSER = \
 				convert \
-				parser_lifecycle \
-				prs_run \
+				parser \
 				rd_parser
 
 SRCS_EXPANDER = \
@@ -97,8 +90,7 @@ SRCS_EXPANDER = \
 				tag_tilde
 
 SRCS_ASSEMBLER = \
-				asm_build \
-				asm_run
+				assemble
 
 SRCS_EXECUTOR = \
 				builtin/bt_cd \
@@ -134,9 +126,7 @@ SRCS_ENV = \
 				minishell_env \
 				sort
 SRCS_AST = \
-				ast_create \
-				ast_helpers \
-				ast_lifecycle \
+				ast \
 				push_swap
 
 SRCS_NORMALIZE = \
@@ -155,12 +145,9 @@ SRCS_TOKEN = \
 				token_lifecycle
 
 SRCS_SIGNAL = \
-				handles \
-				init
+				signals
 SRCS_INPUT = \
-				lexer_sub_input \
-				inp_adv \
-				inp_cmp
+				input
 
 SRCS_HELPERS = \
 				printer \
@@ -169,8 +156,7 @@ SRCS_HELPERS = \
 				valid_id
 
 SRCS_UTILS = \
-				deque/lifecycle \
-				deque/ops \
+				deque/deque \
 				gnl/nano_gnl \
 				printf_fd/ft_printf_fd_process_hex \
 				printf_fd/ft_printf_fd_process_nbr \
@@ -189,7 +175,6 @@ SRCS_UTILS = \
 				std/ft_substr \
 				std/ft_toa \
 				std/ft_toupper \
-				sstr/sstr_aux \
 				sstr/sstr \
 				strapi/ft_strapi_add_remove \
 				strapi/ft_strapi_append \
