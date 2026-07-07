@@ -24,6 +24,14 @@
 struct						s_mns;
 typedef struct s_mns		t_mns;
 
+typedef enum e_lex_state
+{
+	LEX_NORMAL,
+	LEX_SQUOTE,
+	LEX_DQUOTE,
+	LEX_ESCAPE,
+}	t_lex_state;
+
 typedef struct s_lexer
 {
 	char			*ifs;
@@ -31,9 +39,7 @@ typedef struct s_lexer
 	t_input			inp;
 	t_tk_part		*tmp_wp;
 	t_contexts		ctxs;
-	bool			pending_squote;
-	bool			pending_dquote;
-	bool			pending_escape;
+	t_lex_state	state;
 	t_sstr			*heredoc_garbage;
 	t_sstr			*garbage;
 	int				heredoc_count;

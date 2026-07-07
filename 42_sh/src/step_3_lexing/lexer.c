@@ -52,9 +52,7 @@ void	lexer_hard_reset(t_lexer *lx, int lv)
 	contexts_free(&lx->ctxs);
 	sstr_free(&lx->heredoc_garbage);
 	sstr_free(&lx->garbage);
-	lx->pending_escape = false;
-	lx->pending_squote = false;
-	lx->pending_dquote = false;
+	lx->state = LEX_NORMAL;
 	lx->heredoc_count = 0;
 	lx->inp.stream = NULL;
 	lx->inp.pos = 0;
@@ -71,9 +69,7 @@ void	lexer_soft_reset(t_lexer *lx, int lv)
 	free_token_parts(lx->tmp_wp);
 	contexts_free(&lx->ctxs);
 	lx->tmp_wp = NULL;
-	lx->pending_escape = false;
-	lx->pending_squote = false;
-	lx->pending_dquote = false;
+	lx->state = LEX_NORMAL;
 	lx->heredoc_count = 0;
 	lx->inp.stream = NULL;
 	lx->inp.pos = 0;

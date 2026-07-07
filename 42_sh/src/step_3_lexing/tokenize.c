@@ -56,6 +56,23 @@ static bool	starts_word_char(t_lexer *lx)
 		&& !peek_str_(&lx->inp, ")"));
 }
 
+static void	enter_quote_state(t_lexer *lx, t_lex_state state,
+	t_tk_type part_type)
+{
+	lx->state = state;
+	rem_op_context(lx);
+	add_context(lx, part_type);
+	tk_temp_part_create(lx, part_type);
+}
+
+static void	leave_quote_state(t_lexer *lx, t_ctx_ ctx)
+{
+	close_tmp_part(lx);
+	advance_(&lx->inp);
+	remove_matching_context(&lx->ctxs, ctx);
+	lx->state = LEX_NORMAL;
+}
+
 static bool	emit_control_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
 	if (!peek_str_(&lx->inp, str))
@@ -140,7 +157,7 @@ static bool	emit_struct(t_lexer *lx)
 	return (false);
 }
 
-static void	read_double_quoted_body(t_lexer *lx)
+static void	lex_dquote(t_lexer *lx)
 {
 	while (!is_dquote(lx))
 	{
@@ -150,26 +167,19 @@ static void	read_double_quoted_body(t_lexer *lx)
 			return ;
 		advance_(&lx->inp);
 	}
-	close_tmp_part(lx);
-	advance_(&lx->inp);
-	remove_matching_context(&lx->ctxs, CTX___DQUOTE);
-	lx->pending_dquote = false;
+	leave_quote_state(lx, CTX___DQUOTE);
 }
 
-static bool	read_double_quoted_part(t_lexer *lx)
+static bool	enter_dquote(t_lexer *lx)
 {
-	if (lx->pending_squote || !is_dquote(lx))
+	if (!is_dquote(lx))
 		return (false);
 	advance_(&lx->inp);
-	lx->pending_dquote = true;
-	rem_op_context(lx);
-	add_context(lx, TOK_DQUOTE);
-	tk_temp_part_create(lx, TOK_DQUOTE);
-	read_double_quoted_body(lx);
+	enter_quote_state(lx, LEX_DQUOTE, TOK_DQUOTE);
 	return (true);
 }
 
-static void	read_single_quoted_body(t_lexer *lx)
+static void	lex_squote(t_lexer *lx)
 {
 	while (!is_squote(lx))
 	{
@@ -177,22 +187,15 @@ static void	read_single_quoted_body(t_lexer *lx)
 			return ;
 		advance_(&lx->inp);
 	}
-	close_tmp_part(lx);
-	advance_(&lx->inp);
-	remove_matching_context(&lx->ctxs, CTX___SQUOTE);
-	lx->pending_squote = false;
+	leave_quote_state(lx, CTX___SQUOTE);
 }
 
-static bool	read_single_quoted_part(t_lexer *lx)
+static bool	enter_squote(t_lexer *lx)
 {
-	if (lx->pending_dquote || !is_squote(lx))
+	if (!is_squote(lx))
 		return (false);
 	advance_(&lx->inp);
-	lx->pending_squote = true;
-	rem_op_context(lx);
-	add_context(lx, TOK_SQUOTE);
-	tk_temp_part_create(lx, TOK_SQUOTE);
-	read_single_quoted_body(lx);
+	enter_quote_state(lx, LEX_SQUOTE, TOK_SQUOTE);
 	return (true);
 }
 
@@ -210,11 +213,11 @@ static bool	consume_escape(t_lexer *lx)
 			tk_temp_part_create(lx, TOK_UQUOTE);
 		return (true);
 	}
-	lx->pending_escape = true;
+	lx->state = LEX_ESCAPE;
 	advance_(&lx->inp);
 	if (!is_eof(lx))
 	{
-		lx->pending_escape = false;
+		lx->state = LEX_NORMAL;
 		advance_(&lx->inp);
 	}
 	return (true);
@@ -222,13 +225,12 @@ static bool	consume_escape(t_lexer *lx)
 
 static bool	consume_comment(t_lexer *lx)
 {
-	if ((lx->pending_dquote || lx->pending_squote) && !lx->pending_escape)
+	if (lx->state != LEX_NORMAL)
 		return (false);
 	if (!is_comment(lx))
 		return (false);
 	close_tmp_part(lx);
 	tk_word_emit(lx);
-	lx->pending_escape = false;
 	advance_(&lx->inp);
 	while (!is_eof(lx) && !is_newline(lx))
 		advance_(&lx->inp);
@@ -278,15 +280,20 @@ static void	consume_separators(t_lexer *lx, bool *had_sep)
 	}
 }
 
-static void	read_unquoted_part(t_lexer *lx)
+static void	lex_escape(t_lexer *lx)
+{
+	rem_esc_context(lx);
+	lx->state = LEX_NORMAL;
+}
+
+static void	lex_normal(t_lexer *lx)
 {
 	bool	had_sep;
 
-	if (is_eof(lx))
-	{
-		lx->pending_escape = false;
+	if (enter_squote(lx) || enter_dquote(lx))
 		return ;
-	}
+	if (emit_control_operator(lx) || emit_redirection(lx) || emit_struct(lx))
+		return ;
 	had_sep = false;
 	consume_separators(lx, &had_sep);
 	if (had_sep || consume_comment(lx))
@@ -297,31 +304,18 @@ static void	read_unquoted_part(t_lexer *lx)
 	read_unquoted_body(lx);
 }
 
-static void	resume_pending_quote(t_lexer *lx)
-{
-	rem_esc_context(lx);
-	lx->pending_escape = false;
-	if (lx->pending_dquote)
-		read_double_quoted_body(lx);
-	else if (lx->pending_squote)
-		read_single_quoted_body(lx);
-}
-
 static void	tokenize_input(t_lexer *lx)
 {
 	while (!is_eof(lx))
 	{
-		if (read_single_quoted_part(lx))
-			continue ;
-		if (read_double_quoted_part(lx))
-			continue ;
-		if (emit_control_operator(lx))
-			continue ;
-		if (emit_redirection(lx))
-			continue ;
-		if (emit_struct(lx))
-			continue ;
-		read_unquoted_part(lx);
+		if (lx->state == LEX_SQUOTE)
+			lex_squote(lx);
+		else if (lx->state == LEX_DQUOTE)
+			lex_dquote(lx);
+		else if (lx->state == LEX_ESCAPE)
+			lex_escape(lx);
+		else
+			lex_normal(lx);
 	}
 }
 
@@ -332,11 +326,10 @@ void	run_lexer(t_lexer *lx, int lv)
 	lx->heredoc_count = 0;
 	if (is_eof(lx))
 		return ;
-	resume_pending_quote(lx);
 	tokenize_input(lx);
-	if (lx->pending_escape)
+	if (lx->state == LEX_ESCAPE)
 		add_context(lx, TOK_ESCAPE);
-	else if (!lx->pending_squote && !lx->pending_dquote)
+	else if (lx->state == LEX_NORMAL)
 	{
 		tk_word_emit(lx);
 		if (isatty(STDIN_FILENO))

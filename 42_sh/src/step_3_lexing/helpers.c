@@ -39,14 +39,14 @@ bool	is_comment(t_lexer *lx)
 
 bool	is_wsp(t_lexer *lx)
 {
-	if (lx->pending_dquote || lx->pending_squote || lx->pending_escape)
+	if (lx->state != LEX_NORMAL)
 		return (false);
 	return (!is_eof(lx) && strchr(lx->ifs, get_char(&lx->inp)));
 }
 
 bool	is_sep(t_lexer *lx)
 {
-	if (lx->pending_dquote || lx->pending_squote || lx->pending_escape)
+	if (lx->state != LEX_NORMAL)
 		return (false);
 	return (strchr(lx->ifs, lx->inp.stream[lx->inp.pos]));
 }

@@ -41,8 +41,7 @@ static void	exit_from_heredoc(t_main_data *data)
 
 static void	manage_pendings(t_main_data *data)
 {
-	if (data->lx->pending_escape || data->lx->pending_dquote
-		|| data->lx->pending_squote)
+	if (data->lx->state != LEX_NORMAL)
 	{
 		if (!isatty(STDIN_FILENO))
 		{
