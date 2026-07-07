@@ -72,22 +72,15 @@ typedef enum e_tk_flags
 	TF_SUBSHELL = 1 << 7,
 	TF_TERMINATOR = 1 << 8,
 	TF_SYNTHETIC = 1 << 9,
+	TF_REDIR_INPUT = 1 << 10,
+	TF_REDIR_OUTPUT = 1 << 11,
 }	t_tk_flags;
-
-typedef enum e_tk_precedence
-{
-	PREC_NONE,
-	PREC_LIST,
-	PREC_AND_OR,
-	PREC_PIPE,
-}	t_tk_precedence;
 
 typedef struct s_tk_spec
 {
 	const char	*name;
 	const char	*lexeme;
 	int			flags;
-	int			precedence;
 }	t_tk_spec;
 
 typedef struct s_tk_part

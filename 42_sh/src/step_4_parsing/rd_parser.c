@@ -47,7 +47,7 @@ static bool	is_type(t_tokens *t, t_tk_type ty)
 
 static bool	is_seq_sep(t_token *tok)
 {
-	return (tok && (tok->type == TOK_SEMI || tok->type == TOK_NEWLINE));
+	return (tok && tok_has(tok->type, TF_LIST_SEP));
 }
 
 static bool	starts_command(t_token *tok)
@@ -143,7 +143,7 @@ static t_ast_node	*rd_and_or(t_tokens *t)
 	t_token		*op;
 
 	left = rd_pipeline(t);
-	while (is_type(t, TOK_AND_IF) || is_type(t, TOK_OR_IF))
+	while (t->head && tok_has(t->head->type, TF_AND_OR_OP))
 	{
 		op = tk_list_pop_front(t);
 		left = bin_node(get_ast_type(op->type), op, left, rd_pipeline(t));
