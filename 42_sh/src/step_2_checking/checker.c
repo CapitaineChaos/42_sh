@@ -38,30 +38,6 @@ void	checker_reset(t_checker *checker, int lv)
 	checker->proceed_loop = true;
 }
 
-static void	display_unclosed_context(t_main_data *data, t_token *error)
-{
-	t_logger	lg;
-	t_ctx_		ctx;
-
-	(void)error;
-	log_init(&lg);
-	if (data->lx->ctxs.tail)
-	{
-		ctx = data->lx->ctxs.tail->ctx_name;
-		if (ctx == CTX___DQUOTE || ctx == CTX___SQUOTE)
-			log_puts(&lg, "🐯: Syntax error: missing quote\n");
-		else if (ctx == CTX___CMDAND || ctx == CTX___CMDOR || ctx == CTX___PIPE)
-			log_puts(&lg, "🐯: Syntax error: missing command\n");
-		else if (ctx == CTX___SUBSH)
-			log_puts(&lg, "🐯: Syntax error: missing closing parenthesis\n");
-		else if (ctx == CTX___ESCAPE)
-			log_puts(&lg, "🐯: Syntax error: concatenat not possible\n");
-	}
-	else
-		log_puts(&lg, "🐯: Syntax error: unexpected end of input\n");
-	log_flush(STDERR_FILENO, &lg, false);
-}
-
 static void	display_wordpart_error(t_main_data *data, t_token *error)
 {
 	char	*str;
@@ -290,11 +266,6 @@ int	special_checker(t_main_data *data, t_tokens *tokens)
 		}
 		else
 			print_syntax_error(error->str, data->partial_input);
-		return (-1);
-	}
-	if (DLVL == -2 && data->lx->ctxs.count > 0)
-	{
-		display_unclosed_context(data, error);
 		return (-1);
 	}
 	return (0);
