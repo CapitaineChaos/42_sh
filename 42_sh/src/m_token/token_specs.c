@@ -13,28 +13,35 @@
 #include "module_token.h"
 
 const t_tk_spec	g_tok_specs[TOK_COUNT] = {
-	[TOK_WORD]			= {"WORD",			NULL,	TF_WORD | TF_OPERAND},
-	[TOK_PIPE]			= {"PIPE",			"|",	TF_CONTROL_OP | TF_PIPE_OP},
-	[TOK_AND_IF]		= {"AND_IF",		"&&",	TF_CONTROL_OP | TF_AND_OR_OP},
-	[TOK_OR_IF]			= {"OR_IF",			"||",	TF_CONTROL_OP | TF_AND_OR_OP},
-	[TOK_LPAREN]		= {"LPAREN",		"(",	TF_SUBSHELL},
-	[TOK_RPAREN]		= {"RPAREN",		")",	TF_SUBSHELL},
-	[TOK_SEMI]			= {"SEMI",			";",	TF_LIST_SEP | TF_TERMINATOR},
-	[TOK_ESCAPE]		= {"ESCAPE",		"\\",	TF_SYNTHETIC},
-	[TOK_REDIR_IN]		= {"REDIR_IN",		"<",	TF_REDIR | TF_REDIR_INPUT | TF_OPERAND},
-	[TOK_REDIR_OUT]		= {"REDIR_OUT",		">",	TF_REDIR | TF_REDIR_OUTPUT | TF_OPERAND},
-	[TOK_REDIR_APPEND]	= {"REDIR_APPEND",	">>",	TF_REDIR | TF_REDIR_OUTPUT | TF_OPERAND},
-	[TOK_REDIR_HEREDOC]	= {"REDIR_HEREDOC",	"<<",	TF_REDIR | TF_REDIR_INPUT | TF_OPERAND},
-	[TOK_HEREDOC_BODY]	= {"HEREDOC_BODY",	NULL,	TF_OPERAND | TF_SYNTHETIC},
-	[TOK_EOF]			= {"EOF",			NULL,	TF_TERMINATOR | TF_SYNTHETIC},
-	[TOK_NEWLINE]		= {"NEWLINE",		"\n",	TF_LIST_SEP | TF_TERMINATOR},
+	[TOK_WORD]			= {"WORD",			NULL,	LCL_WORD,		TA_CMD_PART},
+	[TOK_PIPE]			= {"PIPE",			"|",	LCL_CONTROL,	TA_BINARY},
+	[TOK_AND_IF]		= {"AND_IF",		"&&",	LCL_CONTROL,	TA_BINARY | TA_ANDOR},
+	[TOK_OR_IF]			= {"OR_IF",			"||",	LCL_CONTROL,	TA_BINARY | TA_ANDOR},
+	[TOK_LPAREN]		= {"LPAREN",		"(",	LCL_CONTROL,	TA_NONE},
+	[TOK_RPAREN]		= {"RPAREN",		")",	LCL_CONTROL,	TA_NONE},
+	[TOK_SEMI]			= {"SEMI",			";",	LCL_CONTROL,	TA_SEP},
+	[TOK_ESCAPE]		= {"ESCAPE",		"\\",	LCL_INTERNAL,	TA_NONE},
+	[TOK_REDIR_IN]		= {"REDIR_IN",		"<",	LCL_REDIR,		TA_CMD_PART | TA_REDIR_IN},
+	[TOK_REDIR_OUT]		= {"REDIR_OUT",		">",	LCL_REDIR,		TA_CMD_PART | TA_REDIR_OUT},
+	[TOK_REDIR_APPEND]	= {"REDIR_APPEND",	">>",	LCL_REDIR,		TA_CMD_PART | TA_REDIR_OUT},
+	[TOK_REDIR_HEREDOC]	= {"REDIR_HEREDOC",	"<<",	LCL_REDIR,		TA_CMD_PART | TA_REDIR_IN | TA_REDIR_HERE},
+	[TOK_HEREDOC_BODY]	= {"HEREDOC_BODY",	NULL,	LCL_INTERNAL,	TA_CMD_PART},
+	[TOK_EOF]			= {"EOF",			NULL,	LCL_INTERNAL,	TA_NONE},
+	[TOK_NEWLINE]		= {"NEWLINE",		"\n",	LCL_CONTROL,	TA_SEP},
 };
 
-bool	tok_has(t_tk_type type, int flags)
+bool	tok_has(t_tk_type type, int attrs)
 {
 	if (type < 0 || type >= TOK_COUNT)
 		return (false);
-	return ((g_tok_specs[type].flags & flags) == flags);
+	return ((g_tok_specs[type].attrs & attrs) == attrs);
+}
+
+t_tk_class	tok_class(t_tk_type type)
+{
+	if (type < 0 || type >= TOK_COUNT)
+		return (LCL_INTERNAL);
+	return (g_tok_specs[type].cls);
 }
 
 const char	*tok_name(t_tk_type type)

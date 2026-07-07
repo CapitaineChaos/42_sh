@@ -39,6 +39,19 @@ char	*debug_get_part_type(t_tk_part_type type)
 	return ((char *)part_name(type));
 }
 
+char	*debug_get_token_class(t_tk_class cls)
+{
+	static const t_debug_name	names[] = {
+	{LCL_WORD, "WORD"},
+	{LCL_CONTROL, "CONTROL"},
+	{LCL_REDIR, "REDIR"},
+	{LCL_INTERNAL, "INTERNAL"},
+	{0, NULL}
+	};
+
+	return (lookup_name(names, cls, "UNKNOWN"));
+}
+
 char	*debug_get_token_role(t_tk_role role)
 {
 	static const t_debug_name	names[] = {

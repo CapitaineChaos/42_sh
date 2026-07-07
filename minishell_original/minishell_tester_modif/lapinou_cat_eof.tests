@@ -1,7 +1,0 @@
-cat <<EOF | wc -l\nline1\nline2\nline3\nEOF\n
-cat <<EOF | awk "{ print toupper(\$0) }"\nfoo\nbar\nEOF\n
-grep b <<TAG | sed "s/a/A/g"\napple\nbanana\ncherry\nTAG\n
-export var=42; cat <<\'EOF\'\n$value: $var\nEOF\n
-cat <<EOF\nunterminated...
-<< m
-cat <<EOF\nHello\nWorld\nEOF\n

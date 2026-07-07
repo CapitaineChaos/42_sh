@@ -67,7 +67,7 @@ static void	*set_states(t_checker *chk, int rdy, int cls, int cmd)
 
 static bool	is_bad_redir(t_token **token)
 {
-	if (*token && tok_has((*token)->type, TF_REDIR))
+	if (*token && tok_class((*token)->type) == LCL_REDIR)
 	{
 		*token = (*token)->next;
 		if (!(*token) || (*token)->type == TOK_WORD)
@@ -82,12 +82,12 @@ static bool	is_bad_redir(t_token **token)
 
 static bool	is_bad_cmd(t_token **token)
 {
-	while (*token && tok_has((*token)->type, TF_OPERAND))
+	while (*token && tok_has((*token)->type, TA_CMD_PART))
 	{
 		if (is_bad_redir(token))
 			return (true);
 		if (*token && (*token)->next
-			&& tok_has((*token)->next->type, TF_OPERAND))
+			&& tok_has((*token)->next->type, TA_CMD_PART))
 			*token = (*token)->next;
 		else
 			return (false);
@@ -102,12 +102,12 @@ static bool	check_lparen(t_checker *chk, t_token **cur, t_token **ret)
 		return (false);
 	if (chk->cmd_ready && !chk->cmd_closed)
 	{
-		if ((*cur)->prev && tok_has((*cur)->prev->type, TF_OPERAND))
+		if ((*cur)->prev && tok_has((*cur)->prev->type, TA_CMD_PART))
 		{
 			*ret = (*cur)->next;
 			if (!(*cur)->prev->prev)
 				return (true);
-			if (!tok_has((*cur)->prev->prev->type, TF_OPERAND))
+			if (!tok_has((*cur)->prev->prev->type, TA_CMD_PART))
 				return (true);
 		}
 		*ret = *cur;
@@ -157,7 +157,7 @@ static bool	check_command(t_checker *chk, t_token **cur, t_token **ret)
 		*ret = set_states(chk, 1, 0, 0);
 		return (true);
 	}
-	if (*cur && tok_has((*cur)->type, TF_REDIR))
+	if (*cur && tok_class((*cur)->type) == LCL_REDIR)
 	{
 		if (is_bad_redir(cur))
 		{
@@ -172,7 +172,7 @@ static bool	check_command(t_checker *chk, t_token **cur, t_token **ret)
 
 static bool	check_separator_or_unknown(t_checker *chk, t_token **cur, t_token **ret)
 {
-	if (*cur && tok_has((*cur)->type, TF_LIST_SEP))
+	if (*cur && tok_has((*cur)->type, TA_SEP))
 	{
 		*ret = *cur;
 		if (!chk->cmd_ready)
@@ -181,7 +181,7 @@ static bool	check_separator_or_unknown(t_checker *chk, t_token **cur, t_token **
 		*ret = NULL;
 		return (true);
 	}
-	if (*cur && tok_has((*cur)->type, TF_CONTROL_OP))
+	if (*cur && tok_has((*cur)->type, TA_BINARY))
 	{
 		*ret = *cur;
 		if (!chk->cmd_ready)

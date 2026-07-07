@@ -84,7 +84,7 @@ int	apply_redir_other(t_token *tok, char *target)
 		fd = -1;
 	if (fd < 0)
 		return (perror("open"), EXIT_FAILURE);
-	if (tok_has(tok->type, TF_REDIR_INPUT))
+	if (tok_has(tok->type, TA_REDIR_IN))
 		return (dup_close(fd, STDIN_FILENO));
 	else
 		return (dup_close(fd, STDOUT_FILENO));

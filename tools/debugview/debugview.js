@@ -252,22 +252,24 @@ function treeHTML(text, name) {
 function tokenTable(text, name) {
   const rows = text.split("\n").filter((l) => l.length);
   let h = `<div class="hscroll"><table class="ttab tktab"><thead><tr><th>#</th>` +
-    `<th>ROLE</th><th>TYPE</th><th>FLAGS</th><th>TEXT</th></tr></thead><tbody>`;
+    `<th>ROLE</th><th>TYPE</th><th>CLASS</th><th>FLAGS</th>` +
+    `<th>TEXT</th></tr></thead><tbody>`;
   for (const l of rows) {
     const f = l.split("\t");
     const o = {
       kind: "tok", idx: f[0] || "", role: f[1] || "", type: f[2] || "",
       flags: f[3] || "----", text: f[4] || "", count: f[5] || "0",
-      parts: f[6] || "",
+      parts: f[6] || "", cls: f[7] || "", attrs: f[8] || "",
     };
     const key = `tok:${name}:${o.idx}`;
     INSPECT[key] = o;
     h += `<tr data-key="${key}"><td class="ti">${esc(o.idx)}</td>` +
       `<td>${esc(o.role)}</td><td class="type">${esc(o.type)}</td>` +
+      `<td class="type">${esc(o.cls)}</td>` +
       `<td class="tf">${flagsHTML(o.flags)}</td>` +
       `<td class="tt">${color(o.text)}</td></tr>`;
   }
-  if (!rows.length) h += `<tr><td colspan="5" class="empty">aucun token</td></tr>`;
+  if (!rows.length) h += `<tr><td colspan="6" class="empty">aucun token</td></tr>`;
   return h + `</tbody></table></div>`;
 }
 
@@ -355,6 +357,8 @@ function inspectToken(o) {
     `<span class="idx">#${esc(o.idx)}</span></div>`;
   h += kvRows([
     ["role", esc(o.role)],
+    ["class", esc(o.cls || "-")],
+    ["attrs", esc(o.attrs || "-")],
     ["flags", `${flagsHTML(o.flags)}${on.length ? " — " + on.join(", ") : ""}`],
     ["count", esc(o.count)],
     ["text", `<code>${color(o.text)}</code>`],

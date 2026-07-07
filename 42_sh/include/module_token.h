@@ -59,28 +59,34 @@ typedef enum e_tk_part_type
 	PART_GLOB,
 }	t_tk_part_type;
 
-typedef enum e_tk_flags
+/* Classe lexicale : partition, une valeur par token. Lue via tok_class(). */
+typedef enum e_tk_class
 {
-	TF_NONE = 0,
-	TF_WORD = 1 << 0,
-	TF_OPERAND = 1 << 1,
-	TF_REDIR = 1 << 2,
-	TF_CONTROL_OP = 1 << 3,
-	TF_LIST_SEP = 1 << 4,
-	TF_PIPE_OP = 1 << 5,
-	TF_AND_OR_OP = 1 << 6,
-	TF_SUBSHELL = 1 << 7,
-	TF_TERMINATOR = 1 << 8,
-	TF_SYNTHETIC = 1 << 9,
-	TF_REDIR_INPUT = 1 << 10,
-	TF_REDIR_OUTPUT = 1 << 11,
-}	t_tk_flags;
+	LCL_WORD,
+	LCL_CONTROL,
+	LCL_REDIR,
+	LCL_INTERNAL,
+}	t_tk_class;
+
+/* Attributs non exclusifs, combinables en masque. Testés via tok_has(). */
+typedef enum e_tk_attr
+{
+	TA_NONE = 0,
+	TA_CMD_PART = 1 << 0,
+	TA_SEP = 1 << 1,
+	TA_BINARY = 1 << 2,
+	TA_ANDOR = 1 << 3,
+	TA_REDIR_IN = 1 << 4,
+	TA_REDIR_OUT = 1 << 5,
+	TA_REDIR_HERE = 1 << 6,
+}	t_tk_attr;
 
 typedef struct s_tk_spec
 {
 	const char	*name;
 	const char	*lexeme;
-	int			flags;
+	t_tk_class	cls;
+	int			attrs;
 }	t_tk_spec;
 
 typedef struct s_tk_part
@@ -171,7 +177,8 @@ void		tk_list_insert(t_tokens *tokens, t_token *after_me, t_token *tok);
 
 char		*aggregate_wordparts_to_strline(t_tk_part *first, char *line);
 char		*slice_dup(const char *src, size_t start, size_t end);
-bool		tok_has(t_tk_type type, int flags);
+bool		tok_has(t_tk_type type, int attrs);
+t_tk_class	tok_class(t_tk_type type);
 const char	*tok_name(t_tk_type type);
 const char	*part_name(t_tk_part_type type);
 /**

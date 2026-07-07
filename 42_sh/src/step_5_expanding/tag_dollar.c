@@ -79,7 +79,7 @@ void	tag_tokens_vars(t_token *first)
 		return ;
 	while (token)
 	{
-		if (tok_has(token->type, TF_OPERAND)
+		if (tok_has(token->type, TA_CMD_PART)
 			&& token->role != TKR_REDIR_OP)
 		{
 			tag_token_quotes(token);

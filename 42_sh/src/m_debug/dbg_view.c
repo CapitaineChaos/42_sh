@@ -188,6 +188,31 @@ static void	put_tok_flags(int fd, t_token *t)
 	put_byte(fd, t->has_glob ? '*' : '-');
 }
 
+/* Attributs actifs du token (axe 2), joints par ',', '-' si aucun. */
+static void	put_tok_attrs(int fd, t_tk_type type)
+{
+	static const int	bits[] = {TA_CMD_PART, TA_SEP, TA_BINARY, TA_ANDOR,
+		TA_REDIR_IN, TA_REDIR_OUT, TA_REDIR_HERE};
+	static const char	*names[] = {"CMD_PART", "SEP", "BINARY", "ANDOR",
+		"REDIR_IN", "REDIR_OUT", "REDIR_HERE"};
+	int					i;
+	int					first;
+
+	i = -1;
+	first = 1;
+	while (++i < 7)
+	{
+		if (!tok_has(type, bits[i]))
+			continue ;
+		if (!first)
+			put_byte(fd, ',');
+		dprintf(fd, "%s", names[i]);
+		first = 0;
+	}
+	if (first)
+		put_byte(fd, '-');
+}
+
 static char	*ast_title(t_ast_node *n)
 {
 	if (n->type == AST_SEQ)
@@ -348,6 +373,10 @@ void	dbg_tokens(t_tokens *tokens)
 		put_tok_text(fd, t);
 		dprintf(fd, "\t%d\t", (int)t->count);
 		put_parts(fd, t);
+		put_byte(fd, DBG_TAB);
+		dprintf(fd, "%s", debug_get_token_class(tok_class(t->type)));
+		put_byte(fd, DBG_TAB);
+		put_tok_attrs(fd, t->type);
 		put_byte(fd, DBG_NL);
 		t = t->next;
 		idx++;

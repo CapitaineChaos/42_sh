@@ -23,7 +23,7 @@ void	find_redirs(t_tokens *tokens)
 	tok = tokens->head;
 	while (tok)
 	{
-		if (tok_has(tok->type, TF_REDIR))
+		if (tok_class(tok->type) == LCL_REDIR)
 		{
 			tok->role = TKR_REDIR_OP;
 			if (tok->next && tok->type == TOK_REDIR_HEREDOC)
@@ -47,12 +47,12 @@ static bool	is_type(t_tokens *t, t_tk_type ty)
 
 static bool	is_seq_sep(t_token *tok)
 {
-	return (tok && tok_has(tok->type, TF_LIST_SEP));
+	return (tok && tok_has(tok->type, TA_SEP));
 }
 
 static bool	starts_command(t_token *tok)
 {
-	return (tok && (tok_has(tok->type, TF_OPERAND)
+	return (tok && (tok_has(tok->type, TA_CMD_PART)
 			|| tok->type == TOK_LPAREN));
 }
 
@@ -82,7 +82,7 @@ static void	consume_operands(t_tokens *t, t_ast_node *node, bool redirs_only)
 {
 	t_token	*tok;
 
-	while (t->head && tok_has(t->head->type, TF_OPERAND))
+	while (t->head && tok_has(t->head->type, TA_CMD_PART))
 	{
 		if (redirs_only && !is_redir_role(t->head))
 			break ;
@@ -143,7 +143,7 @@ static t_ast_node	*rd_and_or(t_tokens *t)
 	t_token		*op;
 
 	left = rd_pipeline(t);
-	while (t->head && tok_has(t->head->type, TF_AND_OR_OP))
+	while (t->head && tok_has(t->head->type, TA_ANDOR))
 	{
 		op = tk_list_pop_front(t);
 		left = bin_node(get_ast_type(op->type), op, left, rd_pipeline(t));

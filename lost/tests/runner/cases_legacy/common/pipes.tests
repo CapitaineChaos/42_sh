@@ -1,4 +1,0 @@
-cat minishell.h | grep ");"$
-cat ./test_files/infile_big | grep oi
-env | sort | grep -v SHLVL | grep -v ^_
-export GHOST=123 | env | grep GHOST

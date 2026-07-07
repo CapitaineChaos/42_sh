@@ -1,7 +1,0 @@
-# build normal (exécutable à la racine uniquement, pas le dossier src/minishell/)
-obj/
-/minishell
-
-# build de test du runner (tests/runner/tester.py : NAME=minishell_test OBJ_DIR=obj_test)
-obj_test/
-minishell_test
