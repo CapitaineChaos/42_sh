@@ -1,4 +1,4 @@
-env | grep -v '^_=' | sort
+env | sort
 env | grep '^PATH='
 export
 export A=1

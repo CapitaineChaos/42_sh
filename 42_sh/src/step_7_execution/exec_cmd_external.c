@@ -16,6 +16,8 @@
 #include <errno.h>
 #include <sys/wait.h>
 
+extern char	**environ;
+
 int	exec_external(t_ast_node *node, char *path, char **av, char **ep)
 {
 	pid_t				pid;
@@ -23,6 +25,7 @@ int	exec_external(t_ast_node *node, char *path, char **av, char **ep)
 	struct sigaction	saved[2];
 	int					saved_errno;
 
+	(void)ep;
 	pid = fork();
 	if (pid < 0)
 		return (return_code(EXIT_FAILURE, "fork"));
@@ -31,7 +34,8 @@ int	exec_external(t_ast_node *node, char *path, char **av, char **ep)
 		sig_reset();
 		if (apply_redirs(node) != 0)
 			free_and_exit_minishell(EXIT_FAILURE);
-		execve(path, av, ep);
+		setenv("_", path, 1);
+		execve(path, av, environ);
 		saved_errno = errno;
 		free_and_exit_minishell(get_exit_code(av[0], saved_errno));
 	}

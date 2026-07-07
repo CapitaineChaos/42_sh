@@ -22,10 +22,6 @@ static void	chk_env(const char *key, const char *content)
 		setenv(key, content, 1);
 }
 
-/* Niveau SHLVL suivant, robuste face à une valeur héritée pourrie. long +
- * strtol pour ne jamais déborder (un int déborderait sur SHLVL=2147483647).
- * Calé sur bash : non numérique / poubelle en fin / >= 1000 -> reset (1) ;
- * négatif -> 0 ; sinon n + 1. */
 static long	next_shlvl(void)
 {
 	char	*cur;
@@ -62,17 +58,12 @@ void	create_env(t_mns *mns)
 {
 	char	*cwd;
 
+	if (isatty(STDIN_FILENO))
+		unsetenv("_");
 	chk_env("PATH", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin");
-	chk_env("TERM", "c");
-	chk_env("LANG", "C.UTF-8");
 	cwd = getcwd(NULL, 0);
 	if (cwd)
-	{
 		chk_env("PWD", cwd);
-		chk_env("OLDPWD", cwd);
-		chk_env("HOME", cwd);
-	}
-	chk_env("USER", "ancientacodearchitects");
 	free(cwd);
 	update_shell_level(mns);
 }

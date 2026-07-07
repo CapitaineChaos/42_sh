@@ -189,6 +189,10 @@ def run_shell_tty(argv: list[str], steps, cwd: Path, env: dict,
             os.setsid()
             fcntl.ioctl(in_s, termios.TIOCSCTTY, 0)
             os.chdir(cwd)
+            # Python ignore SIGPIPE ; un vrai terminal le laisse à SIG_DFL.
+            # Sans ce reset, le shell (et ses enfants, ex. `yes`) hérite du
+            # SIG_IGN de Python et rapporte des « Broken pipe » fantômes.
+            signalmod.signal(signalmod.SIGPIPE, signalmod.SIG_DFL)
             os.dup2(in_s, 0)
             os.dup2(out_w, 1)
             os.dup2(err_w, 2)
