@@ -12,19 +12,15 @@
 
 #include "module_builtin.h"
 #include "module_minishell.h"
-#include "ft_wput.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
 
-int	check_pwd_args(t_mns *mns, int argc, char **argv, char **envp)
+static int	check_pwd_args(int argc, char **argv)
 {
 	t_logger	logger;
 
-	(void)mns;
-	(void)argc;
-	(void)envp;
 	if (argc < 2 || !strcmp(argv[1], "-") || !strcmp(argv[1], "--"))
 		return (0);
 	else if (!strncmp(argv[1], "-", 1))
@@ -41,16 +37,19 @@ int	check_pwd_args(t_mns *mns, int argc, char **argv, char **envp)
 
 static void	print_builtin_pwd_err(int err)
 {
+	const char	*msg;
+
 	if (err == ENOMEM)
-		write(STDERR_FILENO, "pwd: cannot allocate memory\n", 28);
+		msg = "pwd: cannot allocate memory\n";
 	else if (err == EACCES)
-		write (STDERR_FILENO, "pwd: error retrieving current directory: "
+		msg = "pwd: error retrieving current directory: "
 			"getcwd: cannot access parent directories:"
-			" Permission denied\n", 102);
+			" Permission denied\n";
 	else
-		write(STDERR_FILENO, "pwd: error retrieving current directory:"
+		msg = "pwd: error retrieving current directory:"
 			" getcwd: cannot access parent directories:"
-			" No such file or directory\n", 109);
+			" No such file or directory\n";
+	write(STDERR_FILENO, msg, strlen(msg));
 }
 
 static int	pwd_print_phys(char *my_path)
@@ -79,9 +78,8 @@ static int	pwd_print_phys(char *my_path)
 	return (0);
 }
 
-static int	check_cwd_env(t_mns *mns, char **phys, bool opt_P, char **pwd)
+static int	check_cwd_env(char **phys, bool opt_P, char **pwd)
 {
-	(void)mns;
 	*phys = getcwd(NULL, 0);
 	if (!*phys)
 	{
@@ -106,15 +104,17 @@ int	builtin_pwd(t_mns *mns, int argc, char **argv, char **envp)
 	bool	opt_l;
 	int		ret;
 
+	(void)mns;
+	(void)envp;
 	opt_p = false;
 	opt_l = false;
 	if (argc == 2 && !strcmp(argv[1], "-P"))
 		opt_p = true;
 	else if (argc == 2 && !strcmp(argv[1], "-L"))
 		opt_l = true;
-	else if (check_pwd_args(mns, argc, argv, envp) != 0)
+	else if (check_pwd_args(argc, argv) != 0)
 		return (2);
-	ret = check_cwd_env(mns, &phys, opt_p, &pwd);
+	ret = check_cwd_env(&phys, opt_p, &pwd);
 	if (ret != -1)
 		return (ret);
 	if (opt_l && pwd && *pwd)

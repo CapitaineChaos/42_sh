@@ -25,8 +25,7 @@ void	free_char_array(char **argv)
 		return ;
 	while (argv[i])
 	{
-		if (argv[i])
-			free(argv[i]);
+		free(argv[i]);
 		argv[i] = NULL;
 		i++;
 	}

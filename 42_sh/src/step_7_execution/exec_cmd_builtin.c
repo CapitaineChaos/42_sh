@@ -15,14 +15,19 @@
 #include <stdio.h>
 #include <unistd.h>
 
+static void	restore_fds(int sv_in, int sv_out)
+{
+	dup2(sv_in, STDIN_FILENO);
+	dup2(sv_out, STDOUT_FILENO);
+	close(sv_in);
+	close(sv_out);
+}
+
 static int	check_app_r(t_ast_node *node, int sv_in, int sv_out)
 {
 	if (apply_redirs(node) != 0)
 	{
-		dup2(sv_in, STDIN_FILENO);
-		dup2(sv_out, STDOUT_FILENO);
-		close(sv_in);
-		close(sv_out);
+		restore_fds(sv_in, sv_out);
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
@@ -50,10 +55,7 @@ static int	return_builtin_status(char **argv, int ret)
 
 static int	do_exit_builtin(char **argv, t_operand *op, int sv_in, int sv_out)
 {
-	dup2(sv_in, STDIN_FILENO);
-	dup2(sv_out, STDOUT_FILENO);
-	close(sv_in);
-	close(sv_out);
+	restore_fds(sv_in, sv_out);
 	return (execute_builtin(op->argc, argv));
 }
 
@@ -79,9 +81,6 @@ int	exec_builtin(t_ast_node *node, char **argv, t_operand *op)
 	if (strcmp(op->argv[0], "exit") == 0)
 		return (do_exit_builtin(argv, op, sv_in, sv_out));
 	ret = execute_builtin(op->argc, argv);
-	dup2(sv_in, STDIN_FILENO);
-	dup2(sv_out, STDOUT_FILENO);
-	close(sv_in);
-	close(sv_out);
+	restore_fds(sv_in, sv_out);
 	return (return_builtin_status(argv, ret));
 }

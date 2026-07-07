@@ -11,10 +11,21 @@
 /* ************************************************************************** */
 
 #include "module_builtin.h"
-#include "ft_wput.h"
 #include "utils.h"
 #include "module_debug.h"
 #include <errno.h>
+#include <unistd.h>
+#include <string.h>
+
+static int	echo_write(char *s, int fd)
+{
+	ssize_t	r;
+
+	r = write(fd, s, strlen(s));
+	if (r < 0)
+		return (-1 * errno);
+	return ((int)r);
+}
 
 static bool	is_option_n(char *str)
 {
@@ -77,16 +88,16 @@ int	builtin_echo(t_mns *mns, int argc, char **argv, char **envp)
 	{
 		trace_info_nvnb(LVL_EXEC, "Arg", i);
 		trace_info_nvstr(LVL_EXEC, "echo", argv[i]);
-		if (test_err(ft_wputstr_fd(argv[i], STDOUT_FILENO)) < 0)
+		if (test_err(echo_write(argv[i], STDOUT_FILENO)) < 0)
 			return (1);
 		if (test_err(argv[i + 1] != NULL
-				&& ft_wputstr_fd(" ", STDOUT_FILENO)) < 0)
+				&& echo_write(" ", STDOUT_FILENO)) < 0)
 			return (1);
 		i++;
 	}
 	if (nl)
 	{
-		if (test_err(ft_wputstr_fd("\n", STDOUT_FILENO) < 0))
+		if (test_err(echo_write("\n", STDOUT_FILENO) < 0))
 			return (1);
 	}
 	return (0);

@@ -33,7 +33,7 @@ static t_builtin_entry	*get_builtin_functions(void)
 	return (builtins);
 }
 
-bool	is_builtin(char *cmd)
+static t_builtin_entry	*find_builtin(char *cmd)
 {
 	t_builtin_entry	*builtins;
 	int				i;
@@ -43,11 +43,22 @@ bool	is_builtin(char *cmd)
 	while (builtins[i].fn != NULL)
 	{
 		if (strcmp(cmd, builtins[i].name) == 0)
-		{
-			trace_info_nvstr(LVL_EXEC, "    >  Found Built-in name", (char *)builtins[i].name);
-			return (true);
-		}
+			return (&builtins[i]);
 		i++;
+	}
+	return (NULL);
+}
+
+bool	is_builtin(char *cmd)
+{
+	t_builtin_entry	*found;
+
+	found = find_builtin(cmd);
+	if (found)
+	{
+		trace_info_nvstr(LVL_EXEC, "    >  Found Built-in name",
+			(char *)found->name);
+		return (true);
 	}
 	trace_info_nvstr(LVL_EXEC, "    > No Built-in found", cmd);
 	return (false);
@@ -61,20 +72,10 @@ bool	is_builtin(char *cmd)
  */
 int	execute_builtin(int argc, char **argv)
 {
-	t_builtin_entry	*builtins;
-	int				i;
-	t_mns			*mns;
+	t_builtin_entry	*found;
 
-	builtins = get_builtin_functions();
-	i = 0;
-	while (builtins[i].fn != NULL)
-	{
-		if (strcmp(argv[0], builtins[i].name) == 0)
-		{
-			mns = get_mns(NULL);
-			return (builtins[i].fn(mns, argc, argv, NULL));
-		}
-		i++;
-	}
+	found = find_builtin(argv[0]);
+	if (found)
+		return (found->fn(get_mns(NULL), argc, argv, NULL));
 	return (1);
 }

@@ -98,4 +98,5 @@ void	debug_log_init(void)
 		t->tm_hour, t->tm_min, t->tm_sec, tv.tv_usec / 1000);
 	write(fd, buf, len);
 	close(fd);
+	dbg_errors_reset();
 }

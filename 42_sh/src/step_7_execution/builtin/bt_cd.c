@@ -12,18 +12,16 @@
 
 #include "module_builtin.h"
 #include "module_env.h"
-#include "ft_wput.h"
 #include "module_minishell.h"
 #include <stdio.h>
 #include <unistd.h>
 
 
-static int	cd_update_pwd(t_mns *mns, char *oldpwd, const char *arg_raw)
+static int	cd_update_pwd(char *oldpwd, const char *arg_raw)
 {
 	char	*phys;
 	char	*newpwd;
 
-	(void)mns;
 	phys = getcwd(NULL, 0);
 	if (!phys)
 		phys = strdup("");
@@ -44,12 +42,10 @@ static int	cd_update_pwd(t_mns *mns, char *oldpwd, const char *arg_raw)
 	return (0);
 }
 
-static int	check_args(t_mns *mns, int argc, char **argv, char **envp)
+static int	check_args(int argc, char **argv)
 {
 	t_logger	logger;
 
-	(void)mns;
-	(void)envp;
 	if (argc > 2)
 	{
 		log_init(&logger);
@@ -71,12 +67,11 @@ static int	check_args(t_mns *mns, int argc, char **argv, char **envp)
 	return (0);
 }
 
-const char	*get_target(t_mns *mns, int argc, char **argv)
+static const char	*get_target(int argc, char **argv)
 {
 	const char	*target;
 	t_logger	logger;
 
-	(void)mns;
 	if (argc == 1 || (argc == 2 && !strcmp(argv[1], "--")))
 		target = getenv("HOME");
 	else if (argc == 2 && !strcmp(argv[1], "-"))
@@ -128,13 +123,15 @@ int	builtin_cd(t_mns *mns, int argc, char **argv, char **envp)
 	char		*arg_raw;
 	int			ret;
 
-	ret = check_args(mns, argc, argv, envp);
+	(void)mns;
+	(void)envp;
+	ret = check_args(argc, argv);
 	if (ret != 0)
 		return (ret);
 	save_oldpwd = getcwd(NULL, 0);
 	if (!save_oldpwd)
 		save_oldpwd = strdup("");
-	target = get_target(mns, argc, argv);
+	target = get_target(argc, argv);
 	ret = check_target(&target, argc, argv, save_oldpwd);
 	if (ret != 0)
 		return (ret);
@@ -142,5 +139,5 @@ int	builtin_cd(t_mns *mns, int argc, char **argv, char **envp)
 		arg_raw = argv[1];
 	else
 		arg_raw = (char *)target;
-	return (cd_update_pwd(mns, save_oldpwd, arg_raw));
+	return (cd_update_pwd(save_oldpwd, arg_raw));
 }

@@ -14,16 +14,18 @@
 #include "colors.h"
 #include "texts.h"
 #include "ft_std.h"
-#include "ft_wput.h"
 #include "utils.h"
+
+static void	put_str(const char *s, int fd)
+{
+	if (write(fd, s, strlen(s)) < 0)
+		return ;
+}
 
 void	print_part_of_edge(const char *str, int length)
 {
-	int	i;
-
-	i = -1;
-	while (++i < length)
-		ft_wputchar_fd(str[i], 1);
+	if (write(1, str, length) < 0)
+		return ;
 }
 
 void	print_anim2(int c_printed, int t_c_print, const char **lines, int size)
@@ -47,7 +49,7 @@ void	print_anim2(int c_printed, int t_c_print, const char **lines, int size)
 		else
 			print_count = 0;
 		print_part_of_edge(lines[i], print_count);
-		ft_wputchar_fd('\n', 1);
+		put_str("\n", 1);
 		c_printed += chars_to_print_in_line;
 	}
 }
@@ -63,19 +65,19 @@ void	print_animation(const char **edge_lines, int frames, int time)
 	while (edge_lines[sizetab] != NULL)
 		sizetab++;
 	i = -1;
-	ft_wputstr_fd("\033[?25l", 1);
-	ft_wputstr_fd("\033[2J\033[H", 1);
+	put_str("\033[?25l", 1);
+	put_str("\033[2J\033[H", 1);
 	while (++i < frames)
 	{
-		ft_wputstr_fd("\033[0;0H", 1);
-		ft_wputstr_fd(RVB7, 1);
+		put_str("\033[0;0H", 1);
+		put_str(RVB7, 1);
 		total_c_to_print = i;
 		c_printed = 0;
 		print_anim2(c_printed, total_c_to_print, edge_lines, sizetab);
 		usleep(time * 1000);
 	}
-	ft_wputstr_fd("\033[?25h", 1);
-	ft_wputstr_fd(RT, 1);
+	put_str("\033[?25h", 1);
+	put_str(RT, 1);
 }
 
 void	select_animation(char *name)
@@ -97,5 +99,5 @@ void	select_animation(char *name)
 	else if (strcmp(name, "gits_lines_micro") == 0)
 		print_animation(edge_lines_micro, 400, 7);
 	else
-		ft_wputstr_fd("Invalid animation name\n", 2);
+		put_str("Invalid animation name\n", 2);
 }

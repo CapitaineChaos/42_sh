@@ -12,49 +12,28 @@
 
 #include "utils.h"
 #include "ft_std.h"
-
-char	*gnl_append(char *s, char c)
-{
-	int		i;
-	char	*res;
-
-	i = 0;
-	while (s && s[i])
-		i++;
-	res = malloc(i + 2);
-	if (!res)
-		return (free(s), NULL);
-	i = 0;
-	while (s && s[i])
-	{
-		res[i] = s[i];
-		i++;
-	}
-	res[i] = c;
-	res[i + 1] = '\0';
-	free(s);
-	return (res);
-}
+#include "ft_strapi.h"
 
 char	*nano_get_next_line(int fd)
 {
+	t_strapi	api;
 	char		*line;
 	char		buf;
 	ssize_t		r;
 
-	line = NULL;
+	strapi_init(64, &api);
 	while (1)
 	{
 		r = read(fd, &buf, 1);
 		if (r < 0)
-			return (free(line), NULL);
+			return (api.free(&api), NULL);
 		if (r == 0)
 			break ;
-		line = gnl_append(line, buf);
-		if (!line)
-			return (NULL);
+		api.append_char(&api, buf);
 		if (buf == '\n')
 			break ;
 	}
+	line = api.get_dup(&api);
+	api.free(&api);
 	return (line);
 }

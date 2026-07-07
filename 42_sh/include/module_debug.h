@@ -58,6 +58,26 @@ void	dbg_nodes(t_ast_node *root);
 void	dbg_ast(t_deque *final);
 void	dbg_exec(t_ast_node *root);
 void	dbg_footer(int last_exit);
+void	dbg_error(const char *msg);
+void	dbg_errors_reset(void);
+void	dbg_logf(const char *fmt, ...);
+void	dbg_assert_fail(const char *expr, const char *msg,
+			const char *file, int line);
+
+/*
+ * Panel error du debugview = canal d'assertions / logs de dev.
+ * DBG_ASSERT(cond, msg) : émet une entrée si cond est fausse.
+ * DBG_LOGF(fmt, ...)     : log formaté (ex: DBG_LOGF("count=%d", n)).
+ * No-op total hors build debug (make debug -> -DDBG_VIEW).
+ */
+# ifdef DBG_VIEW
+#  define DBG_ASSERT(cond, msg) ((cond) ? (void)0 \
+	: dbg_assert_fail(#cond, (msg), __FILE__, __LINE__))
+#  define DBG_LOGF(...) dbg_logf(__VA_ARGS__)
+# else
+#  define DBG_ASSERT(cond, msg) ((void)0)
+#  define DBG_LOGF(...) ((void)0)
+# endif
 
 char	*get_ast_typestr(t_ast_type type);
 char	*debug_get_token_type(t_tk_type type);

@@ -333,6 +333,15 @@ function nodesTable(text, name) {
   return h + `</tbody></table></div>`;
 }
 
+/* Panel erreurs : une ligne par message capturé sur STDERR (05_errors). */
+function errorsTable(text) {
+  const rows = text.split("\n").filter((l) => l.trim().length);
+  if (!rows.length) return `<div class="empty">aucune erreur</div>`;
+  return `<div class="errlist">` +
+    rows.map((l) => `<div class="errrow">${color(l)}</div>`).join("") +
+    `</div>`;
+}
+
 function kvRows(pairs) {
   return `<table class="kv">` + pairs.map(([k, v]) =>
     `<tr><td class="k">${k}</td><td class="v">${v}</td></tr>`).join("") +
@@ -533,6 +542,8 @@ function render(data) {
         s._body.innerHTML = nodesTable(data[n], n);
       else if (/exec/.test(n))
         s._body.innerHTML = execTable(data[n], n);
+      else if (/error/.test(n))
+        s._body.innerHTML = errorsTable(data[n]);
       else s._body.innerHTML = `<pre>${color(data[n])}</pre>`;
       s._last = data[n];
     }

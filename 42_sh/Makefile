@@ -161,8 +161,6 @@ SRCS_UTILS = \
 				strapi/ft_strapi_get \
 				strapi/ft_strapi_lifecycle \
 				strapi/ft_strapi_utils \
-				wput/ft_wputchar_fd \
-				wput/ft_wputstr_fd \
 				get_term_size \
 				logger
 

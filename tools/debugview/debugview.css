@@ -225,3 +225,13 @@ section.max .iconbtn[data-act="max"] { color:var(--hdr); }
 .accent { color:var(--accent); }
 ::-webkit-scrollbar { height:8px; width:10px; }
 ::-webkit-scrollbar-thumb { background:var(--line); border-radius:6px; }
+
+/* Panel erreurs */
+section[data-name$="errors"] > h2 { color:#f38ba8; }
+.errlist { display:flex; flex-direction:column; gap:4px; padding:8px; }
+.errrow {
+  padding:6px 10px; font-size:12px; line-height:1.4;
+  color:#f38ba8; background:var(--panel2);
+  border:1px solid var(--line); border-left:3px solid #f38ba8;
+  border-radius:6px; white-space:pre-wrap; word-break:break-word;
+}

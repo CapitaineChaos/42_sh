@@ -127,11 +127,10 @@ static void	export_list_print(void)
 	free(arr);
 }
 
-static void	print_invalid_export(char **envp)
+static void	print_invalid_export(void)
 {
 	t_logger	logger;
 
-	(void)envp;
 	log_init(&logger);
 	log_puts(&logger, "🐰: export: invalid option\n");
 	log_puts(&logger,
@@ -146,12 +145,13 @@ int	builtin_export(t_mns *mns, int argc, char **argv, char **envp)
 	int	status;
 
 	(void)mns;
+	(void)envp;
 	if (!argv[1] || (strcmp(argv[1], "--") == 0 && argc == 2))
 		return (export_list_print(), 0);
 	if ((strncmp(argv[1], "--", 2) == 0 && argv[1][2] != '\0')
 		|| (argv[1][0] == '-' && argv[1][1] && argv[1][1] != '-'))
 	{
-		print_invalid_export(envp);
+		print_invalid_export();
 		return (2);
 	}
 	if ((strcmp(argv[1], "--") == 0))

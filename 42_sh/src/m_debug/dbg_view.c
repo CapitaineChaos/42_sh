@@ -12,8 +12,10 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "all_config.h"
@@ -32,6 +34,7 @@
 # define DBG_F_NODES DBG_VIEW_DIR "/02_nodes"
 # define DBG_F_AST DBG_VIEW_DIR "/03_ast"
 # define DBG_F_EXEC DBG_VIEW_DIR "/04_exec"
+# define DBG_F_ERRORS DBG_VIEW_DIR "/05_errors"
 # define DBG_F_FOOTER DBG_VIEW_DIR "/footer"
 # define DBG_TAB '\t'
 # define DBG_US '\x1f'
@@ -423,5 +426,72 @@ void	dbg_footer(int last_exit)
 	close(fd);
 #else
 	(void)last_exit;
+#endif
+}
+
+/*
+ * Une erreur = un appel = une ligne (les octets de contrôle, dont les '\n'
+ * internes des messages multi-lignes, sont neutralisés en espaces). Fichier
+ * en append, remis à zéro par dbg_reset au début de chaque cycle de lecture.
+ */
+void	dbg_error(const char *msg)
+{
+#ifdef DBG_VIEW
+	int	fd;
+
+	if (!msg || !*msg)
+		return ;
+	fd = open(DBG_F_ERRORS, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd < 0)
+		return ;
+	put_clean(fd, msg);
+	put_byte(fd, DBG_NL);
+	close(fd);
+#else
+	(void)msg;
+#endif
+}
+
+/* Log de dev formaté vers le panel (macro DBG_LOGF). */
+void	dbg_logf(const char *fmt, ...)
+{
+#ifdef DBG_VIEW
+	char	buf[1024];
+	va_list	ap;
+
+	va_start(ap, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, ap);
+	va_end(ap);
+	dbg_error(buf);
+#else
+	(void)fmt;
+#endif
+}
+
+/* Assertion de dev échouée -> panel (macro DBG_ASSERT). */
+void	dbg_assert_fail(const char *expr, const char *msg,
+	const char *file, int line)
+{
+#ifdef DBG_VIEW
+	char	buf[1024];
+
+	snprintf(buf, sizeof(buf), "ASSERT(%s)%s%s @ %s:%d", expr,
+		msg && *msg ? " — " : "", msg ? msg : "", file, line);
+	dbg_error(buf);
+#else
+	(void)expr;
+	(void)msg;
+	(void)file;
+	(void)line;
+#endif
+}
+
+/* Remet le panel à zéro en début de session (les faults accumulent ensuite). */
+void	dbg_errors_reset(void)
+{
+#ifdef DBG_VIEW
+	if (mkdir(DBG_VIEW_DIR, 0755) < 0 && errno != EEXIST)
+		return ;
+	trunc_file(DBG_F_ERRORS);
 #endif
 }
