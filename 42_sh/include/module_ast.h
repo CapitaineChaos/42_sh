@@ -84,19 +84,13 @@ void		free_ast(t_ast_node *node);
  */
 
 t_ast_node	*create_cmd_word_operand(t_ast_type type);
-t_ast_node	*create_operator(t_ast_type type, t_token *token);
-t_ast_node	*create_control(t_ast_type type, t_token *token);
+t_ast_node	*create_binary(t_ast_type type, t_token *token,
+				t_ast_class tclass);
 
 /**
  * HELPERS
  */
 
 t_ast_node	*peek_head(t_deque *deque);
-
-/**
- * PUSH_SWAP FUNCTIONS
- */
-
-void		ps_push_front_create(t_deque *deque, t_ast_node *token);
 
 #endif

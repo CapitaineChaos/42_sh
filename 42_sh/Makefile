@@ -112,8 +112,7 @@ SRCS_MINISHELL = \
 SRCS_ENV = \
 				env
 SRCS_AST = \
-				ast \
-				push_swap
+				ast
 
 SRCS_NORMALIZE = \
 				assign \

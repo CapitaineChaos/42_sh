@@ -65,6 +65,7 @@ static bool	is_empty_command(t_ast_node *root)
 bool	run_parser(t_parser *prs, t_tokens *tkns, int lv)
 {
 	t_ast_node	*root;
+	t_dq_n		*cell;
 
 	if (lv < 4)
 		return (false);
@@ -75,7 +76,13 @@ bool	run_parser(t_parser *prs, t_tokens *tkns, int lv)
 	root = rd_parse(tkns);
 	if (is_empty_command(root))
 		return (free_ast(root), false);
-	ps_push_front_create(&prs->deques.final, root);
+	if (root)
+	{
+		cell = dstn_new(root);
+		if (!cell)
+			free_and_exit_minishell(EXIT_FAILURE);
+		deque_push_front(&prs->deques.final, cell);
+	}
 	dbg_nodes(root);
 	dbg_ast(&prs->deques.final);
 	return (true);

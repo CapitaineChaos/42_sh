@@ -70,9 +70,9 @@ static t_ast_node	*bin_node(t_ast_type type, t_token *op,
 	t_ast_node	*node;
 
 	if (type == AST_SEQ)
-		node = create_control(type, op);
+		node = create_binary(type, op, ACL_CONTROL);
 	else
-		node = create_operator(type, op);
+		node = create_binary(type, op, ACL_OPERATOR);
 	node->left = left;
 	node->right = right;
 	return (node);

@@ -32,7 +32,7 @@ t_ast_node	*create_cmd_word_operand(t_ast_type type)
 	return (node);
 }
 
-t_ast_node	*create_control(t_ast_type type, t_token *token)
+t_ast_node	*create_binary(t_ast_type type, t_token *token, t_ast_class tclass)
 {
 	t_ast_node	*node;
 
@@ -43,25 +43,7 @@ t_ast_node	*create_control(t_ast_type type, t_token *token)
 		return (NULL);
 	}
 	node->type = type;
-	node->tclass = ACL_CONTROL;
-	node->arity = 2;
-	node->t_ast_data.operator_.precedence = get_precedence(type);
-	node->t_ast_data.operator_.token = token;
-	return (node);
-}
-
-t_ast_node	*create_operator(t_ast_type type, t_token *token)
-{
-	t_ast_node	*node;
-
-	node = calloc(1, sizeof(t_ast_node));
-	if (!node)
-	{
-		free_and_exit_minishell(EXIT_FAILURE);
-		return (NULL);
-	}
-	node->type = type;
-	node->tclass = ACL_OPERATOR;
+	node->tclass = tclass;
 	node->arity = 2;
 	node->t_ast_data.operator_.precedence = get_precedence(type);
 	node->t_ast_data.operator_.token = token;
