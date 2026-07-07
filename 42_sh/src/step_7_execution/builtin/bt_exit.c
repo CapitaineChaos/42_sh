@@ -27,7 +27,6 @@ static void	exit_and_free_non_numeric(char *exit_str)
 	log_puts(&lg, exit_str);
 	log_puts(&lg, ": numeric argument required\n");
 	log_flush(STDERR_FILENO, &lg, false);
-	trace_logger_flush(-1, &lg, true);
 	free_and_exit_minishell(2);
 }
 
@@ -45,7 +44,6 @@ void	check_nullargs(t_mns *mns, int argc, char **argv, char **envp)
 		log_puts(&lg, "exit\n");
 		if (isatty(STDERR_FILENO))
 			log_flush(STDERR_FILENO, &lg, false);
-		trace_logger_flush(-1, &lg, true);
 		free_and_exit_minishell(EXIT_SUCCESS);
 	}
 }
@@ -79,7 +77,6 @@ int	builtin_exit(t_mns *mns, int argc, char **argv, char **envp)
 		{
 			log_puts(&lg, "exit: too many arguments\n");
 			log_flush(STDERR_FILENO, &lg, false);
-			trace_logger_flush(-1, &lg, true);
 			return (2);
 		}
 		free_and_exit_minishell (exit_status);

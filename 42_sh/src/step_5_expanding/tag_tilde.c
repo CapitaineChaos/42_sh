@@ -37,7 +37,6 @@ void	tag_tokens_tildes(t_token *first)
 	token = first;
 	if (token == NULL)
 		return ;
-	trace_info(LVL_EXPAND, "Tagging tokens");
 	while (token)
 	{
 		if (token->kind == TKD_OPERAND && token->family != TKF_REDIRECT

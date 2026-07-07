@@ -64,7 +64,6 @@ bool	ctx_is_now(t_contexts *ctxs, t_ctx_ ctx_name)
 
 void	contexts_init(t_contexts *ctxs)
 {
-	trace_start(LVL_CHK, "Checker contexts init");
 	ctxs->head = NULL;
 	ctxs->tail = NULL;
 	ctxs->count = 0;
@@ -74,13 +73,10 @@ void	contexts_free(t_contexts *ctxs)
 {
 	t_context	*ctx;
 
-	trace_start(LVL_CHK, "Checker contexts free");
 	if (ctxs->count == 0 || ctxs->head == NULL)
 	{
-		trace_info(LVL_CHK, "Checker contexts free : None");
 		return ;
 	}
-	trace_info_nvnb(LVL_CHK, "Checker contexts to free : ", ctxs->count);
 	while (ctxs->head)
 	{
 		ctx = ctxs->head;
@@ -89,8 +85,6 @@ void	contexts_free(t_contexts *ctxs)
 		ctxs->count--;
 	}
 	ctxs->tail = NULL;
-	if (ctxs->count != 0)
-		trace_info(LVL_FAIL, "  @@@ Memory leak in checker ctx  ");
 	ctxs->count = 0;
 }
 
@@ -100,13 +94,11 @@ void	context_add_(t_contexts *ctxs, t_ctx_ ctx_name)
 
 	if (is_hidden_context(ctx_name))
 	{
-		trace_info(LVL_CHK, "Context is hidden");
 		return ;
 	}
 	ctx_node = calloc(1, sizeof(t_context));
 	if (!ctx_node)
 	{
-		trace_info(LVL_FAIL, "Computer memory failure");
 		free_and_exit_minishell(EXIT_FAILURE);
 	}
 	ctx_node->ctx_name = ctx_name;
@@ -152,7 +144,6 @@ bool	context_remove_last_(t_contexts *ctxs, t_ctx_ ctx_name)
 		return (false);
 	if (ctx_node->ctx_name != ctx_name)
 	{
-		trace_info(LVL_FAIL, "@@@ Context not matching");
 		return (false);
 	}
 	ctxs->tail = ctx_node->prev;

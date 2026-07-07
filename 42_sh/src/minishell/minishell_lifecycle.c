@@ -33,7 +33,6 @@ void	free_and_exit_minishell(intmax_t exit_code)
 {
 	t_mns	*mns;
 
-	trace_info(LVL_FAIL, "... Free and exit ...");
 	mns = get_mns(NULL);
 	if (mns)
 	{
@@ -54,7 +53,6 @@ void	free_mns(t_mns *mns)
 	free(mns->data.stream);
 	free(mns->data.ifs);
 	rl_clear_history();
-	trace_info(LVL_MNS, "Free mns");
 }
 
 void	init_modules(t_mns *mns, char *ifs, char **envp, int lv)
@@ -73,7 +71,6 @@ void	init_modules(t_mns *mns, char *ifs, char **envp, int lv)
 void	init_mns(t_mns *mns, char *ifs, char **envp, int lv)
 {
 	init_modules(mns, ifs, envp, lv);
-	trace_start(LVL_MNS, "Init mns");
 	mns->argv = NULL;
 	mns->argc = 0;
 	mns->read_exit = false;
@@ -92,7 +89,6 @@ void	init_mns(t_mns *mns, char *ifs, char **envp, int lv)
 	mns->lexer.ifs = mns->data.ifs;
 	mns->next_job_id = 1;
 	get_mns(mns);
-	trace_ok(LVL_MNS, "Init mns done");
 }
 
 t_mns	*get_mns(t_mns *ptr)

@@ -78,18 +78,15 @@ int	main(int ac, char **av, char **envp)
 	}
 	interactive_shell_only();
 	lv = 7;
-	debug_log_init();
-	trace_debug_level();
+	dbg_errors_reset();
 	init_mns(&mns, strdup(" \t\n"), envp, lv);
 	first_time_init();
 	mns.argv = av;
 	mns.argc = ac;
 	launch_animation(&mns);
-	trace_info_nvstr(LVL_MNS, "User", getenv("USER"));
 	minishell(&mns, lv);
 	exit_code = mns.last_exit_code;
 	free_mns(&mns);
-	trace_info(LVL_OK, "End of MiNIShell 🐰🐯");
 	if (isatty(STDERR_FILENO))
 		write(STDERR_FILENO, "End of MiNIShell 🐰🐯\n", 26);
 	return (exit_code);

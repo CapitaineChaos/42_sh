@@ -29,7 +29,6 @@ int	print_invalid_id(char *arg)
 	log_puts(&logger, arg);
 	log_puts(&logger, "': not a valid identifier\n");
 	log_flush(STDERR_FILENO, &logger, false);
-	trace_logger_flush(-1, &logger, true);
 	return (0);
 }
 
@@ -96,7 +95,6 @@ static void	export_print_one(const char *entry)
 		log_puts(&logger, dup);
 	log_puts(&logger, "\n");
 	log_flush(STDOUT_FILENO, &logger, false);
-	trace_logger_flush(-1, &logger, true);
 	free(dup);
 }
 
@@ -136,29 +134,23 @@ static void	print_invalid_export(void)
 	log_puts(&logger,
 		"export: usage: export [-fn] [name[=value] ...] or export -p [-f]\n");
 	log_flush(STDERR_FILENO, &logger, false);
-	trace_logger_flush(-1, &logger, true);
 }
 
 int	builtin_export(t_mns *mns, int argc, char **argv, char **envp)
 {
-	int	i;
-	int	status;
+	int			i;
+	int			status;
+	t_optres	opt;
 
 	(void)mns;
 	(void)envp;
-	if (!argv[1] || (strcmp(argv[1], "--") == 0 && argc == 2))
+	(void)argc;
+	if (bt_getopt(argv, "", NULL, &opt) < 0)
+		return (print_invalid_export(), 2);
+	if (!argv[opt.operand])
 		return (export_list_print(), 0);
-	if ((strncmp(argv[1], "--", 2) == 0 && argv[1][2] != '\0')
-		|| (argv[1][0] == '-' && argv[1][1] && argv[1][1] != '-'))
-	{
-		print_invalid_export();
-		return (2);
-	}
-	if ((strcmp(argv[1], "--") == 0))
-		i = 2;
-	else
-		i = 1;
 	status = 0;
+	i = opt.operand;
 	while (argv[i])
 	{
 		if (!try_set_env(argv[i]))

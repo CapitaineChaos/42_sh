@@ -36,7 +36,6 @@ static int	exec_slash(t_ast_node *node, t_operand *op, struct stat *sb)
 {
 	if (op->argv[0] && has_slash(op->argv[0]))
 	{
-		trace_info(LVL_EXEC, "Exec command with slash");
 		if (stat(op->argv[0], sb) < 0)
 		{
 			display_msg_err(op->argv[0], ENOENT);
@@ -59,24 +58,11 @@ static int	exec_slash(t_ast_node *node, t_operand *op, struct stat *sb)
 
 static int	exec_norm(t_ast_node *n, struct stat *sb, t_operand *op, t_mns *mns)
 {
-	char	*path_env;
-	bool	path_unset;
-
-	trace_info(LVL_EXEC, "Exec command without slash");
 	op->path = get_exec_path(mns, op->argv);
-	trace_info_nvstr(LVL_EXEC, "Exec path", op->path);
 	if (op->path[0] == '\0')
 	{
-		path_env = getenv("PATH");
-		trace_info_nvstr(LVL_EXEC, "Path env", path_env);
-		path_unset = (path_env == NULL || path_env[0] == '\0');
-		trace_info_nvstr(LVL_EXEC, "Path unset", path_unset ? "true" : "false");
-		trace_info_nvstr(LVL_EXEC, "Command argv[0]", op->argv[0]);
-		if (op->path[0] == '\0')
-		{
-			display_cmd_err(op->argv[0]);
-			return (127);
-		}
+		display_cmd_err(op->argv[0]);
+		return (127);
 	}
 	if (stat(op->path, sb) < 0)
 		return (display_msg_err(op->argv[0], ENOENT), 127);
@@ -94,7 +80,6 @@ static int	check_redirs_in_child(t_ast_node *node, t_operand *op)
 
 	if (op->redirections.count == 0)
 		return (EXIT_SUCCESS);
-	trace_info(LVL_EXEC, "Check redirections in child process");
 	pid = fork();
 	if (pid < 0)
 		return (1);
@@ -119,7 +104,6 @@ int	exec_command(t_ast_node *node)
 	
 	if (node == NULL)
 		return (return_code(EXIT_FAILURE, "exec command"));
-	debug_mini_title(LVL_EXEC, "Exec command");
 	op = &node->t_ast_data.operand;
 	mns = get_mns(NULL);
 	expand_args(node);
@@ -127,7 +111,6 @@ int	exec_command(t_ast_node *node)
 	ret = check_redirs_in_child(node, op);
 	if (ret != 0)
 	{
-		debug_mini_title(LVL_EXEC, "Exec command failed");
 		return (ret);
 	}
 	if (op->argc == 0)

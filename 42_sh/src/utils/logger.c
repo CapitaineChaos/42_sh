@@ -62,10 +62,6 @@ void	log_flush(int fd, t_logger *lg, bool to_file)
 {
 	if (lg->pos && to_file == false)
 		write(fd, lg->buf, lg->pos);
-	#pragma region "DEBUG"
-	if (lg->pos > 0 && to_file == true)
-		debug_log(lg->buf);
-	#pragma endregion
 }
 
 /**

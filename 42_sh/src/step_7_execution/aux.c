@@ -98,7 +98,6 @@ char	*get_exec_path(t_mns *mns, char **argv)
 	char		*exec_path;
 
 	(void)mns;
-	trace_info(LVL_EXEC, " > Get exec path");
 	if (has_slash(argv[0]))
 		exec_path = strdup(argv[0]);
 	else

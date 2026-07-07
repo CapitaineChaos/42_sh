@@ -51,12 +51,10 @@ int	set_code(int exit_code)
 {
 	t_mns	*mns;
 
-	debug_title(LVL_EXEC, "Set exit code");
 	if (exit_code == 130 || exit_code == 131)
 		g_signal_flag = exit_code;
 	mns = get_mns(NULL);
 	mns->last_exit_code = exit_code;
-	trace_info_nvnb(LVL_EXEC, "Exit code", exit_code);
 	return (exit_code);
 }
 

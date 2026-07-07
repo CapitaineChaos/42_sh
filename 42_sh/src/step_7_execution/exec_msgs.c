@@ -25,7 +25,6 @@ int	disp_msg_and_ret(char *msg, int ret)
 	log_puts(&lg, "🐰🐯 Minishell: ");
 	log_puts(&lg, msg);
 	log_flush(STDERR_FILENO, &lg, false);
-	trace_logger_flush(-1, &lg, true);
 	return (ret);
 }
 
@@ -40,7 +39,6 @@ int	display_other_msg(int sig, bool be_pipe)
 	log_puts(&lg, "Broken pipe\n");
 	if (be_pipe)
 		log_flush(STDERR_FILENO, &lg, false);
-	trace_logger_flush(-1, &lg, true);
 	return (sig);
 }
 
@@ -60,7 +58,6 @@ void	display_msg_err(char *cmd, int err)
 	else
 		log_puts(&lg, ": Unknown error\n");
 	log_flush(STDERR_FILENO, &lg, false);
-	trace_logger_flush(-1, &lg, true);
 }
 
 void	display_cmd_err(char *cmd)
@@ -72,5 +69,4 @@ void	display_cmd_err(char *cmd)
 	log_puts(&lg, cmd);
 	log_puts(&lg, ": command not found\n");
 	log_flush(STDERR_FILENO, &lg, false);
-	trace_logger_flush(-1, &lg, true);
 }

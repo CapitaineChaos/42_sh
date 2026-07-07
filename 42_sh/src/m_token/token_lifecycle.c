@@ -27,7 +27,6 @@ t_token	*token_new(t_tk_type type)
 		return (NULL);
 	}
 	tok->type = type;
-	trace_ok(LVL_LEXER, "Token created");
 	return (tok);
 }
 
@@ -42,7 +41,6 @@ void	free_token_part(t_tk_part *part)
 	}
 	free(part);
 	part = NULL;
-	trace_ok(LVL_LEXER, "Token part freed");
 }
 
 void	free_token_parts(t_tk_part *first_part)
@@ -58,7 +56,6 @@ void	free_token_parts(t_tk_part *first_part)
 		first_part = next;
 		i++;
 	}
-	trace_info_nvnb(LVL_LEXER, "Token parts freed", i);
 }
 
 /**
@@ -69,12 +66,10 @@ void	free_token_parts(t_tk_part *first_part)
  */
 void	free_token(t_token *token)
 {
-	trace_info_nvstr(LVL_LEXER, "Freeing token", debug_get_token_type(token->type));
 	if (!token)
 		return ;
 	if (token->str != NULL)
 	{
-		trace_info_nvstr(LVL_LEXER, "Freeing token str", token->str);
 		free(token->str);
 		token->str = NULL;
 	}
@@ -87,7 +82,6 @@ void	free_token(t_token *token)
 		token->tail = NULL;
 		token->count = 0;
 	}
-	trace_info_nvstr(LVL_LEXER, "Token freed", debug_get_token_type(token->type));
 	free(token);
 }
 
@@ -97,7 +91,6 @@ void	free_token_list(t_tokens *tokens)
 	t_token	*next;
 	int		i;
 
-	trace_info(LVL_LEXER, "Freeing token list");
 	if (!tokens)
 		return ;
 	i = 0;
@@ -112,5 +105,4 @@ void	free_token_list(t_tokens *tokens)
 	tokens->head = NULL;
 	tokens->tail = NULL;
 	tokens->count = 0;
-	trace_info_nvnb(LVL_LEXER, "Token list freed", i);
 }

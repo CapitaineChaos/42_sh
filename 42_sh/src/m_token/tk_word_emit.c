@@ -21,12 +21,10 @@ void	transplant_parts(t_token *token, t_tk_part *parts)
 	cur = parts;
 	if (parts == NULL)
 		return ;
-	trace_info_nvnb(LVL_LEXER, "Current parts count", token->count);
 	while (cur)
 	{
 		cur = cur->next;
 		token->count++;
-		trace_info_nvnb(LVL_LEXER, "Current parts count", token->count);
 	}
 	if (token->head == NULL)
 		token->head = parts;
@@ -65,7 +63,6 @@ void	tk_word_emit(t_lexer *lx)
 
 	if (lx->tmp_wp == NULL)
 	{
-		trace_info(LVL_LEXER, "Subtoken is NULL");
 		return ;
 	}
 	token = token_new(TOK_WORD);
@@ -77,6 +74,4 @@ void	tk_word_emit(t_lexer *lx)
 	transplant_parts(token, lx->tmp_wp);
 	lx->tmp_wp = NULL;
 	tk_list_append(&lx->tokens, token);
-	trace_info_nvnb(LVL_LEXER, "Final parts count", token->count);
-	trace_info_nvstr(LVL_LEXER, "Token Word emitted", debug_get_token_type(token->type));
 }

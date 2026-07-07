@@ -123,3 +123,63 @@ char	*convert_dbg_lvl_name(int lvl)
 
 	return (lookup_name(names, lvl, "🔥 UNK"));
 }
+
+/* Texte d'un token (parts concaténées, tronqué à 70 car). Panels debugview. */
+void	get_token_content_stream(t_token *token, char *buf, size_t buf_size)
+{
+	t_tk_part	*part;
+	size_t		i;
+	size_t		j;
+
+	if (token == NULL || buf == NULL || buf_size < 5)
+		return ;
+	i = 0;
+	part = token->head;
+	while (part && i < buf_size - 1)
+	{
+		if (part->stream)
+		{
+			j = 0;
+			while (part->stream[j] && i < buf_size - 1 && i < 70)
+				buf[i++] = part->stream[j++];
+			if (i == 70 && buf_size > 73)
+			{
+				buf[70] = '.';
+				buf[71] = '.';
+				buf[72] = '.';
+				return ((void)(buf[73] = '\0'));
+			}
+		}
+		part = part->next;
+	}
+	buf[i] = '\0';
+}
+
+/* Texte d'une part (tronqué à 70 car). Panels debugview. */
+void	get_tkpart_content_stream(t_tk_part *part, char *buf, size_t buf_size)
+{
+	size_t	i;
+	size_t	j;
+
+	if (part == NULL || buf == NULL || buf_size < 5)
+		return ;
+	i = 0;
+	while (part && i < buf_size - 1)
+	{
+		if (part->stream)
+		{
+			j = 0;
+			while (part->stream[j] && i < buf_size - 1 && i < 70)
+				buf[i++] = part->stream[j++];
+			if (i == 70 && buf_size > 73)
+			{
+				buf[70] = '.';
+				buf[71] = '.';
+				buf[72] = '.';
+				return ((void)(buf[73] = '\0'));
+			}
+		}
+		part = part->next;
+	}
+	buf[i] = '\0';
+}

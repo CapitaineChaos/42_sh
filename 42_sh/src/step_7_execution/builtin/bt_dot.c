@@ -27,9 +27,6 @@ static int	disp_and_ret(char *msg, char *arg, int ret)
 	log_puts(&lg, msg);
 	log_puts(&lg, "\n");
 	log_flush(STDERR_FILENO, &lg, false);
-	#pragma region "DEBUG"
-	log_flush(-1, &lg, true);
-	#pragma endregion
 	return (ret);
 }
 

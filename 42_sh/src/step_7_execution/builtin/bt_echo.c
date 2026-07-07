@@ -86,8 +86,6 @@ int	builtin_echo(t_mns *mns, int argc, char **argv, char **envp)
 	nl = is_new_line(argv, &i);
 	while (argv[i] != NULL)
 	{
-		trace_info_nvnb(LVL_EXEC, "Arg", i);
-		trace_info_nvstr(LVL_EXEC, "echo", argv[i]);
 		if (test_err(echo_write(argv[i], STDOUT_FILENO)) < 0)
 			return (1);
 		if (test_err(argv[i + 1] != NULL

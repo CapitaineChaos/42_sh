@@ -96,23 +96,19 @@ int	apply_redirs(t_ast_node *node)
 
 	if (expand_redirs(node) == -1)
 		return (EXIT_FAILURE);
-	debug_mini_title(LVL_EXEC, "Applying redirections");
 	tok = node->t_ast_data.operand.redirections.head;
 	while (tok)
 	{
 		if (tok->group == TKG_REDIRECTION)
 		{
-			trace_info_nvstr(LVL_EXEC, "(APPLY) Token type", debug_get_token_type(tok->type));			
 			if (tok->type == TOK_REDIR_HEREDOC && tok->next && tok->next->next
 				&& tok->next->next->type == TOK_HEREDOC_BODY)
 			{
-				trace_info_nvstr(LVL_EXEC, "(APPLY) Redir target", tok->next->next->str);
 				if (apply_redir_heredoc(tok->next->next->str) != 0)
 					return (EXIT_FAILURE);
 			}
 			else if (tok->next && tok->next->type == TOK_WORD)
 			{
-				trace_info_nvstr(LVL_EXEC, "(APPLY) Redir target", tok->next->str);
 				if (apply_redir_other(tok, tok->next->str) != 0)
 					return (EXIT_FAILURE);
 			}

@@ -42,7 +42,6 @@ void	print_cancel(int line, char *delim)
 	log_puts(&lg, delim);
 	log_puts(&lg, "')\n");
 	log_flush(STDERR_FILENO, &lg, false);
-	trace_logger_flush(-1, &lg, true);
 }
 
 static char	*get_line(char *prompt)
@@ -83,12 +82,10 @@ bool	read_heredoc_body(char *prompt, char *delim, t_sstr **body, int lc)
 	char		*content;
 
 	sstr_free(body);
-	trace_info(LVL_PARSER, "Remplissage du corps de l'heredoc");
 	while (true)
 	{
 		signal(SIGINT, sigint_heredoc);
 		content = get_line(prompt);
-		trace_info_nvstr(LVL_PARSER, "Content heredoc", content);
 		if (!isatty(STDIN_FILENO) && content == NULL)
 		{
 			if (sstrs_count(*body) > 0)
@@ -98,7 +95,6 @@ bool	read_heredoc_body(char *prompt, char *delim, t_sstr **body, int lc)
 			return (print_cancel(lc, delim), false);
 		if (strcmp(content, delim) == 0 || g_signal_flag == 1)
 		{
-			trace_info(LVL_PARSER, "[  Fin heredoc  ]");
 			free(content);
 			return (g_signal_flag == 0);
 		}

@@ -127,7 +127,6 @@ void	sstrs_append(t_sstr **strs, char *str)
 	{
 		tmp = tmp->next;
 	}
-	trace_info(LVL_CHK, "Append line");
 	tmp->next = new_line;
 }
 

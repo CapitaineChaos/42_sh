@@ -28,7 +28,6 @@ void	normalize_tokens(t_tokens *tokens)
 {
 	t_token	*token;
 
-	debug_pico_title(LVL_EXPAND, "Formatting tokens", "\001\033[92m\002");
 	if (tokens->head == NULL)
 		return ;
 	token = tokens->head;

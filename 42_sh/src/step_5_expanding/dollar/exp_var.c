@@ -23,11 +23,9 @@ char	*fetch_normal_var(char *s, size_t *i)
 	char	*val;
 
 	key = get_identifier(s, i);
-	trace_info_nvstr(LVL_EXPAND, "Normal variable key", key);
 	if (key == NULL)
 		return (NULL);
 	val = getenv(key);
-	trace_info_nvstr(LVL_EXPAND, "Normal variable value", val);
 	free(key);
 	if (val == NULL)
 		return ("");
@@ -44,7 +42,6 @@ bool	process_dollar(t_strapi *out, char *s, size_t *i)
 		tmp = fetch_special_var(s, i);
 		if (tmp)
 		{
-			trace_info(LVL_EXPAND, "Processed special var");
 			out->append_str(out, tmp);
 			free(tmp);
 			return (true);
@@ -52,7 +49,6 @@ bool	process_dollar(t_strapi *out, char *s, size_t *i)
 		tmp = fetch_normal_var(s, i);
 		if (tmp)
 		{
-			trace_info(LVL_EXPAND, "Processed normal var");
 			out->append_str(out, tmp);
 			return (true);
 		}
@@ -72,8 +68,6 @@ char	*expand_dollar(char *src)
 
 	if (!src)
 		return (strdup(""));
-	debug_pico_title(LVL_EXPAND, "Processing dollar variables", "\033[93m");
-	trace_info_nvstr(LVL_EXPAND, "Source string", src);
 	strapi_init(L_BUFFER_SIZE, &out);
 	i = 0;
 	while (src[i])
@@ -103,15 +97,12 @@ void	expand_redir_vars(t_tokens *tokens)
 
 	if (tokens == NULL)
 		return ;
-	trace_info(LVL_EXPAND, "Expanding REDIR variables");
 	token = tokens->head;
 	while (token)
 	{
 		if (token->has_dollar)
 		{
 			part = token->head;
-			trace_info_nvstr(LVL_EXPAND, "Expanding part", part->str);
-			trace_info_nvstr(LVL_EXPAND, "Part has dollar", part->has_dollar ? "true" : "false");
 			while (part)
 			{
 				if (part->has_dollar)
@@ -135,7 +126,6 @@ void	expand_cmd_vars(t_tokens *tokens)
 	t_token		*token;
 	t_tk_part	*part;
 
-	trace_info(LVL_EXPAND, "Expanding CMD variables");
 	if (tokens == NULL)
 		return ;
 	token = tokens->head;
@@ -144,8 +134,6 @@ void	expand_cmd_vars(t_tokens *tokens)
 		if (token->has_dollar)
 		{
 			part = token->head;
-			trace_info_nvstr(LVL_EXPAND, "Expanding part", part->str);
-			trace_info_nvstr(LVL_EXPAND, "Part has dollar", part->has_dollar ? "true" : "false");
 			while (part)
 			{
 				if (part->has_dollar)

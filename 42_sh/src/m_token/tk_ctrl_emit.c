@@ -19,7 +19,6 @@ void	tk_operator_emit(t_lexer *lx, char *s, t_tk_type type)
 {
 	t_token	*token;
 
-	trace_start(LVL_LEXER, "Emit op token");
 	token = token_new(type);
 	if (!token)
 	{
@@ -31,14 +30,12 @@ void	tk_operator_emit(t_lexer *lx, char *s, t_tk_type type)
 	token->group = TKG_OTHER;
 	token->str = strdup(s);
 	tk_list_append(&lx->tokens, token);
-	trace_info_nvstr(LVL_LEXER, "Token op emitted", debug_get_token_type(token->type));
 }
 
 void	tk_control_emit(t_lexer *lx, char *s, t_tk_type type)
 {
 	t_token	*token;
 
-	trace_start(LVL_LEXER, "Emit ctrl token");
 	token = token_new(type);
 	if (!token)
 	{
@@ -50,5 +47,4 @@ void	tk_control_emit(t_lexer *lx, char *s, t_tk_type type)
 	token->group = TKG_OTHER;
 	token->str = strdup(s);
 	tk_list_append(&lx->tokens, token);
-	trace_info_nvstr(LVL_LEXER, "Token ctrl emitted", debug_get_token_type(token->type));
 }

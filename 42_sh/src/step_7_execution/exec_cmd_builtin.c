@@ -23,16 +23,6 @@ static void	restore_fds(int sv_in, int sv_out)
 	close(sv_out);
 }
 
-static int	check_app_r(t_ast_node *node, int sv_in, int sv_out)
-{
-	if (apply_redirs(node) != 0)
-	{
-		restore_fds(sv_in, sv_out);
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
-}
-
 static bool	is_special_builtin(char *cmd)
 {
 	if (strcmp(cmd, ".") == 0)
@@ -53,11 +43,6 @@ static int	return_builtin_status(char **argv, int ret)
 	return (ret);
 }
 
-static int	do_exit_builtin(char **argv, t_operand *op, int sv_in, int sv_out)
-{
-	restore_fds(sv_in, sv_out);
-	return (execute_builtin(op->argc, argv));
-}
 
 int	exec_builtin(t_ast_node *node, char **argv, t_operand *op)
 {
@@ -65,8 +50,6 @@ int	exec_builtin(t_ast_node *node, char **argv, t_operand *op)
 	int	sv_out;
 	int	ret;
 
-	debug_mini_title(LVL_EXEC, "Exec builtin");
-	debug_str_array("Exec builtin argv", argv);
 	if (op->redirections.count == 0)
 	{
 		ret = execute_builtin(op->argc, argv);
@@ -76,10 +59,16 @@ int	exec_builtin(t_ast_node *node, char **argv, t_operand *op)
 	sv_out = dup(STDOUT_FILENO);
 	if (sv_in < 0 || sv_out < 0)
 		return (return_code(EXIT_FAILURE, "dup"));
-	if (check_app_r(node, sv_in, sv_out) != EXIT_SUCCESS)
+	if (apply_redirs(node) != 0)
+	{
+		restore_fds(sv_in, sv_out);
 		return (EXIT_FAILURE);
+	}
 	if (strcmp(op->argv[0], "exit") == 0)
-		return (do_exit_builtin(argv, op, sv_in, sv_out));
+	{
+		restore_fds(sv_in, sv_out);
+		return (execute_builtin(op->argc, argv));	
+	}
 	ret = execute_builtin(op->argc, argv);
 	restore_fds(sv_in, sv_out);
 	return (return_builtin_status(argv, ret));

@@ -26,7 +26,6 @@ char	*collect_body(t_lexer *lx, t_token *delim, int i, int line_count)
 	char		*str_delim;
 	char		*prompt;
 
-	trace_info_nvstr(LVL_LEXER, "Delim token type", debug_get_token_type(delim->type));
 	assign_parts_ptrs(delim, lx->inp.stream);
 	assign_string(delim);
 	normalize_token(delim);
@@ -51,7 +50,6 @@ bool	collect_heredocs(t_lexer *lx, int line_count, int lv)
 
 	if (lv < 3 || lx->heredoc_count == 0)
 		return (true);
-	trace_info(LVL_LEXER, "Collect heredoc bodies");
 	token = lx->tokens.head;
 	i = 1;
 	while (token)
@@ -65,12 +63,10 @@ bool	collect_heredocs(t_lexer *lx, int line_count, int lv)
 			if (content == NULL)
 				return (false);
 			tk_heredoc_body_emit(lx, token->next, content);
-			trace_info_nvnb(LVL_LEXER, "Heredoc body collected count",  i);
 		}
 		i++;
 		if (token)
 			token = token->next;
 	}
-	trace_info(LVL_LEXER, "All Heredoc bodies collected");
 	return (true);
 }

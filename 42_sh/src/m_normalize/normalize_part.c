@@ -96,7 +96,6 @@ void	normalize_parts(t_tk_part *first)
 	t_tk_part	*part;
 	char		*frag;
 
-	trace_info(LVL_EXPAND, "Formatting parts");
 	if (first == NULL)
 		return ;
 	part = first;
@@ -110,6 +109,4 @@ void	normalize_parts(t_tk_part *first)
 		}
 		part = part->next;
 	}
-	trace_info_nvstr(LVL_EXPAND, "Token type        ", debug_get_token_type(first->type));
-	trace_info_nvstr(LVL_EXPAND, "Token part        ", frag);
 }

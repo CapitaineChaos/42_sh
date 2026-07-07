@@ -23,7 +23,6 @@ void	save_history(t_main_data *data)
 	if (!isatty(STDIN_FILENO))
 		return ;
 	flat = sstrs_flatten(data->inputs);
-	trace_info_nvstr(LVL_MNS, "History - Full user input", flat);
 	add_history(flat);
 	free(flat);
 }
@@ -37,13 +36,11 @@ int	print_unxpected(char *s)
 	log_puts(&lg, s);
 	log_puts(&lg, "'\n");
 	log_flush(STDERR_FILENO, &lg, false);
-	trace_logger_flush(-1, &lg, true);
 	return (-1);
 }
 
 void	init_read(t_main_data *data)
 {
-	trace_info(LVL_INPUT, "Start user input");
 	data->partial_input = NULL;
 	if (data->stream != NULL)
 		free(data->stream);
@@ -89,15 +86,11 @@ int	main_finalize(t_main_data *data)
 {
 	data->stream = data->total_input.get(&data->total_input);
 	set_tokens_parts_ptrs(data->lx->tokens.head, data->stream);
-	debug_tokens(&data->lx->tokens, data->lv);
 	dbg_reset();
 	dbg_read(data->inputs);
 	dbg_tokens(&data->lx->tokens);
-	trace_info(LVL_INPUT, "  Fin user input  ");
 	lexer_soft_reset(data->lx, data->lv);
-	trace_info_nvstr(LVL_MNS, "Stream", data->stream);
 	save_history(data);
-	trace_info_nvstr(LVL_INPUT, "Stream", data->stream);
 	checker_reset(data->chk, data->lv);
 	return (1);
 }

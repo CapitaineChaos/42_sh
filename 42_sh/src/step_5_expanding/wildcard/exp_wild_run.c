@@ -90,7 +90,6 @@ bool	expand_cmd_wildcards(t_tokens *tokens)
 	t_token	*token;
 	int		n;
 
-	trace_info(LVL_EXPAND, "Expanding CMD wildcards");
 	if (tokens == NULL)
 		return (true);
 	token = tokens->head;
@@ -109,7 +108,6 @@ int	expand_redir_wildcards(t_tokens *tokens)
 	t_token	*token;
 	int		n;
 
-	trace_info(LVL_EXPAND, "Expanding REDIR wildcards");
 	if (tokens == NULL)
 		return (0);
 	token = tokens->head;

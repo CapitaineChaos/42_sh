@@ -29,7 +29,6 @@ void	deque_node_free(t_dq_n *node, void (*del)(void *))
 {
 	if (!node)
 		return ;
-	trace_info(LVL_PARSER, "Freeing node");
 	if (node->node && del)
 		del(node->node);
 	free(node);
@@ -80,9 +79,6 @@ t_dq_n	*deque_pop_front(t_deque *deque)
 {
 	t_dq_n	*node;
 
-	trace_info_nvstr(LVL_PARSER, "Popping node from front", deque->name);
-	trace_info_nvstr(LVL_PARSER, "Node type               ",
-		get_ast_typestr(((t_ast_node *)deque->head->node)->type));
 	if (deque->size == 0)
 		return (NULL);
 	node = deque->head;
@@ -99,13 +95,8 @@ void	deque_push_front(t_deque *deque, t_dq_n *node)
 {
 	if (!node)
 	{
-		trace_info_nvstr(LVL_PARSER, "Cannot push NULL node to front",
-			deque->name);
 		return ;
 	}
-	trace_info_nvstr(LVL_PARSER, "Pushing node to front", deque->name);
-	trace_info_nvstr(LVL_PARSER, "Node type               ",
-		get_ast_typestr(((t_ast_node *)node->node)->type));
 	if (deque->size == 0)
 	{
 		deque->head = node;
@@ -127,9 +118,6 @@ t_dq_n	*deque_pop_back(t_deque *deque)
 {
 	t_dq_n	*node;
 
-	trace_info_nvstr(LVL_PARSER, "Popping node from back", deque->name);
-	trace_info_nvstr(LVL_PARSER, "Node type               ",
-		get_ast_typestr(((t_ast_node *)deque->tail->node)->type));
 	if (deque->size == 0)
 		return (NULL);
 	node = deque->tail;
@@ -146,12 +134,8 @@ void	deque_push_back(t_deque *dq, t_dq_n *node)
 {
 	if (!node)
 	{
-		trace_info_nvstr(LVL_PARSER, "Cannot push NULL node to back", dq->name);
 		return ;
 	}
-	trace_info_nvstr(LVL_PARSER, "Pushing node to back", dq->name);
-	trace_info_nvstr(LVL_PARSER, "Node type               ",
-		get_ast_typestr(((t_ast_node *)node->node)->type));
 	if (dq->size == 0)
 	{
 		node->prev = NULL;

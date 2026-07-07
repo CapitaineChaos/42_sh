@@ -50,7 +50,6 @@ static void	tk_append(t_token **head, t_token *tok)
 
 void	tk_list_insert(t_tokens *tokens, t_token *after_me, t_token *tok)
 {
-	trace_info_nvstr(LVL_LEXER, "Token list insert     ", debug_get_token_type(tok->type));
 	if (after_me == NULL)
 	{
 		tk_append(&tokens->head, tok);
@@ -72,10 +71,8 @@ void	tk_list_append(t_tokens *tokens, t_token *tok)
 {
 	if (tokens == NULL || tok == NULL)
 	{
-		trace_info(LVL_LEXER, "Token list append: NULL");
 		return ;
 	}
-	trace_info_nvstr(LVL_LEXER, "Token list append", debug_get_token_type(tok->type));
 	tok->next = NULL;
 	tok->prev = NULL;
 	if (tokens->head == NULL)
@@ -104,7 +101,6 @@ void	replace_in_list(t_tokens *tokens, t_token *old, t_token *new_head)
 	t_token	*tail;
 	t_token	*it;
 
-	debug_pico_title(LVL_LEXER, "Replacing token by list", "\001\033[95m\002");
 	tail = new_head;
 	while (tail->next)
 		tail = tail->next;

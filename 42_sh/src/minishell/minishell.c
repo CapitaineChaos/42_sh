@@ -48,7 +48,5 @@ void	minishell(t_mns *mns, int lv)
 			}
 			parser_free(&mns->parser, lv);
 		}
-		trace_info(LVL_MNS, "  Fin boucle REPL  ");
 	}
-	trace_info(LVL_MNS, "  Sortie de la boucle REPL  ");
 }

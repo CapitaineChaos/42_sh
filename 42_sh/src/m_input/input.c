@@ -63,8 +63,6 @@ void	advance_(t_input *inp)
 {
 	if (!inp->stream || inp->stream[inp->pos] == '\0')
 		return ;
-	trace_info_nvcharpos(LVL_LEXER, "Current char",
-		inp->pos, inp->stream[inp->pos]);
 	inp->pos++;
 }
 
@@ -108,8 +106,6 @@ void	erase_and_advance(t_input *inp)
 {
 	if (!inp->stream || inp->stream[inp->pos] == '\0')
 		return ;
-	trace_info_nvcharpos(LVL_LEXER, "Current char",
-		inp->pos, inp->stream[inp->pos]);
 	inp->stream[inp->pos] = '\0';
 	inp->pos++;
 }

@@ -56,11 +56,8 @@ bool	is_builtin(char *cmd)
 	found = find_builtin(cmd);
 	if (found)
 	{
-		trace_info_nvstr(LVL_EXEC, "    >  Found Built-in name",
-			(char *)found->name);
 		return (true);
 	}
-	trace_info_nvstr(LVL_EXEC, "    > No Built-in found", cmd);
 	return (false);
 }
 

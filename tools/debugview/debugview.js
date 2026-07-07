@@ -509,6 +509,7 @@ function paintAst(s, text, name) {
 function render(data) {
   const names = Object.keys(data)
     .filter((n) => n !== "footer" && !n.startsWith("."))
+    .filter((n) => !/error/.test(n) || (data[n] && data[n].trim().length))
     .sort();
   for (const n in seen)
     if (!names.includes(n)) { seen[n].remove(); delete seen[n]; }
@@ -523,7 +524,11 @@ function render(data) {
         `<span class="hctl">${/ast/.test(n) ? segHTML() : ""}` +
         `<button class="iconbtn" data-act="max" title="agrandir / réduire">` +
         `${IC_EXPAND}</button></span></h2><div class="body"></div>`;
-      host.appendChild(s);
+      const next = names.find((m) => m > n && seen[m]);
+      if (next)
+        host.insertBefore(s, seen[next]);
+      else
+        host.appendChild(s);
       s._body = s.querySelector(".body");
       s._last = null;
       seen[n] = s;

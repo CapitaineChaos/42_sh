@@ -36,6 +36,5 @@ t_token	*tk_glob_emit(char *str)
 	token->tail = part;
 	token->count = 1;
 	token->str = strdup(str);
-	trace_ok(LVL_LEXER, "Glob token emitted");
 	return (token);
 }

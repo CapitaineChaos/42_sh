@@ -61,7 +61,6 @@ int	return_and_send_error(int n)
 		log_puts(&logger, "🐯: ambiguous redirect\n");
 	}
 	log_flush(STDERR_FILENO, &logger, false);
-	trace_logger_flush(-1, &logger, true);
 	return (-1);
 }
 

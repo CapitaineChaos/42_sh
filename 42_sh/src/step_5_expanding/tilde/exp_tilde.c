@@ -96,7 +96,6 @@ int	expand_cmd_tildes(t_tokens *tokens)
 	t_token	*tok;
 	char	*expanded;
 
-	trace_info(LVL_EXPAND, "Expanding CMD tildes");
 	if (tokens == NULL)
 		return (0);
 	tok = tokens->head;
@@ -118,7 +117,6 @@ int	expand_redir_tildes(t_tokens *tokens)
 	t_token	*tok;
 	char	*expanded;
 
-	trace_info(LVL_EXPAND, "Expanding REDIR tildes");
 	if (tokens == NULL)
 		return (0);
 	tok = tokens->head;

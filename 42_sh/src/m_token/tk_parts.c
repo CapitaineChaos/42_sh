@@ -38,7 +38,6 @@ void	tk_temp_part_create(t_lexer *lx, t_tk_type type)
 		cur->next = wp;
 		wp->prev = cur;
 	}
-	trace_info_nvstr(LVL_LEXER, "Temp word part created", debug_get_token_type(wp->type));
 }
 
 t_tk_part	*pop_front_part(t_token *token)

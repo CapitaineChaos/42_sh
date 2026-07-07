@@ -86,6 +86,7 @@ void	first_time_init(void)
 	struct sigaction	sa;
 
 	rl_event_hook = sig_event;
+	rl_change_environment = 0;
 	g_signal_flag = 0;
 	signal(SIGINT, sigint_standard);
 	signal(SIGQUIT, SIG_IGN);
@@ -110,11 +111,9 @@ void	init_signals(void)
 			log_puts(&logger, "Quit (core dumped)");
 		log_puts(&logger, "\n");
 		log_flush(STDERR_FILENO, &logger, false);
-		trace_logger_flush(-1, &logger, true);
 	}
 	g_signal_flag = 0;
 	signal(SIGINT, sigint_standard);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
-	trace_info(LVL_MNS, "Signal handler");
 }

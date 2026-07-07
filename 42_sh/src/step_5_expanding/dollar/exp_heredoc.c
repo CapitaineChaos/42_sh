@@ -23,7 +23,6 @@ static void	append_and_advance(t_strapi *out, char c, size_t *i)
 
 static void	process_heredoc(char *s, size_t *i, t_strapi *out)
 {
-	trace_info(LVL_EXPAND, "Expanding HEREDOC process");
 	while (s[*i])
 	{
 		if (s[*i] == '\\')
@@ -77,16 +76,12 @@ void	expand_heredoc_vars(t_tokens *tokens)
 	
 	if (tokens == NULL)
 		return ;
-	trace_info(LVL_EXPAND, "Expanding HEREDOC variables");
 	token = tokens->head;
 	while (token)
 	{
-		trace_info_nvstr(LVL_EXPAND, "Expanding HEREDOC token type", debug_get_token_type(token->type));
-		trace_info_nvstr(LVL_EXPAND, "Expanding HEREDOC has dollar", token->has_dollar ? "true" : "false");
 		if (token->type == TOK_HEREDOC_BODY && token->has_dollar)
 		{
 			has_quoted_delim = token->prev->has_quoted_part;
-			trace_info_nvstr(LVL_EXPAND, "Expanding HEREDOC quoted delim", has_quoted_delim ? "true" : "false");
 			str = expand_heredoc(token->str, has_quoted_delim);
 			if (token->str)
 				free(token->str);

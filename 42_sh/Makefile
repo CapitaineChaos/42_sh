@@ -37,15 +37,6 @@ SRCS_ROOT = \
 # >>>HIDE_START
 SRCS_DEBUG = \
 				debug_converters \
-				print_arg \
-				print_tokens \
-				print_ast_node \
-				print_ast_tree \
-				print_pendings \
-				print_title \
-				trace \
-				trace_debug_lvl \
-				write_file \
 				dbg_view
 # <<<HIDE_END
 
@@ -93,6 +84,7 @@ SRCS_ASSEMBLER = \
 				assemble
 
 SRCS_EXECUTOR = \
+				builtin/bt_getopt \
 				builtin/bt_cd \
 				builtin/bt_dot \
 				builtin/bt_echo \

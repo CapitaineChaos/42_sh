@@ -30,14 +30,12 @@ int	exec_redirects_only(t_ast_node *node)
 	int			sv_out;
 	int			ret;
 
-	trace_info(LVL_EXEC, "Start redirects only");
 	if (node->t_ast_data.operand.redirections.count == 0)
 		return (EXIT_SUCCESS);
 	sv_in = dup(STDIN_FILENO);
 	sv_out = dup(STDOUT_FILENO);
 	if (sv_in < 0 || sv_out < 0)
 		return (return_code(EXIT_FAILURE, "dup"));
-	trace_info(LVL_EXEC, "Exec redirects only");
 	ret = apply_redirs(node);
 	dup2(sv_in, STDIN_FILENO);
 	dup2(sv_out, STDOUT_FILENO);

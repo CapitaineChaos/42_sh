@@ -19,7 +19,6 @@ void	tk_heredoc_body_emit(t_lexer *lx, t_token *next, char *body)
 {
 	t_token	*token;
 
-	trace_start(LVL_LEXER, "Emit heredoc body token");
 	token = token_new(TOK_HEREDOC_BODY);
 	if (!token)
 	{
@@ -32,14 +31,12 @@ void	tk_heredoc_body_emit(t_lexer *lx, t_token *next, char *body)
 	if (body)
 		token->str = strdup(body);
 	tk_list_insert(&lx->tokens, next, token);
-	trace_info_nvstr(LVL_LEXER, "Token heredoc body emitted", debug_get_token_type(token->type));
 }
 
 void	tk_struct_emit(t_lexer *lx, char *s, t_tk_type type)
 {
 	t_token	*token;
 
-	trace_start(LVL_LEXER, "Emit struct token");
 	token = token_new(type);
 	if (!token)
 	{
@@ -51,14 +48,12 @@ void	tk_struct_emit(t_lexer *lx, char *s, t_tk_type type)
 	token->group = TKG_OTHER;
 	token->str = strdup(s);
 	tk_list_append(&lx->tokens, token);
-	trace_info_nvstr(LVL_LEXER, "Token struct emitted", debug_get_token_type(token->type));
 }
 
 void	tk_redir_emit(t_lexer *lx, char *str, t_tk_type type)
 {
 	t_token	*token;
 
-	trace_start(LVL_LEXER, "Emit redir token");
 	token = token_new(type);
 	if (!token)
 	{
@@ -77,5 +72,4 @@ void	tk_redir_emit(t_lexer *lx, char *str, t_tk_type type)
 	else
 		token->tk_flag = false;
 	tk_list_append(&lx->tokens, token);
-	trace_info_nvstr(LVL_LEXER, "Token Redirect emitted", debug_get_token_type(token->type));
 }

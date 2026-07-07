@@ -19,7 +19,6 @@ void	checker_init(t_checker *checker, int lv)
 {
 	if (lv < 2)
 		return ;
-	trace_info(LVL_CHK, "Checker init");
 	memset(checker, 0, sizeof(t_checker));
 	checker->proceed_loop = true;
 }
@@ -75,7 +74,6 @@ static bool	is_bad_redir(t_token **token)
 			return (false);
 		else
 		{
-			trace_info(LVL_CHK, "Bad redirection");
 			return (true);
 		}
 	}
@@ -200,7 +198,6 @@ static t_token	*check_token(t_checker *chk, t_token **cur)
 	t_token	*ret;
 
 	ret = NULL;
-	trace_info_nvstr(LVL_CHK, "Current token", debug_get_token_type((*cur)->type));
 	if ((*cur)->type == TOK_NEWLINE)
 		set_states(chk, 0, 1, 1);
 	else if (check_parentheses(chk, cur, &ret))
@@ -218,12 +215,10 @@ static t_token	*init_checker(t_checker *chk, t_tokens *tokens)
 	
 	if (chk->current != NULL)
 	{
-		debug_mini_title(LVL_CHK, "Reprise du checking");
 		cur = chk->current;
 	}
 	else
 	{
-		debug_title(LVL_CHK, "[  Special checker  ]");
 		chk->cmd_ready = false;
 		chk->cmd_closed = true;
 		chk->can_cmd = true;
@@ -256,7 +251,6 @@ int	special_checker(t_main_data *data, t_tokens *tokens)
 	t_token		*error;
 
 	error = check_tokens(data, init_checker(data->chk, tokens));
-	debug_mini_title(LVL_CHK, "Fin du checking");
 	if (error)
 	{
 		if (!error->str)

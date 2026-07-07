@@ -40,13 +40,11 @@ static char	*get_line(t_main_data *data)
 
 int	read_user_input(t_main_data *data)
 {
-	debug_title(LVL_MNS, "[  Reading user input  ]");
 	if (data->lv < 1)
 		return (0);
 	init_read(data);
 	while (data->chk->proceed_loop)
 	{
-		debug_mini_title(LVL_INPUT, "Read line");
 		data->partial_input = get_line(data);
 		*(data->lc) += 1;
 		if (main_stop(data))

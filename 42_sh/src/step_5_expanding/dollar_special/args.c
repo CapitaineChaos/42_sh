@@ -40,10 +40,8 @@ static char	*get_exit_status(size_t *i)
 {
 	char	*val;
 
-	debug_nano_title(LVL_EXPAND, "Processing exit status");
 	if (asprintf(&val, "%d", get_mns(NULL)->last_exit_code) < 0)
 		val = NULL;
-	trace_info_nvnb(LVL_EXPAND, "Exit status", get_mns(NULL)->last_exit_code);
 	(*i)++;
 	return (val);
 }
@@ -54,7 +52,6 @@ static char	*get_numeric_arg(size_t *i, char *s)
 	char	*val;
 	int		idx;
 
-	debug_nano_title(LVL_EXPAND, "Processing numeric arg");
 	idx = s[*i] - '0';
 	(*i)++;
 	mns = get_mns(NULL);
@@ -69,7 +66,6 @@ static char	*get_positional_args(void)
 {
 	t_mns	*mns;
 
-	debug_nano_title(LVL_EXPAND, "Processing positional args");
 	mns = get_mns(NULL);
 	if (mns->argc > 1)
 		return (join_args(mns));

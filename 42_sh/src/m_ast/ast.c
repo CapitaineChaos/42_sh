@@ -77,20 +77,16 @@ t_ast_node	*peek_head(t_deque *deque)
 
 static void	free_ast_node(t_ast_node *node)
 {
-	trace_info(LVL_AST, "Freeing AST node");
 	if (!node)
 		return ;
 	if (node->tclass == ACL_OPERAND)
 	{
 		free_token_list(&node->t_ast_data.operand.tokens);
 		free_token_list(&node->t_ast_data.operand.redirections);
-		trace_info(LVL_AST, "Freeing operand argv");
 		free(node->t_ast_data.operand.argv);
 		node->t_ast_data.operand.argv = NULL;
 		node->t_ast_data.operand.envp = NULL;
-		trace_info(LVL_AST, "Freeing operand path");
 		free(node->t_ast_data.operand.path);
-		trace_info(LVL_AST, "Operand path freed");
 		node->t_ast_data.operand.path = NULL;
 	}
 	else
@@ -98,7 +94,6 @@ static void	free_ast_node(t_ast_node *node)
 		free_token(node->t_ast_data.operator_.token);
 		node->t_ast_data.operator_.token = NULL;
 	}
-	trace_info(LVL_AST, "AST node freed");
 	free(node);
 }
 

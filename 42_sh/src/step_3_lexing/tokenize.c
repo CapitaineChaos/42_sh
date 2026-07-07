@@ -19,8 +19,6 @@ static bool	emit_control_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
 	if (!match_str(&lx->inp, str))
 		return (false);
-	trace_info(LVL_LEXER, " -- Matching control -- ");
-	trace_info_nvstr(LVL_LEXER, " -- ", get_ptr(&lx->inp));
 	tk_word_emit(lx);
 	tk_control_emit(lx, str, type);
 	return (true);
@@ -30,8 +28,6 @@ static bool	emit_operator_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
 	if (!match_str(&lx->inp, str))
 		return (false);
-	trace_info(LVL_LEXER, " -- Matching operator -- ");
-	trace_info_nvstr(LVL_LEXER, " -- ", get_ptr(&lx->inp));
 	tk_word_emit(lx);
 	tk_operator_emit(lx, str, type);
 	return (true);
@@ -109,7 +105,6 @@ static void	read_double_quoted_body(t_lexer *lx)
 	erase_and_advance(&lx->inp);
 	remove_matching_context(&lx->ctxs, CTX___DQUOTE);
 	lx->pending_dquote = false;
-	trace_info(LVL_LEXER, "Ending lex dquote");
 }
 
 static bool	read_double_quoted_part(t_lexer *lx)
@@ -117,7 +112,6 @@ static bool	read_double_quoted_part(t_lexer *lx)
 	if (lx->pending_squote || !is_dquote(lx))
 		return (false);
 	erase_and_advance(&lx->inp);
-	trace_info(LVL_LEXER, "Start lex dquote");
 	lx->pending_dquote = true;
 	rem_op_context(lx);
 	add_context(lx, TOK_DQUOTE);
@@ -137,7 +131,6 @@ static void	read_single_quoted_body(t_lexer *lx)
 	erase_and_advance(&lx->inp);
 	remove_matching_context(&lx->ctxs, CTX___SQUOTE);
 	lx->pending_squote = false;
-	trace_info(LVL_LEXER, "Ending lex squote");
 }
 
 static bool	read_single_quoted_part(t_lexer *lx)
@@ -145,7 +138,6 @@ static bool	read_single_quoted_part(t_lexer *lx)
 	if (lx->pending_dquote || !is_squote(lx))
 		return (false);
 	erase_and_advance(&lx->inp);
-	trace_info(LVL_LEXER, "Start lex squote");
 	lx->pending_squote = true;
 	rem_op_context(lx);
 	add_context(lx, TOK_SQUOTE);
@@ -198,7 +190,6 @@ static void	read_unquoted_body(t_lexer *lx)
 		}
 		if (is_sep(lx) || is_wsp(lx) || is_dquote(lx) || is_squote(lx))
 		{
-			trace_info(LVL_LEXER, "End lex unquoted");
 			return ;
 		}
 		if (consume_escape(lx))
@@ -206,7 +197,6 @@ static void	read_unquoted_body(t_lexer *lx)
 		advance_(&lx->inp);
 		had_char = true;
 	}
-	trace_info(LVL_LEXER, "End lex unquoted");
 }
 
 static void	consume_separators(t_lexer *lx, bool *had_sep)
@@ -215,13 +205,11 @@ static void	consume_separators(t_lexer *lx, bool *had_sep)
 	{
 		if (!*had_sep)
 		{
-			debug_nano_title(LVL_LEXER, "Word separator");
 			tk_word_emit(lx);
 			*had_sep = true;
 		}
 		if (is_newline(lx))
 		{
-			debug_nano_title(LVL_LEXER, "New line");
 			tk_control_emit(lx, "newline", TOK_NEWLINE);
 		}
 		erase_and_advance(&lx->inp);
@@ -241,8 +229,6 @@ static void	read_unquoted_part(t_lexer *lx)
 	consume_separators(lx, &had_sep);
 	if (had_sep || consume_comment(lx))
 		return ;
-	trace_info(LVL_LEXER, "Start lex unquoted");
-	trace_info_nvstr(LVL_LEXER, " -- ", get_ptr(&lx->inp));
 	if (!is_eof(lx))
 		tk_temp_part_create(lx, TOK_UQUOTE);
 	rem_op_context(lx);
@@ -251,7 +237,6 @@ static void	read_unquoted_part(t_lexer *lx)
 
 static void	resume_pending_quote(t_lexer *lx)
 {
-	debug_lx_pendings(lx);
 	rem_esc_context(lx);
 	lx->pending_escape = false;
 	if (lx->pending_dquote)
@@ -282,13 +267,11 @@ void	run_lexer(t_lexer *lx, int lv)
 {
 	if (lv < 3)
 		return ;
-	debug_title(LVL_LEXER, "[  Lexing  ]");
 	lx->heredoc_count = 0;
 	if (is_eof(lx))
 		return ;
 	resume_pending_quote(lx);
 	tokenize_input(lx);
-	debug_lx_pendings(lx);
 	if (lx->pending_escape)
 		add_context(lx, TOK_ESCAPE);
 	else if (!lx->pending_squote && !lx->pending_dquote)
@@ -298,10 +281,7 @@ void	run_lexer(t_lexer *lx, int lv)
 			tk_control_emit(lx, "newline", TOK_NEWLINE);
 		if (lx->ctxs.count == 0)
 		{
-			trace_info(LVL_LEXER, "Context stack is empty");
 			tk_control_emit(lx, "eof", TOK_EOF);
 		}
-		trace_info_nvnb(LVL_LEXER, "Contexts count", lx->ctxs.count);
 	}
-	trace_info(LVL_LEXER, "[  End lexer  ]");
 }

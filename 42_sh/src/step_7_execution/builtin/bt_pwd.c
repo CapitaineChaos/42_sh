@@ -17,23 +17,18 @@
 #include <stdio.h>
 #include <errno.h>
 
-static int	check_pwd_args(int argc, char **argv)
+static int	pwd_bad_opt(char *opt)
 {
 	t_logger	logger;
 
-	if (argc < 2 || !strcmp(argv[1], "-") || !strcmp(argv[1], "--"))
-		return (0);
-	else if (!strncmp(argv[1], "-", 1))
-	{
-		log_init(&logger);
-		log_puts(&logger, "🐰: pwd: invalid option\n");
-		log_puts(&logger,
-			"pwd: pwd [-LP]\n");
-		log_flush(STDERR_FILENO, &logger, false);
-		return (2);
-	}
-	return (0);
+	log_init(&logger);
+	log_puts(&logger, "🐰: pwd: ");
+	log_puts(&logger, opt);
+	log_puts(&logger, ": invalid option\npwd: pwd [-LP]\n");
+	log_flush(STDERR_FILENO, &logger, false);
+	return (2);
 }
+
 
 static void	print_builtin_pwd_err(int err)
 {
@@ -98,27 +93,19 @@ static int	check_cwd_env(char **phys, bool opt_P, char **pwd)
 
 int	builtin_pwd(t_mns *mns, int argc, char **argv, char **envp)
 {
-	char	*phys;
-	char	*pwd;
-	bool	opt_p;
-	bool	opt_l;
-	int		ret;
+	char		*phys;
+	char		*pwd;
+	int			ret;
+	t_optres	opt;
 
 	(void)mns;
 	(void)envp;
-	opt_p = false;
-	opt_l = false;
-	if (argc == 2 && !strcmp(argv[1], "-P"))
-		opt_p = true;
-	else if (argc == 2 && !strcmp(argv[1], "-L"))
-		opt_l = true;
-	else if (check_pwd_args(argc, argv) != 0)
-		return (2);
-	ret = check_cwd_env(&phys, opt_p, &pwd);
+	(void)argc;
+	if (bt_getopt(argv, "LP", NULL, &opt) < 0)
+		return (pwd_bad_opt(opt.badarg));
+	ret = check_cwd_env(&phys, opt.last == 'P', &pwd);
 	if (ret != -1)
 		return (ret);
-	if (opt_l && pwd && *pwd)
-		return (pwd_print_phys(pwd), free(phys), 0);
 	if (pwd && *pwd && (!strcmp(pwd, phys) || (strncmp(pwd, "//", 2) == 0
 				&& phys[0] == '/' && phys[1] == '\0')))
 		pwd_print_phys(pwd);

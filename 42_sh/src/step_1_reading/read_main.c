@@ -33,7 +33,6 @@ static void	exit_from_heredoc(t_main_data *data)
 	set_code(130);
 	data->total_input.free(&data->total_input);
 	g_signal_flag = 0;
-	trace_info(LVL_LEXER, "  Heredoc cancelled ");
 	data->chk->proceed_loop = true;
 	checker_reset(data->chk, data->lv);
 	lexer_soft_reset(data->lx, data->lv);
@@ -57,7 +56,6 @@ static void	manage_pendings(t_main_data *data)
 				free_and_exit_minishell(2);
 			}
 		}
-		trace_info(LVL_LEXER, "  Escape pending -> + <NL> ");
 		data->total_input.append_str(&data->total_input, "\n");
 		sstrs_append(&data->inputs, strdup("\n"));
 		data->lx->inp.pos += 1;
@@ -70,18 +68,12 @@ bool	main_loop(t_main_data *data)
 	data->total_input.append_str(&data->total_input, data->partial_input);
 	data->lx->inp.stream = data->total_input.get(&data->total_input);
 	run_lexer(data->lx, data->lv);
-	debug_mini_title(LVL_INPUT, "Check");
-	debug_chk_pendings(data->chk, "After lexing");
-	debug_lx_pendings(data->lx);
-	debug_contexts(&data->lx->ctxs);
 	if (data->lx->ctxs.count > 0)
 		data->chk->proceed_loop = true;
 	else
 		data->chk->proceed_loop = false;
 	if (special_checker(data, &data->lx->tokens) == -1)
 	{
-		debug_title(LVL_INPUT, "[  SYNTAX ERROR  ]");
-		trace_info(LVL_INPUT, "  Syntax error  ");
 		set_code(2);
 		checker_reset(data->chk, data->lv);
 		save_history(data);
@@ -91,10 +83,8 @@ bool	main_loop(t_main_data *data)
 		data->chk->proceed_loop = false;
 		return (true);
 	}
-	debug_mini_title(LVL_INPUT, "No Syntax error");
 	manage_pendings(data);
 	if (collect_heredocs(data->lx, *data->lc, data->lv) == false)
 		return (exit_from_heredoc(data), true);
-	trace_info(LVL_INPUT, "  Fin boucle READ  ");
 	return (false);
 }

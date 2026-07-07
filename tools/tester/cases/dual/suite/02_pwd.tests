@@ -12,3 +12,45 @@ cd .. && pwd
 pwd | cat
 echo $PWD
 cd /tmp && pwd && cd / && pwd
+pwd -PL
+pwd -PP
+pwd -LL
+pwd -PLPL
+pwd -LPLP
+pwd -PPPP
+pwd -LLLL
+pwd -P -P
+pwd -L -L
+pwd -L -P
+pwd -P -L -P
+pwd -L -P -L
+pwd -Px
+pwd -xP
+pwd -Pp
+pwd -Lp
+pwd -LPx
+pwd ---
+pwd -0
+pwd -1
+pwd -
+pwd -- -P
+pwd -- -L
+pwd -- foo
+pwd foo bar
+pwd -P foo
+pwd -L extra args
+pwd -P | cat
+pwd -L | cat
+pwd -P && echo ok
+pwd -x || echo caught
+cd /tmp && pwd -P
+cd /tmp && pwd -L
+cd / && pwd -P && pwd -L
+cd test_files && pwd -P -L
+cd /tmp && echo $PWD
+export PWD=/wrong && pwd
+export PWD=/wrong && pwd -P
+export PWD=/wrong && pwd -L
+unset PWD && pwd
+pwd -P > pwd_phys.txt
+pwd -L > pwd_log.txt

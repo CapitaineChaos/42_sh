@@ -35,7 +35,6 @@ char	*get_ps1(void)
 	}
 	log_puts(&lg, RT PTREE);
 	mns = get_mns(NULL);
-	trace_info_nvnb(LVL_MNS, "Last exit code", mns->last_exit_code);
 	if (mns->last_exit_code != 0)
 		log_puts(&lg, RD " $" RT " ");
 	else
@@ -45,10 +44,8 @@ char	*get_ps1(void)
 
 char	*get_prompt(t_contexts *ctxs, int lv)
 {
-	debug_title(LVL_MNS, "[  Get prompt  ]");
 	if (ctxs->count > 0 && lv > 1)
 	{
-		trace_info_nvnb(LVL_MNS, "Prompt with contexts", ctxs->count);
 		return (convert_contexts_to_str_(ctxs));
 	}
 	else

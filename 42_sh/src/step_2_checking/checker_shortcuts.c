@@ -32,7 +32,6 @@ int	print_syntax_error(char *s, char *line)
 		log_puts(&lg, "'\n");
 	}
 	log_flush(STDERR_FILENO, &lg, false);
-	trace_logger_flush(-1, &lg, true);
 	return (-1);
 }
 

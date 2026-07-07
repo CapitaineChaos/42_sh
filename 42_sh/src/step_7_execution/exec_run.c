@@ -26,13 +26,9 @@ bool	run_exec(t_ast_node *first, int lv)
 
 	if (lv < 7)
 		return (false);
-	debug_title(LVL_EXEC, "[  Execution  ]");
 	if (first == NULL)
 		return (false);
-	debug_simple_token_list_all_nodes(first);
 	code = exec_node(first);
-	debug_mini_title(LVL_EXEC, "Execution complete");
-	trace_info_nvnb(LVL_EXEC, "Execution code", code);
 	set_code(code);
 	dbg_exec(first);
 	dbg_footer(code);
@@ -46,7 +42,6 @@ bool	run_exec(t_ast_node *first, int lv)
  */
 int	exec_node(t_ast_node *node)
 {
-	trace_info(LVL_EXEC, "[  exec node  ]");
 	if (!node)
 		return (EXIT_SUCCESS);
 	if (node->type == AST_SUBSHELL)

@@ -35,7 +35,6 @@ static void	aggregate_tokens(t_tokens *tk, t_sstr **acc)
 			if (frag)
 			{
 				sstrs_append(acc, strdup(frag));
-				trace_info_nvstr(LVL_EXPAND, "Token part (FRAG)", frag);
 			}
 			part = part->next;
 		}
@@ -67,7 +66,6 @@ char	*aggregate_final_token_parts(t_tk_part *first)
 	t_sstr		*acc;
 	char		*frag;
 
-	trace_info(LVL_EXPAND, "Aggregating token parts");
 	if (first == NULL)
 		return (NULL);
 	part = first;
@@ -84,7 +82,6 @@ char	*aggregate_final_token_parts(t_tk_part *first)
 	frag = sstrs_flatten(acc);
 	sstr_free(&acc);
 	free(acc);
-	trace_info_nvstr(LVL_EXPAND, "Token fragment     ", frag);
 	return (frag);
 }
 
@@ -92,14 +89,11 @@ void	aggregate_token_list(t_token *first)
 {
 	t_token	*current;
 
-	debug_pico_title(LVL_EXPAND, "Aggregating token", "\001\033[92m\002");
 	if (first == NULL)
 		return ;
 	current = first;
 	while (current)
 	{
-		trace_info_nvstr(LVL_EXPAND, "Token type", debug_get_token_type(current->type));
-		trace_info_nvnb(LVL_EXPAND, "Token parts count", current->count);
 		if (current->type == TOK_WORD)
 		{
 			if (current->count > 0)

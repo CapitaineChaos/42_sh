@@ -171,7 +171,6 @@ static int	split_token(t_tokens *tokens, t_token *cur)
 		tokens->count--;
 		free(cur);
 	}
-	trace_info_nvnb(LVL_EXPAND, "Splitted token in parts", sub.count);
 	return (sub.count);
 }
 

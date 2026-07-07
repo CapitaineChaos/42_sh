@@ -29,7 +29,6 @@ int	main_sigint(t_main_data *data)
 			data->total_input.free(&data->total_input);
 			free_and_exit_minishell(get_mns(NULL)->last_exit_code);
 		}
-		trace_info(LVL_INPUT, "  ========= CTRL^C ========== ");
 		set_code(130);
 		data->total_input.clear(&data->total_input);
 		g_signal_flag = 0;
@@ -53,7 +52,6 @@ bool	main_stop(t_main_data *data)
 			data->total_input.free(&data->total_input);
 			free_and_exit_minishell(get_mns(NULL)->last_exit_code);
 		}
-		trace_info(LVL_INPUT, "  EOF DETECTED  CTRL^D  ");
 		if (data->lx->ctxs.count > 0)
 		{
 			print_unxpected(convert_ctx_to_sym(data->lx->ctxs.tail->ctx_name));
