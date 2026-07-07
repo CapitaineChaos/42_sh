@@ -44,8 +44,8 @@ typedef struct s_checker
  * LIFECYCLE
  */
 
-void	checker_init(t_checker *checker, int lv);
-void	checker_reset(t_checker *checker, int lv);
+void	checker_init(t_checker *checker);
+void	checker_reset(t_checker *checker);
 
 /**
  * MAIN

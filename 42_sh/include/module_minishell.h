@@ -53,7 +53,7 @@ typedef struct s_mns
 void	free_mns(t_mns *mns);
 t_mns	*get_mns(t_mns *mns);
 void	free_and_exit_minishell(intmax_t exit_code);
-void	minishell(t_mns *mns, int lv);
-void	init_mns(t_mns *mns, char *ifs, char **envp, int lv);
+void	minishell(t_mns *mns);
+void	init_mns(t_mns *mns, char *ifs, char **envp);
 
 #endif

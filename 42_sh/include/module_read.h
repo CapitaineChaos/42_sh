@@ -30,7 +30,6 @@ typedef struct s_main_data
 	t_checker	*chk;
 	t_lexer		*lx;
 	int			*lc;
-	int			lv;
 	char		*stream;
 	char		*ifs;
 }	t_main_data;
@@ -38,13 +37,13 @@ typedef struct s_main_data
 int		read_user_input(t_main_data *data);
 char	*get_heredoc_prompt(int i, int count);
 bool	read_heredoc_body(char *prompt, char *delim, t_sstr **body, int lc);
-bool	collect_heredocs(t_lexer *lx, int line_count, int lv);
+bool	collect_heredocs(t_lexer *lx, int line_count);
 
 /**
  * PROMPT
  */
 
-char	*get_prompt(t_contexts *ctxs, int lv);
+char	*get_prompt(t_contexts *ctxs);
 void	init_read(t_main_data *data);
 
 /**

@@ -15,10 +15,8 @@
 #include "module_parser.h"
 #include "ft_std.h"
 
-void	parser_init(t_parser *p, int lv)
+void	parser_init(t_parser *p)
 {
-	if (lv < 4)
-		return ;
 	p->deques.final.head = NULL;
 	p->deques.final.tail = NULL;
 	p->deques.final.size = 0;
@@ -33,10 +31,8 @@ static void	free_parser_deques(t_pdeques *deques)
 	}
 }
 
-void	parser_free(t_parser *p, int lv)
+void	parser_free(t_parser *p)
 {
-	if (lv < 4)
-		return ;
 	free_parser_deques(&p->deques);
 	p->deques.final.head = NULL;
 	p->deques.final.tail = NULL;
@@ -62,13 +58,11 @@ static bool	is_empty_command(t_ast_node *root)
 		&& root->t_ast_data.operand.redirections.count == 0);
 }
 
-bool	run_parser(t_parser *prs, t_tokens *tkns, int lv)
+bool	run_parser(t_parser *prs, t_tokens *tkns)
 {
 	t_ast_node	*root;
 	t_dq_n		*cell;
 
-	if (lv < 4)
-		return (false);
 	if (tkns->count == 0)
 	{
 		return (false);

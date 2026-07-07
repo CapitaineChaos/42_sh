@@ -25,8 +25,8 @@ static void	exit_from_heredoc(t_main_data *data)
 		set_code(0);
 		data->total_input.free(&data->total_input);
 		data->chk->proceed_loop = false;
-		checker_reset(data->chk, data->lv);
-		lexer_soft_reset(data->lx, data->lv);
+		checker_reset(data->chk);
+		lexer_soft_reset(data->lx);
 		free_token_list(&data->lx->tokens);
 		return ;
 	}
@@ -34,8 +34,8 @@ static void	exit_from_heredoc(t_main_data *data)
 	data->total_input.free(&data->total_input);
 	g_signal_flag = 0;
 	data->chk->proceed_loop = true;
-	checker_reset(data->chk, data->lv);
-	lexer_soft_reset(data->lx, data->lv);
+	checker_reset(data->chk);
+	lexer_soft_reset(data->lx);
 	free_token_list(&data->lx->tokens);
 }
 
@@ -68,7 +68,7 @@ bool	main_loop(t_main_data *data)
 	sstrs_append(&data->inputs, data->partial_input);
 	data->total_input.append_str(&data->total_input, data->partial_input);
 	data->lx->inp.stream = data->total_input.get(&data->total_input);
-	run_lexer(data->lx, data->lv);
+	run_lexer(data->lx);
 	if (data->lx->ctxs.count > 0)
 		data->chk->proceed_loop = true;
 	else
@@ -76,16 +76,16 @@ bool	main_loop(t_main_data *data)
 	if (special_checker(data, &data->lx->tokens) == -1)
 	{
 		set_code(2);
-		checker_reset(data->chk, data->lv);
+		checker_reset(data->chk);
 		save_history(data);
 		data->total_input.free(&data->total_input);
 		free_token_list(&data->lx->tokens);
-		lexer_soft_reset(data->lx, data->lv);
+		lexer_soft_reset(data->lx);
 		data->chk->proceed_loop = false;
 		return (true);
 	}
 	manage_pendings(data);
-	if (collect_heredocs(data->lx, *data->lc, data->lv) == false)
+	if (collect_heredocs(data->lx, *data->lc) == false)
 		return (exit_from_heredoc(data), true);
 	return (false);
 }

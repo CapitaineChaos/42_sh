@@ -20,12 +20,10 @@
  * @brief Lanceur de l'exécution de l'arbre AST.
  * @param mns Le minishell.
  */
-bool	run_exec(t_ast_node *first, int lv)
+bool	run_exec(t_ast_node *first)
 {
 	int	code;
 
-	if (lv < 7)
-		return (false);
 	if (first == NULL)
 		return (false);
 	code = exec_node(first);

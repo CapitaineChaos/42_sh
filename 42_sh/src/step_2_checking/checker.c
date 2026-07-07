@@ -15,18 +15,14 @@
 #include "module_exec.h"
 #include "ft_std.h"
 
-void	checker_init(t_checker *checker, int lv)
+void	checker_init(t_checker *checker)
 {
-	if (lv < 2)
-		return ;
 	memset(checker, 0, sizeof(t_checker));
 	checker->proceed_loop = true;
 }
 
-void	checker_reset(t_checker *checker, int lv)
+void	checker_reset(t_checker *checker)
 {
-	if (lv < 2)
-		return ;
 	checker->parentheses = 0;
 	checker->inp.stream = NULL;
 	checker->inp.pos = 0;

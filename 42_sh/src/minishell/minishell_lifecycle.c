@@ -47,15 +47,15 @@ void	free_and_exit_minishell(intmax_t exit_code)
 
 void	free_mns(t_mns *mns)
 {
-	parser_free(&mns->parser, 255);
-	lexer_free(&mns->lexer, 255);
+	parser_free(&mns->parser);
+	lexer_free(&mns->lexer);
 	sstr_free(&mns->data.inputs);
 	free(mns->data.stream);
 	free(mns->data.ifs);
 	rl_clear_history();
 }
 
-void	init_modules(t_mns *mns, char *ifs, char **envp, int lv)
+void	init_modules(t_mns *mns, char *ifs, char **envp)
 {
 	mns->checker = (t_checker){0};
 	mns->lexer = (t_lexer){0};
@@ -63,14 +63,14 @@ void	init_modules(t_mns *mns, char *ifs, char **envp, int lv)
 	mns->data = (t_main_data){0};
 	(void)envp;
 	create_env(mns);
-	checker_init(&mns->checker, lv);
-	lexer_init(&mns->lexer, ifs, lv);
-	parser_init(&mns->parser, lv);
+	checker_init(&mns->checker);
+	lexer_init(&mns->lexer, ifs);
+	parser_init(&mns->parser);
 }
 
-void	init_mns(t_mns *mns, char *ifs, char **envp, int lv)
+void	init_mns(t_mns *mns, char *ifs, char **envp)
 {
-	init_modules(mns, ifs, envp, lv);
+	init_modules(mns, ifs, envp);
 	mns->argv = NULL;
 	mns->argc = 0;
 	mns->read_exit = false;
@@ -80,7 +80,6 @@ void	init_mns(t_mns *mns, char *ifs, char **envp, int lv)
 	mns->data.chk = &mns->checker;
 	mns->data.lx = &mns->lexer;
 	mns->data.lc = &mns->nb_lines;
-	mns->data.lv = lv;
 	mns->data.stream = NULL;
 	mns->data.inputs = NULL;
 	mns->data.partial_input = NULL;

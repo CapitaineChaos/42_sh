@@ -322,10 +322,8 @@ static void	tokenize_input(t_lexer *lx)
 	}
 }
 
-void	run_lexer(t_lexer *lx, int lv)
+void	run_lexer(t_lexer *lx)
 {
-	if (lv < 3)
-		return ;
 	lx->heredoc_count = 0;
 	if (is_eof(lx))
 		return ;

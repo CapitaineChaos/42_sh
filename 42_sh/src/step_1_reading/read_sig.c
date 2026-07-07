@@ -34,8 +34,8 @@ int	main_sigint(t_main_data *data)
 		g_signal_flag = 0;
 		free(data->partial_input);
 		sstr_free(&data->inputs);
-		checker_reset(data->chk, data->lv);
-		lexer_soft_reset(data->lx, data->lv);
+		checker_reset(data->chk);
+		lexer_soft_reset(data->lx);
 		free_token_list(&data->lx->tokens);
 		return (true);
 	}

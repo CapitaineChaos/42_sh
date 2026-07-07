@@ -59,7 +59,6 @@ typedef enum e_tk_part_type
 	PART_GLOB,
 }	t_tk_part_type;
 
-/* Classe lexicale : partition, une valeur par token. Lue via tok_class(). */
 typedef enum e_tk_class
 {
 	LCL_WORD,
@@ -68,7 +67,6 @@ typedef enum e_tk_class
 	LCL_INTERNAL,
 }	t_tk_class;
 
-/* Attributs non exclusifs, combinables en masque. Testés via tok_has(). */
 typedef enum e_tk_attr
 {
 	TA_NONE = 0,

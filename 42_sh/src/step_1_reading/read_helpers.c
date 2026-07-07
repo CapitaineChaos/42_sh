@@ -47,7 +47,7 @@ void	init_read(t_main_data *data)
 	data->stream = NULL;
 	strapi_init(L_BUFFER_SIZE, &data->total_input);
 	sstr_free(&data->inputs);
-	lexer_hard_reset(data->lx, data->lv);
+	lexer_hard_reset(data->lx);
 	data->lx->inp.pos = 0;
 	data->chk->proceed_loop = true;
 }
@@ -78,8 +78,8 @@ int	main_finalize(t_main_data *data)
 	dbg_reset();
 	dbg_read(data->inputs);
 	dbg_tokens(&data->lx->tokens);
-	lexer_soft_reset(data->lx, data->lv);
+	lexer_soft_reset(data->lx);
 	save_history(data);
-	checker_reset(data->chk, data->lv);
+	checker_reset(data->chk);
 	return (1);
 }

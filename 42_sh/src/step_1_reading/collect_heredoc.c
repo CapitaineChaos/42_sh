@@ -42,13 +42,13 @@ char	*collect_body(t_lexer *lx, t_token *delim, int i, int line_count)
 	return (NULL);
 }
 
-bool	collect_heredocs(t_lexer *lx, int line_count, int lv)
+bool	collect_heredocs(t_lexer *lx, int line_count)
 {
 	t_token		*token;
 	char		*content;
 	int			i;
 
-	if (lv < 3 || lx->heredoc_count == 0)
+	if (lx->heredoc_count == 0)
 		return (true);
 	token = lx->tokens.head;
 	i = 1;

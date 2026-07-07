@@ -33,15 +33,15 @@ typedef struct s_parser
  * PARSER LIFECYCLE
  */
 
-void		parser_init(t_parser *p, int lv);
-void		parser_free(t_parser *p, int lv);
+void		parser_init(t_parser *p);
+void		parser_free(t_parser *p);
 
 /**
  * PREPARSE / PARSE
  */
 
 void		print_wildcat_error(char *str);
-bool		run_parser(t_parser *prs, t_tokens *tkns, int lv);
+bool		run_parser(t_parser *prs, t_tokens *tkns);
 
 t_ast_node	*rd_parse(t_tokens *tokens);
 void		find_redirs(t_tokens *tokens);

@@ -58,20 +58,11 @@ void	interactive_shell_only(void)
 
 /**
  * @brief Point d'entrée du programme.
- * 
- * @note 1 : input
- * @note 2 : checker
- * @note 3 : lexer
- * @note 4 : parser
- * @note 5 : expansion
- * @note 6 : assembling
- * @note 7 : execution
  */
 int	main(int ac, char **av, char **envp)
 {
 	t_mns	mns;
 	int		exit_code;
-	int		lv;
 	bool	posix;
 
 	posix = (ac == 2 && !strcmp(av[1], "--posix"));
@@ -81,15 +72,14 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	}
 	interactive_shell_only();
-	lv = 7;
 	dbg_errors_reset();
-	init_mns(&mns, strdup(" \t\n"), envp, lv);
+	init_mns(&mns, strdup(" \t\n"), envp);
 	mns.posix = posix;
 	first_time_init();
 	mns.argv = av;
 	mns.argc = ac;
 	launch_animation(&mns);
-	minishell(&mns, lv);
+	minishell(&mns);
 	exit_code = mns.last_exit_code;
 	free_mns(&mns);
 	if (!posix && isatty(STDERR_FILENO))

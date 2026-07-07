@@ -48,11 +48,11 @@ char	*get_ps1(void)
 	return (strdup(lg.buf));
 }
 
-char	*get_prompt(t_contexts *ctxs, int lv)
+char	*get_prompt(t_contexts *ctxs)
 {
 	char	*ps2;
 
-	if (ctxs->count > 0 && lv > 1)
+	if (ctxs->count > 0)
 	{
 		if (get_mns(NULL)->posix)
 		{

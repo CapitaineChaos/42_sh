@@ -25,7 +25,7 @@ static char	*get_line(t_main_data *data)
 
 	if (isatty(STDIN_FILENO))
 	{
-		prompt = get_prompt(&data->lx->ctxs, data->lv);
+		prompt = get_prompt(&data->lx->ctxs);
 		init_signals();
 		line = readline(prompt);
 		free(prompt);
@@ -40,8 +40,6 @@ static char	*get_line(t_main_data *data)
 
 int	read_user_input(t_main_data *data)
 {
-	if (data->lv < 1)
-		return (0);
 	init_read(data);
 	while (data->chk->proceed_loop)
 	{

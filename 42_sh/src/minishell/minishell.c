@@ -24,29 +24,21 @@
 
 /**
  * @brief Fonction principale du minishell.
- * 
- * @note 1 : input
- * @note 2 : checker
- * @note 3 : lexer
- * @note 4 : parser
- * @note 5 : expansion
- * @note 6 : assembling
- * @note 7 : execution
  */
-void	minishell(t_mns *mns, int lv)
+void	minishell(t_mns *mns)
 {
 	t_ast_node	*node;
 
 	while (read_user_input(&mns->data))
 	{
-		if (run_parser(&mns->parser, &mns->lexer.tokens, lv))
+		if (run_parser(&mns->parser, &mns->lexer.tokens))
 		{
 			node = (t_ast_node *)mns->parser.deques.final.head->node;
 			if (node != NULL)
 			{
-				run_exec(node, lv);
+				run_exec(node);
 			}
-			parser_free(&mns->parser, lv);
+			parser_free(&mns->parser);
 		}
 	}
 }

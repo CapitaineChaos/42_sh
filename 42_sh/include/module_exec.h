@@ -18,7 +18,7 @@
 # include "module_minishell.h"
 # include "module_ast.h"
 
-bool	run_exec(t_ast_node *first, int lv);
+bool	run_exec(t_ast_node *first);
 int		exec_node(t_ast_node *node);
 int		exec_and_or(t_ast_node *node);
 int		exec_sequence(t_ast_node *node);

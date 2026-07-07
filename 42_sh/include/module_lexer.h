@@ -49,16 +49,16 @@ typedef struct s_lexer
  * MAIN LEXER FUNCTION
  */
 
-void	run_lexer(t_lexer *lx, int lv);
+void	run_lexer(t_lexer *lx);
 
 /**
  * LEXER
  */
 
-void	lexer_init(t_lexer *lx, char *ifs, int lv);
-void	lexer_free(t_lexer *lx, int lv);
-void	lexer_soft_reset(t_lexer *lx, int lv);
-void	lexer_hard_reset(t_lexer *lx, int lv);
+void	lexer_init(t_lexer *lx, char *ifs);
+void	lexer_free(t_lexer *lx);
+void	lexer_soft_reset(t_lexer *lx);
+void	lexer_hard_reset(t_lexer *lx);
 
 /**
  * TOKENIZATION

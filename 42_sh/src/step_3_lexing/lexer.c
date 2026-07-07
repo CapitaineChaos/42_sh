@@ -18,19 +18,15 @@
 #include "ft_std.h"
 
 /* Initialiser le lexer une seule fois*/
-void	lexer_init(t_lexer *lx, char *ifs, int lv)
+void	lexer_init(t_lexer *lx, char *ifs)
 {
-	if (lv < 3)
-		return ;
 	memset(lx, 0, sizeof (t_lexer));
 	lx->ifs = ifs;
 }
 
 /* Libérer définitivement le lexer */
-void	lexer_free(t_lexer *lx, int lv)
+void	lexer_free(t_lexer *lx)
 {
-	if (lv < 3)
-		return ;
 	free_token_parts(lx->tmp_wp);
 	contexts_free(&lx->ctxs);
 	lx->tmp_wp = NULL;
@@ -42,10 +38,8 @@ void	lexer_free(t_lexer *lx, int lv)
 	lx->inp.pos = 0;
 }
 
-void	lexer_hard_reset(t_lexer *lx, int lv)
+void	lexer_hard_reset(t_lexer *lx)
 {
-	if (lv < 3)
-		return ;
 	free_token_parts(lx->tmp_wp);
 	lx->tmp_wp = NULL;
 	free_token_list(&lx->tokens);
@@ -62,10 +56,8 @@ void	lexer_hard_reset(t_lexer *lx, int lv)
 }
 
 /* Réinitialiser le lexer pour une nouvelle utilisation */
-void	lexer_soft_reset(t_lexer *lx, int lv)
+void	lexer_soft_reset(t_lexer *lx)
 {
-	if (lv < 3)
-		return ;
 	free_token_parts(lx->tmp_wp);
 	contexts_free(&lx->ctxs);
 	lx->tmp_wp = NULL;
