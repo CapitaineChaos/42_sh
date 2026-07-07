@@ -134,7 +134,8 @@ static void	print_invalid_export(char **envp)
 	(void)envp;
 	log_init(&logger);
 	log_puts(&logger, "🐰: export: invalid option\n");
-	log_puts(&logger, "export: export [-fn] [name[=value] ...] or export -p\n");
+	log_puts(&logger,
+		"export: usage: export [-fn] [name[=value] ...] or export -p [-f]\n");
 	log_flush(STDERR_FILENO, &logger, false);
 	trace_logger_flush(-1, &logger, true);
 }

@@ -13,6 +13,7 @@
 #include "module_debug.h"
 #include "module_exec.h"
 #include <stdio.h>
+#include <unistd.h>
 
 static int	check_app_r(t_ast_node *node, int sv_in, int sv_out)
 {
@@ -25,6 +26,26 @@ static int	check_app_r(t_ast_node *node, int sv_in, int sv_out)
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
+}
+
+static bool	is_special_builtin(char *cmd)
+{
+	if (strcmp(cmd, ".") == 0)
+		return (true);
+	if (strcmp(cmd, "exit") == 0)
+		return (true);
+	if (strcmp(cmd, "export") == 0)
+		return (true);
+	if (strcmp(cmd, "unset") == 0)
+		return (true);
+	return (false);
+}
+
+static int	return_builtin_status(char **argv, int ret)
+{
+	if (ret != 0 && !isatty(STDIN_FILENO) && is_special_builtin(argv[0]))
+		free_and_exit_minishell(ret);
+	return (ret);
 }
 
 static int	do_exit_builtin(char **argv, t_operand *op, int sv_in, int sv_out)
@@ -45,7 +66,10 @@ int	exec_builtin(t_ast_node *node, char **argv, t_operand *op)
 	debug_mini_title(LVL_EXEC, "Exec builtin");
 	debug_str_array("Exec builtin argv", argv);
 	if (op->redirections.count == 0)
-		return (execute_builtin(op->argc, argv));
+	{
+		ret = execute_builtin(op->argc, argv);
+		return (return_builtin_status(argv, ret));
+	}
 	sv_in = dup(STDIN_FILENO);
 	sv_out = dup(STDOUT_FILENO);
 	if (sv_in < 0 || sv_out < 0)
@@ -59,5 +83,5 @@ int	exec_builtin(t_ast_node *node, char **argv, t_operand *op)
 	dup2(sv_out, STDOUT_FILENO);
 	close(sv_in);
 	close(sv_out);
-	return (ret);
+	return (return_builtin_status(argv, ret));
 }
