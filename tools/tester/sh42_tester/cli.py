@@ -14,7 +14,7 @@ from .config import DEFAULT_TIMEOUT, FAILURES_FILE
 from .discovery import case_label, categories, discover, load_cases
 from .environment import build_binary, make_env, pick_locale, preflight
 from .execution import RUNNING, RUNNING_LOCK, STOP, run_one
-from .ui import (C, banner, format_failure, print_icons,
+from .ui import (C, _visible_len, banner, format_failure, print_icons,
                  prompt_retry, set_title)
 
 
@@ -129,7 +129,7 @@ def report(t: dict, segfaults: list[str], failures: list[str]) -> int:
 
     def cell(val, total):
         mark = f"{C.GREEN}OK{C.RESET}" if val == total else f"{C.RED}KO{C.RESET}"
-        return f"{mark} {val:>4}/{total:<4}"
+        return f"{mark} {val}/{total}"
 
     rows = [
         ("O", t["out"], t["pipe_n"], t["tty_out"], t["tty_n"]),
@@ -137,9 +137,28 @@ def report(t: dict, segfaults: list[str], failures: list[str]) -> int:
         ("D", t["diff"], t["pipe_n"], t["tty_diff"], t["tty_n"]),
         ("E", t["err"], t["pipe_n"], t["tty_err"], t["tty_n"]),
     ]
-    print(f"{C.BOLD}        pipe          tty{C.RESET}")
-    for label, pipe_val, pipe_total, tty_val, tty_total in rows:
-        print(f"{label}:   {cell(pipe_val, pipe_total)}     {cell(tty_val, tty_total)}")
+    data = [(lbl, cell(pv, pt), cell(tv, tt)) for lbl, pv, pt, tv, tt in rows]
+    lw = 3
+    cw = max([_visible_len("pipe"), _visible_len("tty")]
+             + [_visible_len(c) for _, c1, c2 in data for c in (c1, c2)]) + 2
+
+    def padc(s, w):
+        pad = w - _visible_len(s)
+        left = pad // 2
+        return " " * left + s + " " * (pad - left)
+
+    def line(lft, mid, rgt):
+        return lft + "─" * lw + mid + "─" * cw + mid + "─" * cw + rgt
+
+    def trow(a, b, c):
+        return f"│{padc(a, lw)}│{padc(b, cw)}│{padc(c, cw)}│"
+
+    print(line("┌", "┬", "┐"))
+    print(f"{C.BOLD}{trow('', 'pipe', 'tty')}{C.RESET}")
+    print(line("├", "┼", "┤"))
+    for lbl, c1, c2 in data:
+        print(trow(f"{C.BOLD}{lbl}{C.RESET}", c1, c2))
+    print(line("└", "┴", "┘"))
     if t["crit"]:
         print(f"{C.PURPLE}{t['crit']} erreur(s) critique(s){C.RESET}")
     else:
