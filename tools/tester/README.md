@@ -38,8 +38,9 @@ tester/
 ├── README.md
 ├── sh42_tester/         # package du testeur (voir sh42_tester/README.md)
 ├── cases/               # jeux de tests, 1 ligne = 1 test
-│   ├── suite/           # suite principale (01_echo.tests ... 15_edge_cases.tests)
-│   └── special/         # cas .toml : heredocs, interruptions
+│   ├── dual/            # pipe + tty
+│   ├── pipe/            # pipe seulement
+│   └── tty/             # tty seulement
 ├── cases_legacy/        # anciens jeux (common, lapinou, wildcat, bonus)
 ├── fixtures/            # fichiers d'entrée -> symlinkés dans test_files/ des sandboxes
 └── manual/              # scénarios manuels (heredoc, signaux...) NON différentiels
@@ -53,9 +54,16 @@ régénérer). Les commandes peuvent écrire dans `./outfiles/` et lire
 `./test_files/` (fournis par le bac à sable). `./test_files/invalid_permission`
 est un fichier `chmod 000` pour tester les erreurs de permission.
 
+Préfixe d'environnement par ligne :
+
+```text
+@env SHLVL=abc -- echo $SHLVL
+@env 'SHLVL=  7  ' -- echo $SHLVL
+```
+
 ## Statuts par test
 
-Quatre colonnes `O C D E` (Output, exit Code, Diff outfiles, Error msg) : `·`
+Quatre colonnes `OCDE` (Output, exit Code, Diff outfiles, Error msg) : `·`
 si l'axe concorde, sinon la lettre de l'axe divergent (en rouge). `V` : fuite
 valgrind (exit 99). `!` suivi des symboles : erreur critique classée (segfault,
 invalid read/write...).

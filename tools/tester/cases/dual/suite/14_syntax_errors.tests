@@ -1,6 +1,5 @@
 |
 | echo hi
-echo hi |
 echo hi | | cat
 ||
 &&
@@ -14,11 +13,8 @@ echo a &&& echo b
 echo >
 echo <
 cat <
-(
 )
-( echo hi
 echo hi )
-echo hi |
 && echo hi
 || echo hi
 echo a ; ; echo b

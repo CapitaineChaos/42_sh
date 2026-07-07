@@ -1,0 +1,12 @@
+@env SHLVL= -- echo $SHLVL
+@env SHLVL=abc -- echo $SHLVL
+@env SHLVL=3x -- echo $SHLVL
+@env SHLVL=-5 -- echo $SHLVL
+@env SHLVL=-999999999 -- echo $SHLVL
+@env 'SHLVL=  7  ' -- echo $SHLVL
+@env SHLVL=999999999999999999999999 -- echo $SHLVL
+@env SHLVL=0 -- echo $SHLVL
+@env SHLVL=42 -- echo $SHLVL
+@env SHLVL=0x10 -- echo $SHLVL
+@env SHLVL=+3 -- echo $SHLVL
+@env SHLVL=99999999999garbage -- echo alive

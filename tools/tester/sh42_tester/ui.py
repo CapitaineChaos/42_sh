@@ -10,7 +10,7 @@ import tty
 
 from .result import Result
 
-LINE_WIDTH = 80
+LINE_WIDTH = 75
 _ANSI = re.compile(r"\033\[[0-9;]*m")
 
 
@@ -61,9 +61,16 @@ def banner(title: str) -> str:
 
 def print_icons(r: Result) -> None:
     def ic(letter: str, ok: bool) -> str:
-        return f"{C.GREEN}·{C.RESET}" if ok else f"{C.RED}{letter}{C.RESET}"
-    line = (f"{C.YELLOW}{r.index:>4}: {ic('O', r.ok_output)}{ic('C', r.ok_code)}"
-            f"{ic('D', r.ok_diff)}{ic('E', r.ok_error)}")
+        return f"{C.GREEN}✓{C.RESET}" if ok else f"{C.RED}{letter}{C.RESET}"
+    pipe = "    "
+    tty = "    "
+    if r.pipe_enabled:
+        pipe = (f"{ic('O', r.ok_output)}{ic('C', r.ok_code)}"
+                f"{ic('D', r.ok_diff)}{ic('E', r.ok_error)}")
+    if r.tty_enabled:
+        tty = (f"{ic('O', r.tty_ok_output)}{ic('C', r.tty_ok_code)}"
+               f"{ic('D', r.tty_ok_diff)}{ic('E', r.tty_ok_error)}")
+    line = f"{C.YELLOW}{r.index:>4}: {pipe} {tty}"
     if r.sh42_code == 99:
         line += f" {C.CYAN}V{C.RESET}"
     if r.critical:
@@ -84,23 +91,41 @@ def format_failure(r: Result, label: str) -> str:
     sep = "=" * 72
     p = [sep, f" Test {r.index}  |  {label}", sep,
          " Commande essayée :", f"   {r.cmd}", ""]
-    if not r.ok_output:
-        p.append(" [STDOUT] DIFFÉRENT")
+    if r.pipe_enabled and not r.ok_output:
+        p.append(" [PIPE STDOUT] DIFFÉRENT")
         p.append(_fail_field("attendu  (bash)      :", r.bash_out))
         p.append(_fail_field("obtenu   (42_sh) :", r.sh42_out))
         p.append("")
-    if not r.ok_code:
-        p.append(f" [EXIT CODE] DIFFÉRENT : attendu={r.bash_code}"
+    if r.pipe_enabled and not r.ok_code:
+        p.append(f" [PIPE EXIT CODE] DIFFÉRENT : attendu={r.bash_code}"
                  f"  obtenu={r.sh42_code}")
         p.append("")
-    if not r.ok_diff:
-        p.append(" [OUTFILES] DIFFÉRENT")
+    if r.pipe_enabled and not r.ok_diff:
+        p.append(" [PIPE OUTFILES] DIFFÉRENT")
         p += [f"   {d}" for d in r.outfiles_diff]
         p.append("")
-    if not r.ok_error:
-        p.append(" [STDERR] DIFFÉRENT")
+    if r.pipe_enabled and not r.ok_error:
+        p.append(" [PIPE STDERR] DIFFÉRENT")
         p.append(_fail_field("attendu  (bash)      :", r.bash_err))
         p.append(_fail_field("obtenu   (42_sh) :", r.sh42_err))
+        p.append("")
+    if r.tty_enabled and not r.tty_ok_output:
+        p.append(" [TTY ÉCRAN] DIFFÉRENT")
+        p.append(_fail_field("attendu  (bash tty)      :", r.tty_bash_out))
+        p.append(_fail_field("obtenu   (42_sh tty) :", r.tty_sh42_out))
+        p.append("")
+    if r.tty_enabled and not r.tty_ok_code:
+        p.append(f" [TTY EXIT CODE] DIFFÉRENT : attendu={r.tty_bash_code}"
+                 f"  obtenu={r.tty_sh42_code}")
+        p.append("")
+    if r.tty_enabled and not r.tty_ok_diff:
+        p.append(" [TTY OUTFILES] DIFFÉRENT")
+        p += [f"   {d}" for d in r.tty_outfiles_diff]
+        p.append("")
+    if r.tty_enabled and not r.tty_ok_error:
+        p.append(" [TTY STDERR] DIFFÉRENT")
+        p.append(_fail_field("attendu  (bash tty)      :", r.tty_bash_err))
+        p.append(_fail_field("obtenu   (42_sh tty) :", r.tty_sh42_err))
         p.append("")
     if r.is_segfault:
         p.append(" [SEGFAULT] 42_sh a segfault (exit 139)")

@@ -1,0 +1,30 @@
+echo ~
+echo ~/
+echo ~/.
+echo ~/missing_42sh_path
+echo ~root
+echo ~root/
+echo ~root/tmp
+echo ~definitely_no_such_user_42sh
+echo "~"
+echo '~'
+echo "~root"
+echo '~root'
+echo prefix~
+echo prefix~root
+echo ~root suffix
+echo ~root:~root
+echo ~+
+cd /; echo ~+
+cd /; cd /tmp; echo ~-
+cd /; cd /tmp; echo ~-/x
+unset OLDPWD; echo ~-
+export HOME=; echo ~
+unset HOME; echo ~
+export X=~; echo "$X"
+export X=~/dir; echo "$X"
+export X=~root; echo "$X"
+export X=~root/dir; echo "$X"
+export X=pre~root; echo "$X"
+echo ~root > outfiles/tilde_root; cat outfiles/tilde_root
+cat < ~/definitely_missing_42sh_file

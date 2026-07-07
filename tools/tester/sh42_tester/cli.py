@@ -38,7 +38,10 @@ def run_suite(cases: list[Case], args, base_env: dict):
     Renvoie (totals, segfaults, failures, failed, interrupted) ;
     failed (cas non strict_ok) sert aux relances ciblées.
     """
-    totals = dict(n=0, strict=0, out=0, code=0, diff=0, err=0, crit=0, segv=0)
+    totals = dict(n=0, strict=0, out=0, code=0, diff=0, err=0,
+                  pipe_n=0, tty_n=0,
+                  tty_out=0, tty_code=0, tty_diff=0, tty_err=0,
+                  crit=0, segv=0)
     segfaults: list[str] = []
     failures: list[str] = []
     failed: list[Case] = []
@@ -57,10 +60,18 @@ def run_suite(cases: list[Case], args, base_env: dict):
                 print(banner(case_label(c.source)) + "\n")
             r = futures[i].result()
             totals["n"] += 1
-            totals["out"] += r.ok_output
-            totals["code"] += r.ok_code
-            totals["diff"] += r.ok_diff
-            totals["err"] += r.ok_error
+            if r.pipe_enabled:
+                totals["pipe_n"] += 1
+                totals["out"] += r.ok_output
+                totals["code"] += r.ok_code
+                totals["diff"] += r.ok_diff
+                totals["err"] += r.ok_error
+            if r.tty_enabled:
+                totals["tty_n"] += 1
+                totals["tty_out"] += r.tty_ok_output
+                totals["tty_code"] += r.tty_ok_code
+                totals["tty_diff"] += r.tty_ok_diff
+                totals["tty_err"] += r.tty_ok_error
             totals["strict"] += r.strict_ok
             if r.critical:
                 totals["crit"] += 1
@@ -99,8 +110,13 @@ def write_failures_file(t: dict, failures: list[str]) -> None:
     head = [
         "#" * 72,
         f"# Rapport d'échecs : {len(failures)} test(s) en échec sur {n}",
-        f"# strict {t['strict']}/{n} | stdout {t['out']}/{n} | "
-        f"exit {t['code']}/{n} | outfiles {t['diff']}/{n} | stderr {t['err']}/{n}",
+        f"# strict {t['strict']}/{n} | stdout {t['out']}/{t['pipe_n']} | "
+        f"exit {t['code']}/{t['pipe_n']} | outfiles {t['diff']}/{t['pipe_n']} | "
+        f"stderr {t['err']}/{t['pipe_n']}",
+        f"# tty stdout {t['tty_out']}/{t['tty_n']} | "
+        f"tty exit {t['tty_code']}/{t['tty_n']} | "
+        f"tty outfiles {t['tty_diff']}/{t['tty_n']} | "
+        f"tty stderr {t['tty_err']}/{t['tty_n']}",
         "#" * 72, "",
     ]
     body = "\n\n".join(failures)
@@ -111,13 +127,19 @@ def report(t: dict, segfaults: list[str], failures: list[str]) -> int:
     n = t["n"]
     print()
 
-    def line(label, val):
-        mark = f"{C.GREEN}OK{C.RESET}" if val == n else f"{C.RED}KO{C.RESET}"
-        print(f"{mark}  {val}/{n} ({label})")
-    line("outputs", t["out"])
-    line("exit codes", t["code"])
-    line("outfiles", t["diff"])
-    line("errors", t["err"])
+    def cell(val, total):
+        mark = f"{C.GREEN}OK{C.RESET}" if val == total else f"{C.RED}KO{C.RESET}"
+        return f"{mark} {val:>4}/{total:<4}"
+
+    rows = [
+        ("O", t["out"], t["pipe_n"], t["tty_out"], t["tty_n"]),
+        ("C", t["code"], t["pipe_n"], t["tty_code"], t["tty_n"]),
+        ("D", t["diff"], t["pipe_n"], t["tty_diff"], t["tty_n"]),
+        ("E", t["err"], t["pipe_n"], t["tty_err"], t["tty_n"]),
+    ]
+    print(f"{C.BOLD}        pipe          tty{C.RESET}")
+    for label, pipe_val, pipe_total, tty_val, tty_total in rows:
+        print(f"{label}:   {cell(pipe_val, pipe_total)}     {cell(tty_val, tty_total)}")
     if t["crit"]:
         print(f"{C.PURPLE}{t['crit']} erreur(s) critique(s){C.RESET}")
     else:
@@ -156,8 +178,8 @@ def main() -> int:
 
     print(f"{C.GREEN}tester 42_sh · {args.jobs} workers · "
           f"locale {locale}{C.RESET}\n")
-    print(f"{C.BLUE}      O C D E  "
-          f"(Output | exit Code | Diff outfiles | Error msg){C.RESET}")
+    print(f"{C.BLUE}      OCDE  OCDE  pipe tty · "
+          f"O output · C code · D outfiles · E stderr{C.RESET}")
 
     cases: list[Case] = []
     idx = 0

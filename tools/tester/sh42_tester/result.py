@@ -23,3 +23,17 @@ class Result:
     outfiles_diff: list[str] = field(default_factory=list)
     critical: str = ""       # symboles d'erreurs valgrind/abort (mode -v)
     is_segfault: bool = False
+    pipe_enabled: bool = True
+    tty_enabled: bool = True
+    tty_ok_output: bool = False
+    tty_ok_code: bool = False
+    tty_ok_diff: bool = False
+    tty_ok_error: bool = True
+    tty_strict_ok: bool = False
+    tty_sh42_out: str = ""
+    tty_bash_out: str = ""
+    tty_sh42_code: int = 0
+    tty_bash_code: int = 0
+    tty_sh42_err: str = ""
+    tty_bash_err: str = ""
+    tty_outfiles_diff: list[str] = field(default_factory=list)
