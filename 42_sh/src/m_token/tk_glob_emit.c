@@ -22,16 +22,14 @@ t_token	*tk_glob_emit(char *str)
 	t_tk_part	*part;
 	t_token		*token;
 
-	token = token_new(TOK_GLOB);
-	part = tk_part_new(TOK_GLOB, 0);
+	token = token_new(TOK_WORD);
+	part = tk_part_new(PART_GLOB, 0);
 	if (!part)
 	{
 		free_and_exit_minishell(EXIT_FAILURE);
 		return (NULL);
 	}
-	token->kind = TKD_OPERAND;
-	token->family = TKF_WORD;
-	token->group = TKG_ARGUMENT;
+	token->role = TKR_ARGUMENT;
 	token->head = part;
 	token->tail = part;
 	token->count = 1;

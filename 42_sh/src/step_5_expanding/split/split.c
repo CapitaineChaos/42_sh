@@ -31,7 +31,7 @@ static bool	part_needs_split(t_tk_part *part)
 {
 	int	i;
 
-	if (part->type != TOK_UQUOTE || !part->str)
+	if (part->type != PART_UQUOTE || !part->str)
 		return (false);
 	i = 0;
 	while (part->str[i])
@@ -75,7 +75,8 @@ static char	**split_unescaped(char *str, char *delims, int *nb)
 	return (out);
 }
 
-static void	split_part(t_tokens *out, t_token *current, t_tk_part *part)
+static void	split_part(t_tokens *out, t_token *current, t_tk_part *part,
+	t_tk_role role)
 {
 	int			n;
 	int			i;
@@ -91,9 +92,10 @@ static void	split_part(t_tokens *out, t_token *current, t_tk_part *part)
 			if (!current)
 			{
 				current = token_new(TOK_WORD);
+				current->role = role;
 				tk_list_append(out, current);
 			}
-			p = tk_part_new(TOK_UQUOTE, 0);
+			p = tk_part_new(PART_UQUOTE, 0);
 			p->str = strdup(words[i]);
 			tk_append_part_tok(current, p);
 			if (i + 1 < n)
@@ -104,13 +106,15 @@ static void	split_part(t_tokens *out, t_token *current, t_tk_part *part)
 	free_char_array(words);
 }
 
-static void	do_not_split(t_tokens *out, t_token *current, t_tk_part *part)
+static void	do_not_split(t_tokens *out, t_token *current, t_tk_part *part,
+	t_tk_role role)
 {
 	t_tk_part	*next;
 
 	if (!current)
 	{
 		current = token_new(TOK_WORD);
+		current->role = role;
 		tk_list_append(out, current);
 	}
 	next = part->next;
@@ -136,12 +140,12 @@ static t_tokens	split_parts(t_token *tok)
 	while (part)
 	{
 		next = part->next;
-		if (part->type == TOK_UQUOTE && part->str && part->str[0] == '\0')
+		if (part->type == PART_UQUOTE && part->str && part->str[0] == '\0')
 			free_token_part(part);
 		else if (part_needs_split(part))
-			split_part(&out, current, part);
+			split_part(&out, current, part, tok->role);
 		else
-			do_not_split(&out, current, part);
+			do_not_split(&out, current, part, tok->role);
 		part = next;
 	}
 	return (out);
@@ -180,7 +184,7 @@ static bool	need_split(t_tk_part *p)
 	{
 		if (part_needs_split(p))
 			return (true);
-		if (p->type == TOK_UQUOTE && p->str && p->str[0] == '\0')
+		if (p->type == PART_UQUOTE && p->str && p->str[0] == '\0')
 			return (true);
 		p = p->next;
 	}
@@ -197,7 +201,7 @@ int	split_tokens(t_tokens *tokens, bool is_redir)
 	while (cur)
 	{
 		next = cur->next;
-		if (cur->kind == TKD_OPERAND && cur->family == TKF_WORD
+		if (cur->type == TOK_WORD
 			&& !cur->has_quoted_part && need_split(cur->head))
 		{
 			n = split_token(tokens, cur);

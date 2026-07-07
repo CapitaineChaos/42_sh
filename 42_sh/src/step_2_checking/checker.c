@@ -67,7 +67,7 @@ static void	*set_states(t_checker *chk, int rdy, int cls, int cmd)
 
 static bool	is_bad_redir(t_token **token)
 {
-	if (*token && (*token)->family == TKF_REDIRECT)
+	if (*token && tok_has((*token)->type, TF_REDIR))
 	{
 		*token = (*token)->next;
 		if (!(*token) || (*token)->type == TOK_WORD)
@@ -82,11 +82,12 @@ static bool	is_bad_redir(t_token **token)
 
 static bool	is_bad_cmd(t_token **token)
 {
-	while (*token && (*token)->kind == TKD_OPERAND)
+	while (*token && tok_has((*token)->type, TF_OPERAND))
 	{
 		if (is_bad_redir(token))
 			return (true);
-		if (*token && (*token)->next && (*token)->next->kind == TKD_OPERAND)
+		if (*token && (*token)->next
+			&& tok_has((*token)->next->type, TF_OPERAND))
 			*token = (*token)->next;
 		else
 			return (false);
@@ -101,12 +102,12 @@ static bool	check_lparen(t_checker *chk, t_token **cur, t_token **ret)
 		return (false);
 	if (chk->cmd_ready && !chk->cmd_closed)
 	{
-		if ((*cur)->prev && (*cur)->prev->kind == TKD_OPERAND)
+		if ((*cur)->prev && tok_has((*cur)->prev->type, TF_OPERAND))
 		{
 			*ret = (*cur)->next;
 			if (!(*cur)->prev->prev)
 				return (true);
-			if ((*cur)->prev->prev->kind != TKD_OPERAND)
+			if (!tok_has((*cur)->prev->prev->type, TF_OPERAND))
 				return (true);
 		}
 		*ret = *cur;
@@ -143,7 +144,7 @@ static bool	check_parentheses(t_checker *chk, t_token **cur, t_token **ret)
 
 static bool	check_command(t_checker *chk, t_token **cur, t_token **ret)
 {
-	if (*cur && (*cur)->family == TKF_WORD)
+	if (*cur && (*cur)->type == TOK_WORD)
 	{
 		*ret = *cur;
 		if (!chk->can_cmd)
@@ -156,7 +157,7 @@ static bool	check_command(t_checker *chk, t_token **cur, t_token **ret)
 		*ret = set_states(chk, 1, 0, 0);
 		return (true);
 	}
-	if (*cur && (*cur)->family == TKF_REDIRECT)
+	if (*cur && tok_has((*cur)->type, TF_REDIR))
 	{
 		if (is_bad_redir(cur))
 		{
@@ -171,7 +172,7 @@ static bool	check_command(t_checker *chk, t_token **cur, t_token **ret)
 
 static bool	check_separator_or_unknown(t_checker *chk, t_token **cur, t_token **ret)
 {
-	if (*cur && (*cur)->family == TKF_CONTROL)
+	if (*cur && tok_has((*cur)->type, TF_LIST_SEP))
 	{
 		*ret = *cur;
 		if (!chk->cmd_ready)
@@ -180,7 +181,7 @@ static bool	check_separator_or_unknown(t_checker *chk, t_token **cur, t_token **
 		*ret = NULL;
 		return (true);
 	}
-	if (*cur && (*cur)->family == TKF_OPERATOR)
+	if (*cur && tok_has((*cur)->type, TF_CONTROL_OP))
 	{
 		*ret = *cur;
 		if (!chk->cmd_ready)

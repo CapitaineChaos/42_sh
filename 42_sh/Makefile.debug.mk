@@ -4,6 +4,7 @@
 # alimentés par les fichiers /dev/shm/sh42_dbg/*.
 
 DBG_LVL			?= 11
+DBG_PORT		?= 8765
 DBG_BUILD		:= /dev/shm/sh42_build
 DBG_SERVE		:= ../tools/debugview/debugserve.py
 
@@ -22,8 +23,8 @@ debug_build: $(DBG_OBJ_FILES)
 		|| { echo "$(RD)>>>>> Linking failed for $(NAME)$(RT)"; exit 1; }
 
 debug: debug_build
-	@echo "$(MG)>>>>> debugview : http://127.0.0.1:8765$(RT)"
-	@python3 $(DBG_SERVE)
+	@echo "$(MG)>>>>> debugview : lancement sur port $(DBG_PORT)$(RT)"
+	@python3 $(DBG_SERVE) $(DBG_PORT)
 
 -include $(DBG_OBJ_FILES:.o=.d)
 

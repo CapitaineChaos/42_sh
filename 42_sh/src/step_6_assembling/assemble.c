@@ -24,7 +24,7 @@ static size_t	count_argv_tokens(t_tokens *tokens)
 	tok = tokens->head;
 	while (tok)
 	{
-		if (tok->group == TKG_ARGUMENT && tok->str != NULL)
+		if (tok->role == TKR_ARGUMENT && tok->str != NULL)
 			count++;
 		tok = tok->next;
 	}
@@ -45,7 +45,7 @@ static char	**create_cmd_argv(t_tokens *tokens, int *argc)
 	tok = tokens->head;
 	while (tok)
 	{
-		if (tok->group == TKG_ARGUMENT && tok->str != NULL)
+		if (tok->role == TKR_ARGUMENT && tok->str != NULL)
 		{
 			argv[i++] = tok->str;
 		}

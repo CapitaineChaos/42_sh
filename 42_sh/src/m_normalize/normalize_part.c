@@ -79,11 +79,11 @@ char	*normalize_part(t_tk_part *part)
 {
 	char	*str;
 
-	if (part->str && part->type == TOK_SQUOTE)
+	if (part->str && part->type == PART_SQUOTE)
 		return (strdup(part->str));
-	else if (part->str && part->type == TOK_DQUOTE)
+	else if (part->str && part->type == PART_DQUOTE)
 		return (format_dquoted(part->str));
-	else if (part->str && part->type == TOK_UQUOTE)
+	else if (part->str && part->type == PART_UQUOTE)
 	{
 		str = format_unquoted(part->str);
 		return (str);

@@ -99,7 +99,7 @@ int	apply_redirs(t_ast_node *node)
 	tok = node->t_ast_data.operand.redirections.head;
 	while (tok)
 	{
-		if (tok->group == TKG_REDIRECTION)
+		if (tok->role == TKR_REDIR_OP)
 		{
 			if (tok->type == TOK_REDIR_HEREDOC && tok->next && tok->next->next
 				&& tok->next->next->type == TOK_HEREDOC_BODY)

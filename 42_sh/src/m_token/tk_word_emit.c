@@ -46,9 +46,7 @@ t_token	*new_word_token(t_tk_part *first)
 	token = token_new(TOK_WORD);
 	if (!token)
 		free_and_exit_minishell(EXIT_FAILURE);
-	token->kind = TKD_OPERAND;
-	token->family = TKF_WORD;
-	token->group = TKG_ARGUMENT;
+	token->role = TKR_ARGUMENT;
 	token->head = NULL;
 	token->tail = NULL;
 	token->count = 0;
@@ -68,9 +66,7 @@ void	tk_word_emit(t_lexer *lx)
 	token = token_new(TOK_WORD);
 	if (!token)
 		free_and_exit_minishell(EXIT_FAILURE);
-	token->kind = TKD_OPERAND;
-	token->family = TKF_WORD;
-	token->group = TKG_ARGUMENT;
+	token->role = TKR_ARGUMENT;
 	transplant_parts(token, lx->tmp_wp);
 	lx->tmp_wp = NULL;
 	tk_list_append(&lx->tokens, token);

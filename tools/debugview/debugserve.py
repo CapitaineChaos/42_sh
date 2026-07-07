@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import base64
+import errno
 import fcntl
 import http.server
 import json
@@ -223,18 +224,41 @@ class Handler(http.server.BaseHTTPRequestHandler):
             SHELL.unsubscribe(q)
 
 
+class ReusableThreadingHTTPServer(http.server.ThreadingHTTPServer):
+    allow_reuse_address = True
+
+
+def bind_server(port):
+    last_error = None
+    for candidate in range(port, port + 50):
+        try:
+            srv = ReusableThreadingHTTPServer(("127.0.0.1", candidate),
+                                             Handler)
+            if candidate != port:
+                print(f"Port {port} déjà utilisé ; "
+                      f"debugview écoute sur {candidate}.",
+                      file=sys.stderr, flush=True)
+            return (srv, candidate)
+        except OSError as err:
+            last_error = err
+            if err.errno != errno.EADDRINUSE:
+                raise
+    raise last_error
+
+
 def main():
     global SHELL
     os.chdir(ROOT)
+    srv, port = bind_server(PORT)
     SHELL = Shell()
-    srv = http.server.ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
-    print(f"http://127.0.0.1:{PORT}", flush=True)
+    print(f"http://127.0.0.1:{port}", flush=True)
     try:
         srv.serve_forever()
     except KeyboardInterrupt:
         pass
     try:
-        os.kill(SHELL.pid, signal.SIGKILL)
+        if SHELL is not None:
+            os.kill(SHELL.pid, signal.SIGKILL)
     except OSError:
         pass
 

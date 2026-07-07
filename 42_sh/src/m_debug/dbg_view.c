@@ -77,14 +77,6 @@ static void	put_clean(int fd, const char *s)
 	}
 }
 
-/* Ignore le padding d'alignement des convertisseurs terminal. */
-static const char	*ltrim(const char *s)
-{
-	while (*s == ' ')
-		s++;
-	return (s);
-}
-
 /* Texte d'un token : assemblé depuis parts, repli sur str (opérateurs). */
 static void	put_tok_text(int fd, t_token *t)
 {
@@ -161,7 +153,7 @@ static void	put_part_flags(int fd, t_tk_part *p)
 	put_byte(fd, p->has_glob ? '*' : '-');
 }
 
-/* parts : US-liste ; chaque part = type RS span RS flags RS text. */
+/* parts : US-liste ; chaque part = part_type RS span RS flags RS text. */
 static void	put_parts(int fd, t_token *t)
 {
 	t_tk_part	*p;
@@ -175,7 +167,7 @@ static void	put_parts(int fd, t_token *t)
 		if (!first)
 			put_byte(fd, DBG_US);
 		first = 0;
-		dprintf(fd, "%s", debug_get_token_type(p->type));
+		dprintf(fd, "%s", debug_get_part_type(p->type));
 		put_byte(fd, DBG_RS);
 		dprintf(fd, "%d:%d", (int)p->start, (int)p->end);
 		put_byte(fd, DBG_RS);
@@ -349,8 +341,8 @@ void	dbg_tokens(t_tokens *tokens)
 	t = tokens->head;
 	while (t)
 	{
-		dprintf(fd, "%d\t%s\t%s\t", idx, ltrim(get_tok_family(t->family)),
-			debug_get_token_type(t->type));
+		dprintf(fd, "%d\t%s\t%s\t", idx,
+			debug_get_token_role(t->role), debug_get_token_type(t->type));
 		put_tok_flags(fd, t);
 		put_byte(fd, DBG_TAB);
 		put_tok_text(fd, t);

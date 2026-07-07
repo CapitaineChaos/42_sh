@@ -113,7 +113,8 @@ int	expand_redir_wildcards(t_tokens *tokens)
 	token = tokens->head;
 	while (token)
 	{
-		if (token->family == TKF_WORD && token->type != TOK_DELIM)
+		if (token->type == TOK_WORD
+			&& token->role != TKR_HEREDOC_DELIM)
 		{
 			n = 0;
 			if (token->has_glob && !token->has_quoted_part)

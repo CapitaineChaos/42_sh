@@ -19,7 +19,7 @@ static void	tag_tilde(t_token *token, t_tk_part *part)
 	t_tk_part	*tmp;
 
 	tmp = part;
-	if (tmp->str && tmp->type == TOK_UQUOTE)
+	if (tmp->str && tmp->type == PART_UQUOTE)
 	{
 		if (tmp->str[0] == '~')
 		{
@@ -39,13 +39,13 @@ void	tag_tokens_tildes(t_token *first)
 		return ;
 	while (token)
 	{
-		if (token->kind == TKD_OPERAND && token->family != TKF_REDIRECT
-			&& token->type != TOK_DELIM)
+		if (token->type == TOK_WORD
+			&& token->role != TKR_HEREDOC_DELIM)
 		{
 			part = token->head;
 			while (part)
 			{
-				if (part->type == TOK_DQUOTE || part->type == TOK_SQUOTE)
+				if (part->type == PART_DQUOTE || part->type == PART_SQUOTE)
 					token->has_quoted_part = true;
 				tag_tilde(token, part);
 				part = part->next;

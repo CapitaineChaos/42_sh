@@ -78,8 +78,4 @@ void	add_context(t_lexer *lx, t_tk_type type)
 		context_add_(&lx->ctxs, CTX___CMDOR); 
 	else if (type == TOK_ESCAPE)
 		context_add_(&lx->ctxs, CTX___ESCAPE);
-	else if (type == TOK_DQUOTE)
-		context_add_(&lx->ctxs, CTX___DQUOTE);
-	else if (type == TOK_SQUOTE)
-		context_add_(&lx->ctxs, CTX___SQUOTE);
 }

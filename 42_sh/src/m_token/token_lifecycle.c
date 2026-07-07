@@ -73,9 +73,7 @@ void	free_token(t_token *token)
 		free(token->str);
 		token->str = NULL;
 	}
-	if (token->type == TOK_WORD || token->type == TOK_DELIM
-		|| token->type == TOK_HEREDOC_BODY
-		|| token->type == TOK_GLOB)
+	if (token->type == TOK_WORD || token->type == TOK_HEREDOC_BODY)
 	{
 		free_token_parts(token->head);
 		token->head = NULL;

@@ -36,7 +36,7 @@ static void	drop_empty_tmp_uquote(t_lexer *lx)
 		return ;
 	while (part->next)
 		part = part->next;
-	if (part->type != TOK_UQUOTE || part->start != part->end)
+	if (part->type != PART_UQUOTE || part->start != part->end)
 		return ;
 	if (part->prev)
 		part->prev->next = NULL;
@@ -57,11 +57,14 @@ static bool	starts_word_char(t_lexer *lx)
 }
 
 static void	enter_quote_state(t_lexer *lx, t_lex_state state,
-	t_tk_type part_type)
+	t_tk_part_type part_type)
 {
 	lx->state = state;
 	rem_op_context(lx);
-	add_context(lx, part_type);
+	if (part_type == PART_DQUOTE)
+		context_add_(&lx->ctxs, CTX___DQUOTE);
+	else if (part_type == PART_SQUOTE)
+		context_add_(&lx->ctxs, CTX___SQUOTE);
 	tk_temp_part_create(lx, part_type);
 }
 
@@ -175,7 +178,7 @@ static bool	enter_dquote(t_lexer *lx)
 	if (!is_dquote(lx))
 		return (false);
 	advance_(&lx->inp);
-	enter_quote_state(lx, LEX_DQUOTE, TOK_DQUOTE);
+	enter_quote_state(lx, LEX_DQUOTE, PART_DQUOTE);
 	return (true);
 }
 
@@ -195,7 +198,7 @@ static bool	enter_squote(t_lexer *lx)
 	if (!is_squote(lx))
 		return (false);
 	advance_(&lx->inp);
-	enter_quote_state(lx, LEX_SQUOTE, TOK_SQUOTE);
+	enter_quote_state(lx, LEX_SQUOTE, PART_SQUOTE);
 	return (true);
 }
 
@@ -210,7 +213,7 @@ static bool	consume_escape(t_lexer *lx)
 		advance_(&lx->inp);
 		advance_(&lx->inp);
 		if (starts_word_char(lx))
-			tk_temp_part_create(lx, TOK_UQUOTE);
+			tk_temp_part_create(lx, PART_UQUOTE);
 		return (true);
 	}
 	lx->state = LEX_ESCAPE;
@@ -299,7 +302,7 @@ static void	lex_normal(t_lexer *lx)
 	if (had_sep || consume_comment(lx))
 		return ;
 	if (!is_eof(lx))
-		tk_temp_part_create(lx, TOK_UQUOTE);
+		tk_temp_part_create(lx, PART_UQUOTE);
 	rem_op_context(lx);
 	read_unquoted_body(lx);
 }

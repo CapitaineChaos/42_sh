@@ -25,9 +25,7 @@ void	tk_heredoc_body_emit(t_lexer *lx, t_token *next, char *body)
 		free_and_exit_minishell(EXIT_FAILURE);
 		return ;
 	}
-	token->kind = TKD_OPERAND;
-	token->family = TKF_HEREDOC_BODY;
-	token->group = TKG_OTHER;
+	token->role = TKR_HEREDOC_BODY;
 	if (body)
 		token->str = strdup(body);
 	tk_list_insert(&lx->tokens, next, token);
@@ -43,9 +41,7 @@ void	tk_struct_emit(t_lexer *lx, char *s, t_tk_type type)
 		free_and_exit_minishell(EXIT_FAILURE);
 		return ;
 	}
-	token->kind = TKD_STRUCT;
-	token->family = TKF_SUBSHELL;
-	token->group = TKG_OTHER;
+	token->role = TKR_NONE;
 	token->str = strdup(s);
 	tk_list_append(&lx->tokens, token);
 }
@@ -60,9 +56,7 @@ void	tk_redir_emit(t_lexer *lx, char *str, t_tk_type type)
 		free_and_exit_minishell(EXIT_FAILURE);
 		return ;
 	}
-	token->kind = TKD_OPERAND;
-	token->family = TKF_REDIRECT;
-	token->group = TKG_OTHER;
+	token->role = TKR_REDIR_OP;
 	token->str = strdup(str);
 	if (type == TOK_REDIR_HEREDOC)
 	{

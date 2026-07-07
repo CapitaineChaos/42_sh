@@ -61,8 +61,8 @@ void	dbg_assert_fail(const char *expr, const char *msg,
 
 char	*get_ast_typestr(t_ast_type type);
 char	*debug_get_token_type(t_tk_type type);
-char	*debug_get_tok_kind(t_tk_kind kind);
-char	*get_tok_family(t_tk_family tclass);
+char	*debug_get_part_type(t_tk_part_type type);
+char	*debug_get_token_role(t_tk_role role);
 char	*convert_dbg_lvl_name(int lvl);
 
 #endif

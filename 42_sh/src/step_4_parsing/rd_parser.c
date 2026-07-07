@@ -23,19 +23,18 @@ void	find_redirs(t_tokens *tokens)
 	tok = tokens->head;
 	while (tok)
 	{
-		if (tok->family == TKF_REDIRECT)
+		if (tok_has(tok->type, TF_REDIR))
 		{
-			tok->group = TKG_REDIRECTION;
+			tok->role = TKR_REDIR_OP;
 			if (tok->next && tok->type == TOK_REDIR_HEREDOC)
 			{
-				tok->next->group = TKG_REDIRECTION;
-				tok->next->type = TOK_DELIM;
+				tok->next->role = TKR_HEREDOC_DELIM;
 				tok = tok->next;
-				if (tok->next && tok->next->family == TKF_HEREDOC_BODY)
-					tok->next->group = TKG_REDIRECTION;
+				if (tok->next && tok->next->type == TOK_HEREDOC_BODY)
+					tok->next->role = TKR_HEREDOC_BODY;
 			}
 			else if (tok->next && tok->next->type == TOK_WORD)
-				tok->next->group = TKG_REDIRECTION;
+				tok->next->role = TKR_REDIR_TARGET;
 		}
 		tok = tok->next;
 	}
@@ -53,7 +52,16 @@ static bool	is_seq_sep(t_token *tok)
 
 static bool	starts_command(t_token *tok)
 {
-	return (tok && (tok->kind == TKD_OPERAND || tok->type == TOK_LPAREN));
+	return (tok && (tok_has(tok->type, TF_OPERAND)
+			|| tok->type == TOK_LPAREN));
+}
+
+static bool	is_redir_role(t_token *tok)
+{
+	return (tok && (tok->role == TKR_REDIR_OP
+			|| tok->role == TKR_REDIR_TARGET
+			|| tok->role == TKR_HEREDOC_DELIM
+			|| tok->role == TKR_HEREDOC_BODY));
 }
 
 static t_ast_node	*bin_node(t_ast_type type, t_token *op,
@@ -74,12 +82,12 @@ static void	consume_operands(t_tokens *t, t_ast_node *node, bool redirs_only)
 {
 	t_token	*tok;
 
-	while (t->head && t->head->kind == TKD_OPERAND)
+	while (t->head && tok_has(t->head->type, TF_OPERAND))
 	{
-		if (redirs_only && t->head->group != TKG_REDIRECTION)
+		if (redirs_only && !is_redir_role(t->head))
 			break ;
 		tok = tk_list_pop_front(t);
-		if (tok->group == TKG_REDIRECTION)
+		if (is_redir_role(tok))
 			tk_list_append(&node->t_ast_data.operand.redirections, tok);
 		else
 			tk_list_append(&node->t_ast_data.operand.tokens, tok);

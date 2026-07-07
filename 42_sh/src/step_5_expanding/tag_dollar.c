@@ -16,7 +16,7 @@
 
 static void	tag_heredoc(t_token *token)
 {
-	if (token->type != TOK_HEREDOC_BODY || token->type == TOK_DELIM)
+	if (token->type != TOK_HEREDOC_BODY)
 		return ;
 	if (token->type == TOK_HEREDOC_BODY && token->prev)
 	{
@@ -32,15 +32,16 @@ static void	tag_dollar(t_token *token)
 	t_tk_part	*p;
 	int			idx;
 
-	if (token->type == TOK_HEREDOC_BODY || token->type == TOK_DELIM)
+	if (token->type == TOK_HEREDOC_BODY
+		|| token->role == TKR_HEREDOC_DELIM)
 		return ;
 	p = token->head;
 	while (p)
 	{
-		if (p->str && p->next && (p->type == TOK_UQUOTE)
+		if (p->str && p->next && (p->type == PART_UQUOTE)
 			&& !strcmp(p->str, "$"))
 			p->str[0] = '\0';
-		else if (p->str && (p->type == TOK_UQUOTE || p->type == TOK_DQUOTE))
+		else if (p->str && (p->type == PART_UQUOTE || p->type == PART_DQUOTE))
 		{
 			idx = find_unescaped_char(p->str, '$');
 			if (idx != -1 && p->str[idx + 1] != 0)
@@ -60,7 +61,7 @@ static void	tag_token_quotes(t_token *token)
 	part = token->head;
 	while (part)
 	{
-		if (part->type == TOK_DQUOTE || part->type == TOK_SQUOTE)
+		if (part->type == PART_DQUOTE || part->type == PART_SQUOTE)
 		{
 			token->has_quoted_part = true;
 			break ;
@@ -78,7 +79,8 @@ void	tag_tokens_vars(t_token *first)
 		return ;
 	while (token)
 	{
-		if (token->kind == TKD_OPERAND && token->family != TKF_REDIRECT)
+		if (tok_has(token->type, TF_OPERAND)
+			&& token->role != TKR_REDIR_OP)
 		{
 			tag_token_quotes(token);
 			tag_dollar(token);

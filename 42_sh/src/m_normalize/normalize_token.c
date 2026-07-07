@@ -18,7 +18,7 @@ void	normalize_token(t_token *token)
 		return ;
 	while (token)
 	{
-		if (token->family == TKF_WORD)
+		if (token->type == TOK_WORD)
 			normalize_parts(token->head);
 		token = token->next;
 	}

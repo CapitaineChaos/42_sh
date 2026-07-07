@@ -20,7 +20,7 @@
  * @param type Le type du subtoken
  * @note Le subtoken est ajouté à la liste des subtokens temporaires
  */
-void	tk_temp_part_create(t_lexer *lx, t_tk_type type)
+void	tk_temp_part_create(t_lexer *lx, t_tk_part_type type)
 {
 	t_tk_part	*wp;
 	t_tk_part	*cur;
@@ -100,7 +100,7 @@ void	tk_append_part_tok(t_token *token, t_tk_part *part)
 	token->count++;
 }
 
-t_tk_part	*tk_part_new(t_tk_type type, size_t offset)
+t_tk_part	*tk_part_new(t_tk_part_type type, size_t offset)
 {
 	t_tk_part	*wp;
 

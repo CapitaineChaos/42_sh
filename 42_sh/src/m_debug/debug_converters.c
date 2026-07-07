@@ -31,58 +31,27 @@ static char	*lookup_name(const t_debug_name *names, int value, char *fallback)
 
 char	*debug_get_token_type(t_tk_type type)
 {
-	static const t_debug_name	names[] = {
-	{TOK_UQUOTE, "UNQUOTED"},
-	{TOK_DQUOTE, "DQUOTE"},
-	{TOK_SQUOTE, "SQUOTE"},
-	{TOK_GLOB, "GLOB"},
-	{TOK_PIPE, "PIPE"},
-	{TOK_AND_IF, "AND_IF"},
-	{TOK_OR_IF, "OR_IF"},
-	{TOK_LPAREN, "LPAREN"},
-	{TOK_RPAREN, "RPAREN"},
-	{TOK_SEMI, "SEMI"},
-	{TOK_REDIR_IN, "REDIR_IN"},
-	{TOK_REDIR_OUT, "REDIR_OUT"},
-	{TOK_REDIR_APPEND, "REDIR_APPEND"},
-	{TOK_REDIR_HEREDOC, "REDIR_HEREDOC"},
-	{TOK_EOF, "EOF"},
-	{TOK_NEWLINE, "NEWLINE"},
-	{TOK_WORD, "WORD"},
-	{TOK_DELIM, "DELIM"},
-	{TOK_OPERATOR, "OPERATOR"},
-	{TOK_HEREDOC_BODY, "HEREDOC_BODY"},
-	{0, NULL}
-	};
-
-	return (lookup_name(names, type, "      UNKNOWN"));
+	return ((char *)tok_name(type));
 }
 
-char	*debug_get_tok_kind(t_tk_kind kind)
+char	*debug_get_part_type(t_tk_part_type type)
 {
-	static const t_debug_name	names[] = {
-	{TKD_OPERAND, "OPERAND"},
-	{TKD_OPERATOR, "OPERATOR"},
-	{TKD_STRUCT, "STRUCT"},
-	{0, NULL}
-	};
-
-	return (lookup_name(names, kind, "UNKNOWN"));
+	return ((char *)part_name(type));
 }
 
-char	*get_tok_family(t_tk_family family)
+char	*debug_get_token_role(t_tk_role role)
 {
 	static const t_debug_name	names[] = {
-	{TKF_WORD, "         WORD"},
-	{TKF_OPERATOR, "     OPERATOR"},
-	{TKF_REDIRECT, "     REDIRECT"},
-	{TKF_HEREDOC_BODY, " HEREDOC_BODY"},
-	{TKF_SUBSHELL, "     SUBSHELL"},
-	{TKF_WORD_REDIR, "   WORD_REDIR"},
+	{TKR_NONE, "NONE"},
+	{TKR_ARGUMENT, "ARGUMENT"},
+	{TKR_REDIR_OP, "REDIR_OP"},
+	{TKR_REDIR_TARGET, "REDIR_TARGET"},
+	{TKR_HEREDOC_DELIM, "HEREDOC_DELIM"},
+	{TKR_HEREDOC_BODY, "HEREDOC_BODY"},
 	{0, NULL}
 	};
 
-	return (lookup_name(names, family, "      UNKNOWN"));
+	return (lookup_name(names, role, "UNKNOWN"));
 }
 
 char	*get_ast_typestr(t_ast_type type)

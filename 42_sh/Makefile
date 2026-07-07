@@ -128,7 +128,8 @@ SRCS_TOKEN = \
 				tk_word_emit \
 				token_append \
 				token_content \
-				token_lifecycle
+				token_lifecycle \
+				token_specs
 
 SRCS_SIGNAL = \
 				signals

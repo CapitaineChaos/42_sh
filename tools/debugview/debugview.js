@@ -252,18 +252,18 @@ function treeHTML(text, name) {
 function tokenTable(text, name) {
   const rows = text.split("\n").filter((l) => l.length);
   let h = `<div class="hscroll"><table class="ttab tktab"><thead><tr><th>#</th>` +
-    `<th>GROUP</th><th>TYPE</th><th>FLAG</th><th>TEXT</th></tr></thead><tbody>`;
+    `<th>ROLE</th><th>TYPE</th><th>FLAGS</th><th>TEXT</th></tr></thead><tbody>`;
   for (const l of rows) {
     const f = l.split("\t");
     const o = {
-      kind: "tok", idx: f[0] || "", group: f[1] || "", type: f[2] || "",
+      kind: "tok", idx: f[0] || "", role: f[1] || "", type: f[2] || "",
       flags: f[3] || "----", text: f[4] || "", count: f[5] || "0",
       parts: f[6] || "",
     };
     const key = `tok:${name}:${o.idx}`;
     INSPECT[key] = o;
     h += `<tr data-key="${key}"><td class="ti">${esc(o.idx)}</td>` +
-      `<td>${esc(o.group)}</td><td class="type">${esc(o.type)}</td>` +
+      `<td>${esc(o.role)}</td><td class="type">${esc(o.type)}</td>` +
       `<td class="tf">${flagsHTML(o.flags)}</td>` +
       `<td class="tt">${color(o.text)}</td></tr>`;
   }
@@ -354,14 +354,14 @@ function inspectToken(o) {
   let h = `<div class="ihead"><span class="ibadge type">${esc(o.type)}</span>` +
     `<span class="idx">#${esc(o.idx)}</span></div>`;
   h += kvRows([
-    ["group", esc(o.group)],
+    ["role", esc(o.role)],
     ["flags", `${flagsHTML(o.flags)}${on.length ? " — " + on.join(", ") : ""}`],
     ["count", esc(o.count)],
     ["text", `<code>${color(o.text)}</code>`],
   ]);
   if (parts.length) {
     h += `<div class="lbl">parts</div><table class="ptab"><thead><tr>` +
-      `<th>type</th><th>off</th><th>flag</th><th>text</th></tr></thead><tbody>`;
+      `<th>part</th><th>span</th><th>flags</th><th>text</th></tr></thead><tbody>`;
     for (const p of parts) {
       const s = p.split(RS);
       h += `<tr><td class="type">${esc(s[0] || "")}</td>` +

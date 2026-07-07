@@ -21,7 +21,7 @@ static void	tag_glob(t_token *token, t_tk_part *part)
 	tmp = part;
 	while (tmp)
 	{
-		if (tmp->str && tmp->type == TOK_UQUOTE)
+		if (tmp->str && tmp->type == PART_UQUOTE)
 		{
 			if (find_unescaped_char(tmp->str, '*') != -1)
 			{
@@ -43,8 +43,8 @@ void	tag_tokens_globs(t_token *first)
 		return ;
 	while (token)
 	{
-		if (token->kind == TKD_OPERAND && token->family != TKF_REDIRECT
-			&& token->type != TOK_DELIM)
+		if (token->type == TOK_WORD
+			&& token->role != TKR_HEREDOC_DELIM)
 		{
 			part = token->head;
 			while (part)

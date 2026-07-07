@@ -21,66 +21,78 @@ struct					s_mns;
 typedef struct s_mns	t_mns;
 typedef struct s_lexer	t_lexer;
 
-typedef enum e_tk_kind
-{
-	TKD_OPERATOR,
-	TKD_OPERAND,
-	TKD_STRUCT,
-	TKD_NOT_MANAGED,
-}	t_tk_kind;
-
-typedef enum e_tk_family
-{
-	TKF_WORD,
-	TKF_OPERATOR,
-	TKF_CONTROL,
-	TKF_SUBSHELL,
-	TKF_REDIRECT,
-	TKF_WORD_REDIR,
-	TKF_HEREDOC_BODY,
-}	t_tk_family;
-
-typedef enum e_tk_group
-{
-	TKG_ARGUMENT,
-	TKG_REDIRECTION,
-	TKG_GROUP,
-	TKG_OTHER,
-}	t_tk_group;
-
 typedef enum e_tk_type
 {
-	// Generiques
 	TOK_WORD,
-	TOK_DELIM,
-	TOK_OPERATOR,
-	TOK_HEREDOC_BODY,
-	// Mots (WORD PARTS)
-	TOK_UQUOTE,				// "abc", 'echo', 'foo42', etc.
-	TOK_DQUOTE,
-	TOK_SQUOTE,
-	TOK_GLOB,
-	// Séparateurs & contrôle
-	TOK_PIPE,				// |
-	TOK_AND_IF,				// &&
-	TOK_OR_IF,				// ||
-	TOK_LPAREN,				// (
-	TOK_RPAREN,				// )
-	TOK_SEMI,				// ;
+	TOK_PIPE,
+	TOK_AND_IF,
+	TOK_OR_IF,
+	TOK_LPAREN,
+	TOK_RPAREN,
+	TOK_SEMI,
 	TOK_ESCAPE,
-	// Redirections
-	TOK_REDIR_IN,			// <
-	TOK_REDIR_OUT,			// >
-	TOK_REDIR_APPEND,		// >>
-	TOK_REDIR_HEREDOC,		// <<
-	// Divers		
-	TOK_EOF,				// fin du flux
-	TOK_NEWLINE,			//
+	TOK_REDIR_IN,
+	TOK_REDIR_OUT,
+	TOK_REDIR_APPEND,
+	TOK_REDIR_HEREDOC,
+	TOK_HEREDOC_BODY,
+	TOK_EOF,
+	TOK_NEWLINE,
+	TOK_COUNT,
 }	t_tk_type;
+
+typedef enum e_tk_role
+{
+	TKR_NONE,
+	TKR_ARGUMENT,
+	TKR_REDIR_OP,
+	TKR_REDIR_TARGET,
+	TKR_HEREDOC_DELIM,
+	TKR_HEREDOC_BODY,
+}	t_tk_role;
+
+typedef enum e_tk_part_type
+{
+	PART_UQUOTE,
+	PART_DQUOTE,
+	PART_SQUOTE,
+	PART_GLOB,
+}	t_tk_part_type;
+
+typedef enum e_tk_flags
+{
+	TF_NONE = 0,
+	TF_WORD = 1 << 0,
+	TF_OPERAND = 1 << 1,
+	TF_REDIR = 1 << 2,
+	TF_CONTROL_OP = 1 << 3,
+	TF_LIST_SEP = 1 << 4,
+	TF_PIPE_OP = 1 << 5,
+	TF_AND_OR_OP = 1 << 6,
+	TF_SUBSHELL = 1 << 7,
+	TF_TERMINATOR = 1 << 8,
+	TF_SYNTHETIC = 1 << 9,
+}	t_tk_flags;
+
+typedef enum e_tk_precedence
+{
+	PREC_NONE,
+	PREC_LIST,
+	PREC_AND_OR,
+	PREC_PIPE,
+}	t_tk_precedence;
+
+typedef struct s_tk_spec
+{
+	const char	*name;
+	const char	*lexeme;
+	int			flags;
+	int			precedence;
+}	t_tk_spec;
 
 typedef struct s_tk_part
 {
-	t_tk_type			type;
+	t_tk_part_type		type;
 	struct s_tk_part	*next;
 	struct s_tk_part	*prev;
 	char				*str;
@@ -94,10 +106,8 @@ typedef struct s_tk_part
 
 typedef struct s_token
 {
-	t_tk_kind		kind;
-	t_tk_group		group;
 	t_tk_type		type;
-	t_tk_family		family;
+	t_tk_role		role;
 	char			*source;
 	char			*str;
 	ssize_t			count;
@@ -150,8 +160,8 @@ t_token		*tk_glob_emit(char *str);
 void		append_part_to_part(t_tk_part **first, t_tk_part *new);
 t_tk_part	*pop_front_part(t_token *token);
 void		tk_append_part_tok(t_token *token, t_tk_part *part);
-void		tk_temp_part_create(t_lexer *lx, t_tk_type type);
-t_tk_part	*tk_part_new(t_tk_type type, size_t offset);
+void		tk_temp_part_create(t_lexer *lx, t_tk_part_type type);
+t_tk_part	*tk_part_new(t_tk_part_type type, size_t offset);
 
 /**
  * APPEND
@@ -168,6 +178,9 @@ void		tk_list_insert(t_tokens *tokens, t_token *after_me, t_token *tok);
 
 char		*aggregate_wordparts_to_strline(t_tk_part *first, char *line);
 char		*slice_dup(const char *src, size_t start, size_t end);
+bool		tok_has(t_tk_type type, int flags);
+const char	*tok_name(t_tk_type type);
+const char	*part_name(t_tk_part_type type);
 /**
  * LIFECYCLE
  */
@@ -177,5 +190,7 @@ void		free_token_parts(t_tk_part *first_part);
 void		free_token(t_token *token);
 void		free_token_list(t_tokens *tokens);
 void		free_token_part(t_tk_part *part);
+
+extern const t_tk_spec	g_tok_specs[TOK_COUNT];
 
 #endif

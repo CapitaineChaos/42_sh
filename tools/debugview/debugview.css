@@ -151,7 +151,7 @@ section.max .iconbtn[data-act="max"] { color:var(--hdr); }
 .ttab .tt { color:var(--fg); white-space:pre; }
 .ttab .ecell { white-space:normal; }
 .etab td:not(.ecell), .etab th:not(:last-child) { width:1%; white-space:nowrap; }
-/* # / GROUP / TYPE / FLAG au contenu ; TEXT prend le reste. */
+/* # / ROLE / TYPE / FLAGS au contenu ; TEXT prend le reste. */
 .tktab td:not(.tt), .tktab th:not(:last-child) { width:1%; white-space:nowrap; }
 /* # / KIND au contenu ; CONTENT + REDIRS prennent le reste. */
 .ndtab td:not(.tt), .ndtab th:nth-child(-n+2) { width:1%; white-space:nowrap; }
