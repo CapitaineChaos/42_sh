@@ -97,11 +97,12 @@ char	*get_exec_path(t_mns *mns, char **argv)
 {
 	char		*exec_path;
 
+	(void)mns;
 	trace_info(LVL_EXEC, " > Get exec path");
 	if (has_slash(argv[0]))
 		exec_path = strdup(argv[0]);
 	else
-		exec_path = get_good_path(argv[0], ft_getenv(&mns->env, "PATH"));
+		exec_path = get_good_path(argv[0], getenv("PATH"));
 	if (!exec_path)
 		return (strdup(""));
 	return (exec_path);

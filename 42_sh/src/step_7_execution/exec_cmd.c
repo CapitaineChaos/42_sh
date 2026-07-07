@@ -22,6 +22,10 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+extern char	**environ;
 #include <stdio.h>
 #include <errno.h>
 
@@ -63,7 +67,7 @@ static int	exec_norm(t_ast_node *n, struct stat *sb, t_operand *op, t_mns *mns)
 	trace_info_nvstr(LVL_EXEC, "Exec path", op->path);
 	if (op->path[0] == '\0')
 	{
-		path_env = ft_getenv(&mns->env, "PATH");
+		path_env = getenv("PATH");
 		trace_info_nvstr(LVL_EXEC, "Path env", path_env);
 		path_unset = (path_env == NULL || path_env[0] == '\0');
 		trace_info_nvstr(LVL_EXEC, "Path unset", path_unset ? "true" : "false");
@@ -119,7 +123,7 @@ int	exec_command(t_ast_node *node)
 	op = &node->t_ast_data.operand;
 	mns = get_mns(NULL);
 	expand_args(node);
-	op->envp = env_list_to_envp(&mns->env);
+	op->envp = environ;
 	ret = check_redirs_in_child(node, op);
 	if (ret != 0)
 	{

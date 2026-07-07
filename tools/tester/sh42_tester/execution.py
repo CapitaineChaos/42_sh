@@ -205,6 +205,8 @@ def classify_valgrind(code: int, log: Path | None) -> str:
 def run_one(case: Case, args, base_env: dict) -> Result:
     """Un cas : deux bacs à sable (42_sh, bash), puis comparaison."""
     res = Result(index=case.index, cmd=case.label)
+    if case.env:
+        base_env = {**base_env, **case.env}
     with tempfile.TemporaryDirectory(prefix="sh42_test_",
                                      dir=args.tmpdir) as tmp:
         tmp = Path(tmp)

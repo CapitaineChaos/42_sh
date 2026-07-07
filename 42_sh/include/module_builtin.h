@@ -27,7 +27,6 @@ typedef struct s_builtin_entry
 int	builtin_dot(t_mns *mns, int argc, char **argv, char **envp);
 int	builtin_cd(t_mns *mns, int argc, char **argv, char **envp);
 int	builtin_pwd(t_mns *mns, int argc, char **argv, char **envp);
-int	builtin_env(t_mns *mns, int argc, char **argv, char **envp);
 int	builtin_echo(t_mns *mns, int argc, char **argv, char **envp);
 int	builtin_exit(t_mns *mns, int argc, char **argv, char **envp);
 int	builtin_export(t_mns *mns, int argc, char **argv, char **envp);

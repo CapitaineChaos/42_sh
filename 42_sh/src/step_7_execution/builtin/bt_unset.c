@@ -19,15 +19,15 @@
 int	builtin_unset(t_mns *mns, int argc, char **argv, char **envp)
 {
 	t_logger	logger;
+	int			i;
 
+	(void)mns;
 	(void)envp;
 	(void)argc;
 	log_init(&logger);
 	if (argv[1] == NULL)
 		return (0);
-	if (strcmp(argv[1], "--") == 0)
-		return (0);
-	if (argv[1][0] == '-' && argv[1][1] != '\0')
+	if (argv[1][0] == '-' && argv[1][1] != '\0' && strcmp(argv[1], "--") != 0)
 	{
 		log_puts(&logger, "🐰: unset: -");
 		log_putch(&logger, argv[1][1]);
@@ -37,8 +37,12 @@ int	builtin_unset(t_mns *mns, int argc, char **argv, char **envp)
 		log_flush(STDERR_FILENO, &logger, false);
 		return (2);
 	}
-	if (!is_valid_id(argv[1]))
-		return (0);
-	env_list_unset(&mns->env, argv[1]);
+	i = 1 + (strcmp(argv[1], "--") == 0);
+	while (argv[i])
+	{
+		if (is_valid_id(argv[i]))
+			unsetenv(argv[i]);
+		i++;
+	}
 	return (0);
 }

@@ -27,3 +27,11 @@ export B=2; unset B; echo "[$B]"
 export PATH; echo $?
 export ABC=xyz; export | grep ABC
 export A=1 2invalid=x; echo $?
+export RT=xyz; /usr/bin/env | grep '^RT='
+export NOVAL; /usr/bin/env | grep -c '^NOVAL'
+export E=; /usr/bin/env | grep '^E='
+export P1=a P2=; env | grep -E '^(P1|P2)='
+/usr/bin/env | grep -c LW_SHLVL
+env | grep -c LW_SHLVL
+export Q=1; export Q=; env | grep '^Q='
+export Z=hi; env | grep '^Z=' | wc -l

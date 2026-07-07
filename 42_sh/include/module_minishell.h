@@ -32,7 +32,6 @@ typedef struct s_strapi		t_strapi;
 
 typedef struct s_mns
 {
-	t_env_lst				env;
 	int						next_job_id;
 	char					**argv;
 	t_checker				checker;

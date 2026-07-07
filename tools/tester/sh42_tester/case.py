@@ -26,6 +26,7 @@ class Case:
     index: int
     steps: list[Step] = field(default_factory=list)
     name: str = ""           # à défaut, le label est dérivé des `send`
+    env: dict = field(default_factory=dict)   # surcharge d'env propre au cas
 
     @property
     def has_signal(self) -> bool:

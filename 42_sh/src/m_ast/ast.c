@@ -87,9 +87,6 @@ static void	free_ast_node(t_ast_node *node)
 		trace_info(LVL_AST, "Freeing operand argv");
 		free(node->t_ast_data.operand.argv);
 		node->t_ast_data.operand.argv = NULL;
-		trace_info(LVL_AST, "Freeing operand envp");
-		if (node->t_ast_data.operand.envp != NULL)
-			free_char_array(node->t_ast_data.operand.envp);
 		node->t_ast_data.operand.envp = NULL;
 		trace_info(LVL_AST, "Freeing operand path");
 		free(node->t_ast_data.operand.path);

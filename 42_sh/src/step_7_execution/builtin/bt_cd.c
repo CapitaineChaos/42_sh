@@ -23,6 +23,7 @@ static int	cd_update_pwd(t_mns *mns, char *oldpwd, const char *arg_raw)
 	char	*phys;
 	char	*newpwd;
 
+	(void)mns;
 	phys = getcwd(NULL, 0);
 	if (!phys)
 		phys = strdup("");
@@ -36,8 +37,8 @@ static int	cd_update_pwd(t_mns *mns, char *oldpwd, const char *arg_raw)
 	}
 	else
 		newpwd = phys;
-	env_list_set(&mns->env, "OLDPWD", oldpwd);
-	env_list_set(&mns->env, "PWD", newpwd);
+	setenv("OLDPWD", oldpwd, 1);
+	setenv("PWD", newpwd, 1);
 	free(oldpwd);
 	free(newpwd);
 	return (0);
@@ -75,11 +76,12 @@ const char	*get_target(t_mns *mns, int argc, char **argv)
 	const char	*target;
 	t_logger	logger;
 
+	(void)mns;
 	if (argc == 1 || (argc == 2 && !strcmp(argv[1], "--")))
-		target = ft_getenv(&mns->env, "HOME");
+		target = getenv("HOME");
 	else if (argc == 2 && !strcmp(argv[1], "-"))
 	{
-		target = ft_getenv(&mns->env, "OLDPWD");
+		target = getenv("OLDPWD");
 		if (target)
 		{
 			log_init(&logger);

@@ -72,7 +72,7 @@ void	print_animation(const char **edge_lines, int frames, int time)
 		total_c_to_print = i;
 		c_printed = 0;
 		print_anim2(c_printed, total_c_to_print, edge_lines, sizetab);
-		ft_approx_sleep(time);
+		usleep(time * 1000);
 	}
 	ft_wputstr_fd("\033[?25h", 1);
 	ft_wputstr_fd(RT, 1);

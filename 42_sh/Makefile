@@ -96,7 +96,6 @@ SRCS_EXECUTOR = \
 				builtin/bt_cd \
 				builtin/bt_dot \
 				builtin/bt_echo \
-				builtin/bt_env \
 				builtin/bt_exit \
 				builtin/bt_export \
 				builtin/bt_pwd \
@@ -119,12 +118,7 @@ SRCS_MINISHELL = \
 				minishell
 
 SRCS_ENV = \
-				env_lifecycle \
-				env_ops \
-				env \
-				ft_getenv \
-				minishell_env \
-				sort
+				env
 SRCS_AST = \
 				ast \
 				push_swap
@@ -170,7 +164,6 @@ SRCS_UTILS = \
 				wput/ft_wputchar_fd \
 				wput/ft_wputstr_fd \
 				get_term_size \
-				time \
 				logger
 
 # >>>HIDE_START

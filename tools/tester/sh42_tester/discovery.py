@@ -71,7 +71,8 @@ def _load_plain(f: Path) -> list[Case]:
 def _load_toml(f: Path) -> list[Case]:
     """.toml : tests spéciaux (multi-lignes, heredocs, interruptions)."""
     data = tomllib.loads(f.read_text(errors="replace"))
-    return [Case(source=f, index=0, name=t.get("name", ""), steps=_steps(t))
+    return [Case(source=f, index=0, name=t.get("name", ""), steps=_steps(t),
+                 env={k: str(v) for k, v in t.get("env", {}).items()})
             for t in data.get("test", [])]
 
 

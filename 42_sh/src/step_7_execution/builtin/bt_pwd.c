@@ -81,6 +81,7 @@ static int	pwd_print_phys(char *my_path)
 
 static int	check_cwd_env(t_mns *mns, char **phys, bool opt_P, char **pwd)
 {
+	(void)mns;
 	*phys = getcwd(NULL, 0);
 	if (!*phys)
 	{
@@ -93,7 +94,7 @@ static int	check_cwd_env(t_mns *mns, char **phys, bool opt_P, char **pwd)
 		free(*phys);
 		return (0);
 	}
-	*pwd = ft_getenv(&mns->env, "PWD");
+	*pwd = getenv("PWD");
 	return (-1);
 }
 

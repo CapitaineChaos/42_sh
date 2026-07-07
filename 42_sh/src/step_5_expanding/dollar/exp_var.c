@@ -26,7 +26,7 @@ char	*fetch_normal_var(char *s, size_t *i)
 	trace_info_nvstr(LVL_EXPAND, "Normal variable key", key);
 	if (key == NULL)
 		return (NULL);
-	val = ft_getenv(&get_mns(NULL)->env, key);
+	val = getenv(key);
 	trace_info_nvstr(LVL_EXPAND, "Normal variable value", val);
 	free(key);
 	if (val == NULL)

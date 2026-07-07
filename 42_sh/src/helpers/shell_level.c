@@ -19,9 +19,8 @@ int	get_shell_level(t_mns *mns)
 	int		shell_level;
 	char	*str;
 
-	if (mns == NULL)
-		mns = get_mns(NULL);
-	str = ft_getenv(&mns->env, "LW_SHLVL");
+	(void)mns;
+	str = getenv("SHLVL");
 	if (str == NULL)
 		return (0);
 	shell_level = atoi(str);

@@ -54,7 +54,7 @@ _BANNER_WIDTH = len(_BANNER_BORDER)
 
 def banner(title: str) -> str:
     """Encadre `title` centré entre deux bordures -+H+ de largeur fixe."""
-    return (f"{C.YELLOW}{_BANNER_BORDER}{C.RESET}\n"
+    return (f"\n{C.YELLOW}{_BANNER_BORDER}{C.RESET}\n"
             f"{C.RED}{title.center(_BANNER_WIDTH)}{C.RESET}\n"
             f"{C.YELLOW}{_BANNER_BORDER}{C.RESET}")
 

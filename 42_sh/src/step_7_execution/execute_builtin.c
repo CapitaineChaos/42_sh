@@ -23,7 +23,6 @@ static t_builtin_entry	*get_builtin_functions(void)
 	{".", builtin_dot},		
 	{"cd", builtin_cd},
 	{"pwd", builtin_pwd},
-	{"env", builtin_env},
 	{"echo", builtin_echo},
 	{"exit", builtin_exit},
 	{"export", builtin_export},

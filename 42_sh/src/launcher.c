@@ -16,6 +16,7 @@
 #include "module_minishell.h"
 #include "module_env.h"
 #include "all_config.h"
+#include <stdlib.h>
 #include <readline/readline.h>
 
 void	launch_animation(t_mns *mns)
@@ -24,12 +25,13 @@ void	launch_animation(t_mns *mns)
 	int		rows;
 	char	*lvl;
 
+	(void)mns;
 	if (DLVL > -2)
 		return ;
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
 		return ;
-	lvl = ft_getenv(&mns->env, "LW_SHLVL");
-	if (atoi(lvl) > 1)
+	lvl = getenv("SHLVL");
+	if (lvl && atoi(lvl) > 1)
 		return ;
 	get_terminal_size(&cols, &rows);
 	if (cols >= 122)
@@ -83,7 +85,7 @@ int	main(int ac, char **av, char **envp)
 	mns.argv = av;
 	mns.argc = ac;
 	launch_animation(&mns);
-	trace_info_nvstr(LVL_MNS, "User", ft_getenv(&mns.env, "USER"));
+	trace_info_nvstr(LVL_MNS, "User", getenv("USER"));
 	minishell(&mns, lv);
 	exit_code = mns.last_exit_code;
 	free_mns(&mns);

@@ -48,7 +48,6 @@ void	free_and_exit_minishell(intmax_t exit_code)
 
 void	free_mns(t_mns *mns)
 {
-	env_list_free(&mns->env);
 	parser_free(&mns->parser, 255);
 	lexer_free(&mns->lexer, 255);
 	sstr_free(&mns->data.inputs);
@@ -60,12 +59,11 @@ void	free_mns(t_mns *mns)
 
 void	init_modules(t_mns *mns, char *ifs, char **envp, int lv)
 {
-	mns->env = (t_env_lst){0};
 	mns->checker = (t_checker){0};
 	mns->lexer = (t_lexer){0};
 	mns->parser = (t_parser){0};
 	mns->data = (t_main_data){0};
-	env_list_init(&mns->env, envp);
+	(void)envp;
 	create_env(mns);
 	checker_init(&mns->checker, lv);
 	lexer_init(&mns->lexer, ifs, lv);
