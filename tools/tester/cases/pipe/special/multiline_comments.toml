@@ -1,0 +1,19 @@
+# Entrées multi-lignes avec commentaires.
+# Ces cas visent les défauts de reprise de lecture après une ligne commentée
+# quand la ligne suivante ouvre un contexte incomplet.
+
+[[test]]
+name = "commentaire puis guillemet double non ferme"
+input = "# commentaire\n\""
+
+[[test]]
+name = "commentaire puis guillemet simple non ferme"
+input = "# commentaire\n'"
+
+[[test]]
+name = "commentaire puis antislash seul"
+input = "# commentaire\n\\"
+
+[[test]]
+name = "operateur commente puis guillemet double non ferme"
+input = "echo before && # commentaire\n\""

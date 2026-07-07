@@ -90,7 +90,8 @@ def format_failure(r: Result, label: str) -> str:
     """Bloc texte propre décrivant un échec (ASCII, pas de couleurs)."""
     sep = "=" * 72
     p = [sep, f" Test {r.index}  |  {label}", sep,
-         " Commande essayée :", f"   {r.cmd}", ""]
+         " Commande essayée :", f"   {r.cmd}",
+         " Entrée stdin exacte :", r.replay, ""]
     if r.pipe_enabled and not r.ok_output:
         p.append(" [PIPE STDOUT] DIFFÉRENT")
         p.append(_fail_field("attendu  (bash)      :", r.bash_out))

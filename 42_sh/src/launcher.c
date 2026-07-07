@@ -17,6 +17,7 @@
 #include "module_env.h"
 #include "all_config.h"
 #include <stdlib.h>
+#include <string.h>
 #include <readline/readline.h>
 
 void	launch_animation(t_mns *mns)
@@ -25,7 +26,8 @@ void	launch_animation(t_mns *mns)
 	int		rows;
 	char	*lvl;
 
-	(void)mns;
+	if (mns->posix)
+		return ;
 	if (DLVL > -2)
 		return ;
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
@@ -70,16 +72,19 @@ int	main(int ac, char **av, char **envp)
 	t_mns	mns;
 	int		exit_code;
 	int		lv;
+	bool	posix;
 
-	if (ac > 1)
+	posix = (ac == 2 && !strcmp(av[1], "--posix"));
+	if (ac > 1 && !posix)
 	{
-		write(STDERR_FILENO, "Usage: ./minishell\n", 20);
+		write(STDERR_FILENO, "Usage: ./minishell [--posix]\n", 29);
 		return (1);
 	}
 	interactive_shell_only();
 	lv = 7;
 	dbg_errors_reset();
 	init_mns(&mns, strdup(" \t\n"), envp, lv);
+	mns.posix = posix;
 	first_time_init();
 	mns.argv = av;
 	mns.argc = ac;
@@ -87,7 +92,7 @@ int	main(int ac, char **av, char **envp)
 	minishell(&mns, lv);
 	exit_code = mns.last_exit_code;
 	free_mns(&mns);
-	if (isatty(STDERR_FILENO))
+	if (!posix && isatty(STDERR_FILENO))
 		write(STDERR_FILENO, "End of MiNIShell 🐰🐯\n", 26);
 	return (exit_code);
 }

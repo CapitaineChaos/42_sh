@@ -108,20 +108,14 @@ def clean_tty_stream(raw: str, steps) -> str:
             continue
         if stripped == "exit":
             continue
-        if stripped.startswith("🌴Lapinou"):
-            continue
         for s in sent:
             if stripped == s:
                 stripped = ""
                 break
             if stripped.endswith(s):
                 stripped = stripped[:len(stripped) - len(s)].rstrip()
-                if "🌴" in stripped:
-                    stripped = stripped.split("🌴", 1)[0].rstrip()
                 break
         if not stripped:
-            continue
-        if stripped.startswith("End of MiNIShell"):
             continue
         out.append(stripped)
     return "\n".join(out).rstrip("\n")
@@ -391,7 +385,7 @@ def classify_valgrind(code: int, log: Path | None) -> str:
 
 def run_one(case: Case, args, base_env: dict) -> Result:
     """Un cas : deux bacs à sable (42_sh, bash), puis comparaison."""
-    res = Result(index=case.index, cmd=case.label)
+    res = Result(index=case.index, cmd=case.label, replay=case.replay)
     res.pipe_enabled = case.mode in ("dual", "pipe")
     res.tty_enabled = case.mode in ("dual", "tty")
     if case.env:
@@ -408,7 +402,8 @@ def run_one(case: Case, args, base_env: dict) -> Result:
         if res.pipe_enabled:
             build_sandbox(run_dir)
             sh42_out, sh42_err, res.sh42_code = run_shell(
-                [str(SH42)], case.steps, run_dir, base_env, args.timeout, vlog)
+                [str(SH42), "--posix"], case.steps, run_dir, base_env,
+                args.timeout, vlog)
             shutil.copytree(run_dir / "outfiles", sh42_outfiles)
 
             shutil.rmtree(run_dir)
@@ -433,7 +428,8 @@ def run_one(case: Case, args, base_env: dict) -> Result:
             run_dir.mkdir()
             build_sandbox(run_dir)
             tty_sh42_out, tty_sh42_err, res.tty_sh42_code = run_shell_tty(
-                [str(SH42)], case.steps, run_dir, base_env, args.timeout)
+                [str(SH42), "--posix"], case.steps, run_dir, base_env,
+                args.timeout)
             shutil.copytree(run_dir / "outfiles", tty_sh42_outfiles)
 
             shutil.rmtree(run_dir)

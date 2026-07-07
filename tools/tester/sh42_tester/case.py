@@ -42,3 +42,18 @@ class Case:
         base = " ".join(text.splitlines()) or "(vide)"
         sigs = [s.signal for s in self.steps if s.signal]
         return f"{base} ⟨{'+'.join(sigs)}⟩" if sigs else base
+
+    @property
+    def replay(self) -> str:
+        """Description exacte de la séquence envoyée aux shells."""
+        lines: list[str] = []
+        for i, step in enumerate(self.steps, 1):
+            if step.send is not None:
+                text = step.send.replace("\n", "\\n\n")
+                lines.append(f"step {i}: send {len(step.send)} byte(s)")
+                lines.extend(f"  {line}" for line in text.splitlines())
+            if step.signal is not None:
+                lines.append(f"step {i}: signal {step.signal}")
+            if step.eof:
+                lines.append(f"step {i}: eof")
+        return "\n".join(lines) or "(aucune entree)"

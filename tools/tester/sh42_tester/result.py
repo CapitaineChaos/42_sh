@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 class Result:
     index: int
     cmd: str
+    replay: str = ""
     ok_output: bool = False
     ok_code: bool = False
     ok_diff: bool = False

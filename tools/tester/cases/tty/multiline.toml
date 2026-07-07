@@ -1,0 +1,60 @@
+# Continuation multi-ligne (PS2), tty uniquement : une construction non fermée
+# force le shell à redemander une ligne jusqu'à sa fermeture. Chaque `input`
+# contient des '\n' internes : le shell les lit ligne par ligne, comme au clavier.
+
+[[test]]
+name = "guillemet double non ferme"
+input = "echo \"hello\nworld\""
+
+[[test]]
+name = "guillemet simple non ferme"
+input = "echo 'foo\nbar'"
+
+[[test]]
+name = "antislash continuation"
+input = "echo one\\\ntwo"
+
+[[test]]
+name = "antislash continuation multiple"
+input = "echo a\\\nb\\\nc"
+
+# BUG connu 42_sh : le pipe en continuation fait hang (`cat` lit le terminal
+# au lieu du tube). Réactiver ces cas une fois le bug corrigé :
+#   [[test]]  name = "pipe en fin de ligne"        input = "echo hi |\ncat"
+#   [[test]]  name = "quote non fermee puis pipe"  input = "echo \"deux\nlignes\" |\ncat"
+
+[[test]]
+name = "and-if en fin de ligne"
+input = "true &&\necho yes"
+
+[[test]]
+name = "and-if avec commentaire en fin de ligne"
+input = "echo before && # commentaire\necho after"
+
+[[test]]
+name = "or-if en fin de ligne"
+input = "false ||\necho fallback"
+
+[[test]]
+name = "or-if avec commentaire en fin de ligne"
+input = "false || # commentaire\necho fallback"
+
+[[test]]
+name = "and-if enchaine multi-ligne"
+input = "echo a &&\necho b &&\necho c"
+
+[[test]]
+name = "commentaire apres commande puis continuation"
+input = "echo before # commentaire\n&& echo after"
+
+[[test]]
+name = "parenthese non fermee"
+input = "(echo a\necho b)"
+
+[[test]]
+name = "parenthese non fermee avec operateur"
+input = "(echo x\n&& echo y)"
+
+[[test]]
+name = "operateur dans guillemets reste litteral"
+input = "echo \"a && b || c\nsuite\""

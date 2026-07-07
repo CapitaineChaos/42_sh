@@ -39,6 +39,7 @@ typedef struct s_mns
 	t_parser				parser;
 	t_main_data				data;
 	bool					read_exit;
+	bool					posix;
 	int						nb_lines;
 	int						last_exit_code;
 	int						argc;

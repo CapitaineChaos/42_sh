@@ -20,7 +20,14 @@ char	*get_ps1(void)
 	t_logger	lg;
 	t_mns		*mns;
 	int			shell_level;
+	char		*ps1;
 
+	mns = get_mns(NULL);
+	if (mns->posix)
+	{
+		ps1 = getenv("PS1");
+		return (strdup(ps1 ? ps1 : "$ "));
+	}
 	log_init(&lg);
 	log_puts(&lg, PTREE YL LP RT);
 	log_puts(&lg, " " LAPINOU);
@@ -34,7 +41,6 @@ char	*get_ps1(void)
 		log_putlong(&lg, get_shell_level(NULL));
 	}
 	log_puts(&lg, RT PTREE);
-	mns = get_mns(NULL);
 	if (mns->last_exit_code != 0)
 		log_puts(&lg, RD " $" RT " ");
 	else
@@ -44,12 +50,16 @@ char	*get_ps1(void)
 
 char	*get_prompt(t_contexts *ctxs, int lv)
 {
+	char	*ps2;
+
 	if (ctxs->count > 0 && lv > 1)
 	{
+		if (get_mns(NULL)->posix)
+		{
+			ps2 = getenv("PS2");
+			return (strdup(ps2 ? ps2 : "> "));
+		}
 		return (convert_contexts_to_str_(ctxs));
 	}
-	else
-	{
-		return (get_ps1());
-	}
+	return (get_ps1());
 }
