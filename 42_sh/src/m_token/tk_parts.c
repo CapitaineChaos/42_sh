@@ -111,6 +111,7 @@ t_tk_part	*tk_part_new(t_tk_type type, size_t offset)
 		return (NULL);
 	}
 	wp->type = type;
-	wp->offset = offset;
+	wp->start = offset;
+	wp->end = offset;
 	return (wp);
 }

@@ -85,7 +85,7 @@ static const char	*ltrim(const char *s)
 	return (s);
 }
 
-/* Texte d'un token : assemblé depuis parts (stream), repli sur str (opérateurs). */
+/* Texte d'un token : assemblé depuis parts, repli sur str (opérateurs). */
 static void	put_tok_text(int fd, t_token *t)
 {
 	char	buf[256];
@@ -161,7 +161,7 @@ static void	put_part_flags(int fd, t_tk_part *p)
 	put_byte(fd, p->has_glob ? '*' : '-');
 }
 
-/* parts : US-liste ; chaque part = type RS offset RS flags RS text. */
+/* parts : US-liste ; chaque part = type RS span RS flags RS text. */
 static void	put_parts(int fd, t_token *t)
 {
 	t_tk_part	*p;
@@ -177,12 +177,12 @@ static void	put_parts(int fd, t_token *t)
 		first = 0;
 		dprintf(fd, "%s", debug_get_token_type(p->type));
 		put_byte(fd, DBG_RS);
-		dprintf(fd, "%d", (int)p->offset);
+		dprintf(fd, "%d:%d", (int)p->start, (int)p->end);
 		put_byte(fd, DBG_RS);
 		put_part_flags(fd, p);
 		put_byte(fd, DBG_RS);
 		buf[0] = '\0';
-		get_tkpart_content_stream(p, buf, sizeof(buf));
+		get_tkpart_content_stream(t, p, buf, sizeof(buf));
 		put_clean(fd, buf);
 		p = p->next;
 	}
@@ -313,9 +313,8 @@ void	dbg_reset(void)
 }
 
 /*
- * Entrée brute reconstruite depuis data->inputs (chunks pré-lexer). On ne peut
- * pas relire data->stream : le lexer y insère des '\0' en place, ce qui le
- * tronque au premier délimiteur. Rendu par le fallback <pre> du viewer.
+ * Entrée brute reconstruite depuis data->inputs (chunks pré-lexer).
+ * Rendu par le fallback <pre> du viewer.
  */
 void	dbg_read(t_sstr *inputs)
 {

@@ -130,6 +130,7 @@ void	get_token_content_stream(t_token *token, char *buf, size_t buf_size)
 	t_tk_part	*part;
 	size_t		i;
 	size_t		j;
+	char		*src;
 
 	if (token == NULL || buf == NULL || buf_size < 5)
 		return ;
@@ -137,11 +138,15 @@ void	get_token_content_stream(t_token *token, char *buf, size_t buf_size)
 	part = token->head;
 	while (part && i < buf_size - 1)
 	{
-		if (part->stream)
+		src = part->str;
+		if (src == NULL && token->source != NULL)
+			src = token->source + part->start;
+		if (src)
 		{
 			j = 0;
-			while (part->stream[j] && i < buf_size - 1 && i < 70)
-				buf[i++] = part->stream[j++];
+			while ((part->str || part->start + j < part->end)
+				&& src[j] && i < buf_size - 1 && i < 70)
+				buf[i++] = src[j++];
 			if (i == 70 && buf_size > 73)
 			{
 				buf[70] = '.';
@@ -156,21 +161,27 @@ void	get_token_content_stream(t_token *token, char *buf, size_t buf_size)
 }
 
 /* Texte d'une part (tronqué à 70 car). Panels debugview. */
-void	get_tkpart_content_stream(t_tk_part *part, char *buf, size_t buf_size)
+void	get_tkpart_content_stream(t_token *token, t_tk_part *part,
+	char *buf, size_t buf_size)
 {
 	size_t	i;
 	size_t	j;
+	char	*src;
 
 	if (part == NULL || buf == NULL || buf_size < 5)
 		return ;
 	i = 0;
 	while (part && i < buf_size - 1)
 	{
-		if (part->stream)
+		src = part->str;
+		if (src == NULL && token != NULL && token->source != NULL)
+			src = token->source + part->start;
+		if (src)
 		{
 			j = 0;
-			while (part->stream[j] && i < buf_size - 1 && i < 70)
-				buf[i++] = part->stream[j++];
+			while ((part->str || part->start + j < part->end)
+				&& src[j] && i < buf_size - 1 && i < 70)
+				buf[i++] = src[j++];
 			if (i == 70 && buf_size > 73)
 			{
 				buf[70] = '.';

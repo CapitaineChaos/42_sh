@@ -28,7 +28,8 @@ typedef struct s_sstr t_sstr;
 
 
 void	get_token_content_stream(t_token *token, char *buf, size_t buf_size);
-void	get_tkpart_content_stream(t_tk_part *part, char *buf, size_t buf_size);
+void	get_tkpart_content_stream(t_token *token, t_tk_part *part,
+			char *buf, size_t buf_size);
 
 void	dbg_reset(void);
 void	dbg_read(t_sstr *inputs);

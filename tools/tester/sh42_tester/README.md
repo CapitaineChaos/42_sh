@@ -96,6 +96,22 @@ Chaque cas s'exécute dans deux répertoires temporaires distincts (un par shell
 peuplés à l'identique depuis `fixtures/`. Les fichiers produits n'entrant jamais
 en collision, la suite peut tourner en parallèle (`-j`, un `ThreadPoolExecutor`).
 
+## Sélection pipe / TTY
+
+Par défaut, les cas `dual` exécutent les deux axes, les cas `pipe` seulement
+stdin pipe, et les cas `tty` seulement TTY. Deux options permettent de limiter
+la suite à un seul monde :
+
+```sh
+./tester.py -n
+./tester.py --non-interactive-only
+
+./tester.py -I
+./tester.py --interactive-only
+```
+
+Les cas incompatibles avec le mode demandé sont ignorés.
+
 ## Modules
 
 | Module           | Responsabilité                                             |

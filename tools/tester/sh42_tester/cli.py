@@ -26,10 +26,26 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("-i", "--env-i", action="store_true", help="environnement minimal (comme env -i)")
     p.add_argument("-j", "--jobs", type=int, default=os.cpu_count() or 4, help="nombre de workers parallèles (défaut : nb cœurs)")
     p.add_argument("-t", "--timeout", type=float, default=DEFAULT_TIMEOUT, help=f"timeout par test en s (défaut : {DEFAULT_TIMEOUT})")
+    mode = p.add_mutually_exclusive_group()
+    mode.add_argument("-n", "--non-interactive-only", action="store_const",
+                      const="pipe", dest="mode_filter",
+                      help="exécuter seulement le mode non-interactif (stdin pipe)")
+    mode.add_argument("-I", "--interactive-only", action="store_const",
+                      const="tty", dest="mode_filter",
+                      help="exécuter seulement le mode interactif (TTY)")
     p.add_argument("--no-build", action="store_true", help="ne pas recompiler")
     p.add_argument("--skip-preflight", action="store_true", help="ne pas sonder stdin/stdout avant la suite")
     p.add_argument("--tmpdir", default="/dev/shm" if Path("/dev/shm").is_dir() else None, help="racine des bacs à sable (défaut : /dev/shm)")
     return p.parse_args()
+
+
+def apply_mode_filter(case: Case, mode_filter: str | None) -> Case | None:
+    if mode_filter is None:
+        return case
+    if case.mode != "dual" and case.mode != mode_filter:
+        return None
+    case.mode = mode_filter
+    return case
 
 
 def run_suite(cases: list[Case], args, base_env: dict):
@@ -204,9 +220,14 @@ def main() -> int:
     idx = 0
     for f in files:
         for c in load_cases(f):
+            c = apply_mode_filter(c, args.mode_filter)
+            if c is None:
+                continue
             idx += 1
             c.index = idx
             cases.append(c)
+    if not cases:
+        sys.exit(f"{C.RED}Aucun cas compatible avec le mode demandé.{C.RESET}")
 
     rc = 0
     run_no = 0

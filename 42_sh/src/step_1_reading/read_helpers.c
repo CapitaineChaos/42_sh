@@ -56,23 +56,12 @@ void	init_read(t_main_data *data)
 void	set_tokens_parts_ptrs(t_token *first, char *stream)
 {
 	t_token		*token;
-	t_tk_part	*part;
 
 	token = first;
 	while (token)
 	{
-		part = token->head;
-		while (part)
-		{
-			if (token->type == TOK_HEREDOC_BODY)
-			{
-				part->stream = part->str;
-				part = part->next;
-				continue ;
-			}
-			part->stream = stream + part->offset;
-			part = part->next;
-		}
+		if (token->type != TOK_HEREDOC_BODY)
+			token->source = stream;
 		token = token->next;
 	}
 }

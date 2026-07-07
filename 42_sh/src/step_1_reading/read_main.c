@@ -46,11 +46,13 @@ static void	manage_pendings(t_main_data *data)
 	{
 		if (!isatty(STDIN_FILENO))
 		{
-			if (data->lx->tokens.tail->type == TOK_EOF
+			if (data->lx->tokens.tail == NULL
+				|| data->lx->tokens.tail->type == TOK_EOF
 				|| data->lx->tokens.tail->type == TOK_NEWLINE)
 			{
-				print_unxpected(convert_ctx_to_sym(
-						data->lx->ctxs.tail->ctx_name));
+				if (data->lx->ctxs.tail)
+					print_unxpected(convert_ctx_to_sym(
+							data->lx->ctxs.tail->ctx_name));
 				sstr_free(&data->inputs);
 				data->total_input.free(&data->total_input);
 				free_and_exit_minishell(2);

@@ -30,8 +30,5 @@ void	advance_(t_input *inp);
 char	peek_next_chr(t_input *inp);
 bool	peek_chars_2(t_input *inp, char *str);
 char	*get_ptr(t_input *inp);
-bool	match_str(t_input *inp, char *str);
-void	erase_and_advance_str(t_input *inp, char *str);
-void	erase_and_advance(t_input *inp);
 
 #endif

@@ -37,6 +37,6 @@ void	normalize_token(t_token *token);
 
 void	assign_strings(t_tokens *tokens);
 void	assign_string(t_token *token);
-void	assign_parts_ptrs(t_token *token, char *stream);
+void	assign_parts_source(t_token *token, char *stream);
 
 #endif

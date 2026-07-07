@@ -83,9 +83,9 @@ typedef struct s_tk_part
 	t_tk_type			type;
 	struct s_tk_part	*next;
 	struct s_tk_part	*prev;
-	char				*stream;
 	char				*str;
-	size_t				offset;
+	size_t				start;
+	size_t				end;
 	bool				has_tilde;
 	bool				has_dollar;
 	bool				has_glob;
@@ -98,6 +98,7 @@ typedef struct s_token
 	t_tk_group		group;
 	t_tk_type		type;
 	t_tk_family		family;
+	char			*source;
 	char			*str;
 	ssize_t			count;
 	t_tk_part		*head;
@@ -166,6 +167,7 @@ void		tk_list_insert(t_tokens *tokens, t_token *after_me, t_token *tok);
  */
 
 char		*aggregate_wordparts_to_strline(t_tk_part *first, char *line);
+char		*slice_dup(const char *src, size_t start, size_t end);
 /**
  * LIFECYCLE
  */

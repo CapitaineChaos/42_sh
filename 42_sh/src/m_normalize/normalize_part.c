@@ -59,6 +59,11 @@ static char	*format_unquoted(char *str)
 	init_format(&out, &i);
 	while (str[i])
 	{
+		if (str[i] == '\\' && str[i + 1] == '\n')
+		{
+			i += 2;
+			continue ;
+		}
 		if (str[i] == '\\' && str[i + 1] != '\0')
 		{
 			i++;
@@ -81,11 +86,6 @@ char	*normalize_part(t_tk_part *part)
 	else if (part->str && part->type == TOK_UQUOTE)
 	{
 		str = format_unquoted(part->str);
-		if (str && str[0] == '\0')
-		{
-			free(str);
-			return (NULL);
-		}
 		return (str);
 	}
 	return (NULL);

@@ -13,14 +13,31 @@
 #include "module_token.h"
 #include "module_minishell.h"
 
-static size_t	calc_total_lenline(t_tk_part *wp, char *line)
+char	*slice_dup(const char *src, size_t start, size_t end)
+{
+	char	*dup;
+	size_t	len;
+
+	if (src == NULL || end < start)
+		return (NULL);
+	len = end - start;
+	dup = malloc(len + 1);
+	if (!dup)
+		free_and_exit_minishell(EXIT_FAILURE);
+	memcpy(dup, src + start, len);
+	dup[len] = '\0';
+	return (dup);
+}
+
+static size_t	calc_total_lenline(t_tk_part *wp)
 {
 	size_t	len;
 
 	len = 0;
 	while (wp)
 	{
-		len += strlen(wp->offset + line);
+		if (wp->end >= wp->start)
+			len += wp->end - wp->start;
 		wp = wp->next;
 	}
 	return (len);
@@ -34,7 +51,7 @@ char	*aggregate_wordparts_to_strline(t_tk_part *first, char *line)
 	size_t		i;
 	char		*s;
 
-	total_len = calc_total_lenline(first, line);
+	total_len = calc_total_lenline(first);
 	s = malloc(total_len + 1);
 	if (!s)
 		free_and_exit_minishell(EXIT_FAILURE);
@@ -42,9 +59,12 @@ char	*aggregate_wordparts_to_strline(t_tk_part *first, char *line)
 	part = first;
 	while (part)
 	{
-		len = strlen(part->offset + line);
-		memcpy(s + i, part->offset + line, len);
-		i += len;
+		if (part->end >= part->start)
+		{
+			len = part->end - part->start;
+			memcpy(s + i, line + part->start, len);
+			i += len;
+		}
 		part = part->next;
 	}
 	s[i] = '\0';

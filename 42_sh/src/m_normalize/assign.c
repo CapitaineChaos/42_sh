@@ -21,11 +21,8 @@ void	assign_string(t_token *token)
 	part = token->head;
 	while (part)
 	{
-		if (part->str == NULL && part->stream)
-		{
-			part->str = strdup(part->stream);
-			part->stream = NULL;
-		}
+		if (part->str == NULL)
+			part->str = slice_dup(token->source, part->start, part->end);
 		part = part->next;
 	}
 	token = token->next;
@@ -45,14 +42,18 @@ void	assign_strings(t_tokens *tokens)
 	}
 }
 
-void	assign_parts_ptrs(t_token *token, char *stream)
+void	assign_parts_source(t_token *token, char *stream)
 {
 	t_tk_part	*part;
 
+	if (token == NULL)
+		return ;
+	token->source = stream;
 	part = token->head;
 	while (part)
 	{
-		part->stream = stream + part->offset;
+		if (part->str == NULL)
+			part->str = slice_dup(stream, part->start, part->end);
 		part = part->next;
 	}
 }

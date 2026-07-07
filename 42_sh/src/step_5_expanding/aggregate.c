@@ -31,10 +31,14 @@ static void	aggregate_tokens(t_tokens *tk, t_sstr **acc)
 		part = current->head;
 		while (part)
 		{
-			frag = part->stream;
+			frag = part->str;
+			if (frag == NULL)
+				frag = slice_dup(current->source, part->start, part->end);
 			if (frag)
 			{
 				sstrs_append(acc, strdup(frag));
+				if (frag != part->str)
+					free(frag);
 			}
 			part = part->next;
 		}

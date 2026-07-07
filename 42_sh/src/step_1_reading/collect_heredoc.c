@@ -26,7 +26,7 @@ char	*collect_body(t_lexer *lx, t_token *delim, int i, int line_count)
 	char		*str_delim;
 	char		*prompt;
 
-	assign_parts_ptrs(delim, lx->inp.stream);
+	assign_parts_source(delim, lx->inp.stream);
 	assign_string(delim);
 	normalize_token(delim);
 	str_delim = aggregate_final_token_parts(delim->head);

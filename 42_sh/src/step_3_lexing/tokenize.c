@@ -15,10 +15,53 @@
 #include "module_lexer.h"
 #include "module_input.h"
 
+static void	close_tmp_part(t_lexer *lx)
+{
+	t_tk_part	*part;
+
+	part = lx->tmp_wp;
+	if (part == NULL)
+		return ;
+	while (part->next)
+		part = part->next;
+	part->end = lx->inp.pos;
+}
+
+static void	drop_empty_tmp_uquote(t_lexer *lx)
+{
+	t_tk_part	*part;
+
+	part = lx->tmp_wp;
+	if (part == NULL)
+		return ;
+	while (part->next)
+		part = part->next;
+	if (part->type != TOK_UQUOTE || part->start != part->end)
+		return ;
+	if (part->prev)
+		part->prev->next = NULL;
+	else
+		lx->tmp_wp = NULL;
+	free_token_part(part);
+}
+
+static bool	starts_word_char(t_lexer *lx)
+{
+	return (!is_eof(lx) && !is_sep(lx) && !is_wsp(lx)
+		&& !is_dquote(lx) && !is_squote(lx)
+		&& !peek_str_(&lx->inp, "&&") && !peek_str_(&lx->inp, "||")
+		&& !peek_str_(&lx->inp, "|") && !peek_str_(&lx->inp, ">>")
+		&& !peek_str_(&lx->inp, "<<") && !peek_str_(&lx->inp, ">")
+		&& !peek_str_(&lx->inp, "<") && !peek_str_(&lx->inp, "(")
+		&& !peek_str_(&lx->inp, ")"));
+}
+
 static bool	emit_control_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
-	if (!match_str(&lx->inp, str))
+	if (!peek_str_(&lx->inp, str))
 		return (false);
+	close_tmp_part(lx);
+	check_str(&lx->inp, str);
 	tk_word_emit(lx);
 	tk_control_emit(lx, str, type);
 	return (true);
@@ -26,8 +69,10 @@ static bool	emit_control_if_present(t_lexer *lx, char *str, t_tk_type type)
 
 static bool	emit_operator_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
-	if (!match_str(&lx->inp, str))
+	if (!peek_str_(&lx->inp, str))
 		return (false);
+	close_tmp_part(lx);
+	check_str(&lx->inp, str);
 	tk_word_emit(lx);
 	tk_operator_emit(lx, str, type);
 	return (true);
@@ -48,9 +93,11 @@ static bool	emit_control_operator(t_lexer *lx)
 
 static bool	emit_redirection_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
-	if (!match_str(&lx->inp, str))
+	if (!peek_str_(&lx->inp, str))
 		return (false);
 	rem_op_context(lx);
+	close_tmp_part(lx);
+	check_str(&lx->inp, str);
 	tk_word_emit(lx);
 	tk_redir_emit(lx, str, type);
 	return (true);
@@ -73,8 +120,9 @@ static bool	emit_struct_if_present(t_lexer *lx, char *str, t_tk_type type)
 {
 	if (!peek_str_(&lx->inp, str))
 		return (false);
+	close_tmp_part(lx);
 	tk_word_emit(lx);
-	erase_and_advance_str(&lx->inp, str);
+	check_str(&lx->inp, str);
 	tk_struct_emit(lx, str, type);
 	return (true);
 }
@@ -102,7 +150,8 @@ static void	read_double_quoted_body(t_lexer *lx)
 			return ;
 		advance_(&lx->inp);
 	}
-	erase_and_advance(&lx->inp);
+	close_tmp_part(lx);
+	advance_(&lx->inp);
 	remove_matching_context(&lx->ctxs, CTX___DQUOTE);
 	lx->pending_dquote = false;
 }
@@ -111,7 +160,7 @@ static bool	read_double_quoted_part(t_lexer *lx)
 {
 	if (lx->pending_squote || !is_dquote(lx))
 		return (false);
-	erase_and_advance(&lx->inp);
+	advance_(&lx->inp);
 	lx->pending_dquote = true;
 	rem_op_context(lx);
 	add_context(lx, TOK_DQUOTE);
@@ -128,7 +177,8 @@ static void	read_single_quoted_body(t_lexer *lx)
 			return ;
 		advance_(&lx->inp);
 	}
-	erase_and_advance(&lx->inp);
+	close_tmp_part(lx);
+	advance_(&lx->inp);
 	remove_matching_context(&lx->ctxs, CTX___SQUOTE);
 	lx->pending_squote = false;
 }
@@ -137,7 +187,7 @@ static bool	read_single_quoted_part(t_lexer *lx)
 {
 	if (lx->pending_dquote || !is_squote(lx))
 		return (false);
-	erase_and_advance(&lx->inp);
+	advance_(&lx->inp);
 	lx->pending_squote = true;
 	rem_op_context(lx);
 	add_context(lx, TOK_SQUOTE);
@@ -150,6 +200,16 @@ static bool	consume_escape(t_lexer *lx)
 {
 	if (!is_backslash(lx))
 		return (false);
+	if (peek_next_chr(&lx->inp) == '\n')
+	{
+		close_tmp_part(lx);
+		drop_empty_tmp_uquote(lx);
+		advance_(&lx->inp);
+		advance_(&lx->inp);
+		if (starts_word_char(lx))
+			tk_temp_part_create(lx, TOK_UQUOTE);
+		return (true);
+	}
 	lx->pending_escape = true;
 	advance_(&lx->inp);
 	if (!is_eof(lx))
@@ -166,10 +226,11 @@ static bool	consume_comment(t_lexer *lx)
 		return (false);
 	if (!is_comment(lx))
 		return (false);
+	close_tmp_part(lx);
 	tk_word_emit(lx);
 	lx->pending_escape = false;
-	erase_and_advance(&lx->inp);
-	while (!is_eof(lx) && !is_backslash(lx))
+	advance_(&lx->inp);
+	while (!is_eof(lx) && !is_newline(lx))
 		advance_(&lx->inp);
 	return (true);
 }
@@ -181,8 +242,7 @@ static void	read_unquoted_body(t_lexer *lx)
 	had_char = false;
 	while (!is_eof(lx))
 	{
-		if (emit_control_operator(lx) || emit_redirection(lx)
-			|| emit_struct(lx))
+		if (emit_control_operator(lx) || emit_redirection(lx) || emit_struct(lx))
 		{
 			if (had_char)
 				tk_word_emit(lx);
@@ -190,6 +250,7 @@ static void	read_unquoted_body(t_lexer *lx)
 		}
 		if (is_sep(lx) || is_wsp(lx) || is_dquote(lx) || is_squote(lx))
 		{
+			close_tmp_part(lx);
 			return ;
 		}
 		if (consume_escape(lx))
@@ -197,6 +258,7 @@ static void	read_unquoted_body(t_lexer *lx)
 		advance_(&lx->inp);
 		had_char = true;
 	}
+	close_tmp_part(lx);
 }
 
 static void	consume_separators(t_lexer *lx, bool *had_sep)
@@ -212,7 +274,7 @@ static void	consume_separators(t_lexer *lx, bool *had_sep)
 		{
 			tk_control_emit(lx, "newline", TOK_NEWLINE);
 		}
-		erase_and_advance(&lx->inp);
+		advance_(&lx->inp);
 	}
 }
 
