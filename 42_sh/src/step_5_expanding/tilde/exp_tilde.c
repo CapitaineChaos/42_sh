@@ -15,6 +15,7 @@
 #include "module_expand.h"
 #include "module_token.h"
 #include "helpers.h"
+#include <pwd.h>
 
 static char	*expand_pwd_variant(const char *w)
 {
@@ -49,6 +50,32 @@ static char	*expand_home_variant(const char *w)
 	return (ft_strjoin(base, w + 1));
 }
 
+static char	*expand_user_variant(const char *w)
+{
+	struct passwd	*pw;
+	char			*login;
+	const char		*slash;
+	char			*res;
+
+	if (w[1] == '\0' || w[1] == '/' || w[1] == '+' || w[1] == '-')
+		return (NULL);
+	slash = strchr(w, '/');
+	if (slash)
+		login = strndup(w + 1, slash - (w + 1));
+	else
+		login = strdup(w + 1);
+	if (!login)
+		return (NULL);
+	pw = getpwnam(login);
+	free(login);
+	if (!pw || !pw->pw_dir)
+		return (NULL);
+	if (!slash)
+		return (strdup(pw->pw_dir));
+	res = ft_strjoin(pw->pw_dir, slash);
+	return (res);
+}
+
 char	*tilde_expand_word(const char *w)
 {
 	char	*res;
@@ -58,7 +85,10 @@ char	*tilde_expand_word(const char *w)
 	res = expand_pwd_variant(w);
 	if (res)
 		return (res);
-	return (expand_home_variant(w));
+	res = expand_home_variant(w);
+	if (res)
+		return (res);
+	return (expand_user_variant(w));
 }
 
 int	expand_cmd_tildes(t_tokens *tokens)
