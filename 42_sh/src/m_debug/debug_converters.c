@@ -85,27 +85,6 @@ char	*get_ast_typestr(t_ast_type type)
 	return (lookup_name(names, type, "UNKNOWN"));
 }
 
-char	*convert_dbg_lvl_name(int lvl)
-{
-	static const t_debug_name	names[] = {
-	{LVL_LEXER, "🔮 LXR"},
-	{LVL_HEREDOC, "📥 HDC"},
-	{LVL_PARSER, "🧩 PRS"},
-	{LVL_AST, "🌳 AST"},
-	{LVL_EXPAND, "🔰 EXP"},
-	{LVL_ARGV, "📋 ARG"},
-	{LVL_EXEC, "⚙️ EXC"},
-	{LVL_OK, "📨 MSG"},
-	{LVL_FAIL, "❌ ERR"},
-	{LVL_CHK, "🔎 CHK"},
-	{LVL_INPUT, "💬 INP"},
-	{LVL_MNS, "🐰 MNS"},
-	{0, NULL}
-	};
-
-	return (lookup_name(names, lvl, "🔥 UNK"));
-}
-
 /* Texte d'un token (parts concaténées, tronqué à 70 car). Panels debugview. */
 void	get_token_content_stream(t_token *token, char *buf, size_t buf_size)
 {

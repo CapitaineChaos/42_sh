@@ -6,13 +6,13 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent   # tools/tester
 PROJECT = HERE.parent.parent / "42_sh"          # racine du projet 42_sh
-SH42_SRC = PROJECT / "42_sh_test"               # build DLVL=0
+SH42_SRC = PROJECT / "42_sh_test"               # build normal (pipe autorisé)
 SH42 = HERE / "42_sh"                           # copie locale
 FIXTURES = HERE / "fixtures"
 CASES = HERE / "cases"
 FAILURES_FILE = HERE / "failures.log"
 
-TEST_MAKE_ARGS = ["NAME=42_sh_test", "OBJ_DIR=obj_test", "CFLAGS=-Wall -Wextra -Werror -MMD -MP -DDLVL=0"]
+TEST_MAKE_ARGS = ["NAME=42_sh_test", "OBJ_DIR=obj_test", "CFLAGS=-Wall -Wextra -Werror -MMD -MP"]
 
 # anglophones (stderr bash aligné), préférées -> repli ; pick_locale prend la 1re dispo
 LOCALE_CANDIDATES = ("en_US.UTF-8", "en_US.utf8", "C.UTF-8", "C.utf8", "C")

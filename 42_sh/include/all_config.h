@@ -17,26 +17,6 @@
 #  define _POSIX_C_SOURCE 200809L
 # endif
 
-typedef enum e_bdg_lvl
-{
-	LVL_MNS = 11,
-	LVL_INPUT = 10,
-	LVL_CHK = 9,
-	LVL_LEXER = 8,
-	LVL_PARSER = 7,
-	LVL_HEREDOC = 6,
-	LVL_AST = 5,
-	LVL_EXPAND = 4,
-	LVL_ARGV = 3,
-	LVL_EXEC = 2,
-	LVL_FAIL = 1,
-	LVL_OK = 0,
-}	t_bdg_lvl;
-
-# ifndef DLVL
-#  define DLVL -2
-# endif
-
 # ifndef L_BUFFER_SIZE
 #  define L_BUFFER_SIZE 1024
 # endif

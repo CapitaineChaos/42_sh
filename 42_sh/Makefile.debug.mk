@@ -1,5 +1,5 @@
 # Debug via le debugview web (../tools/debugview). Plus de debug terminal.
-# `make debug` compile un binaire debug (-DDLVL -DDBG_VIEW) puis lance
+# `make debug` compile un binaire debug (-DDBG_VIEW) puis lance
 # debugserve.py : pseudo-terminal xterm.js + panneaux (tokens/ast/exec/footer)
 # alimentés par les fichiers /dev/shm/sh42_dbg/*.
 
@@ -10,7 +10,7 @@ DBG_SERVE		:= ../tools/debugview/debugserve.py
 
 DBG_OBJ_BASE	:= $(DBG_BUILD)/lv$(DBG_LVL)
 DBG_OBJ_FILES	:= $(patsubst $(SRC_BASE)/%, $(DBG_OBJ_BASE)/%, $(ALL_FILES:.c=.o))
-DBGFLAGS		:= $(CFLAGS) -g3 -O0 -DDLVL=$(DBG_LVL) -DDBG_VIEW
+DBGFLAGS		:= $(CFLAGS) -g3 -O0 -DDBG_VIEW
 
 $(DBG_OBJ_BASE)/%.o: $(SRC_BASE)/%.c
 	@mkdir -p $(@D)
@@ -19,7 +19,7 @@ $(DBG_OBJ_BASE)/%.o: $(SRC_BASE)/%.c
 
 debug_build: $(DBG_OBJ_FILES)
 	@$(CC) $(DBGFLAGS) $(DBG_OBJ_FILES) $(LIBS) -o $(NAME) \
-		&& echo "$(GN)>>>>> $(NAME) (debug DLVL=$(DBG_LVL)) linked$(RT)" \
+		&& echo "$(GN)>>>>> $(NAME) (debug, DBG_VIEW) linked$(RT)" \
 		|| { echo "$(RD)>>>>> Linking failed for $(NAME)$(RT)"; exit 1; }
 
 debug: debug_build

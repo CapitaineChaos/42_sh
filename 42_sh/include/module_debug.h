@@ -64,6 +64,5 @@ char	*debug_get_token_type(t_tk_type type);
 char	*debug_get_part_type(t_tk_part_type type);
 char	*debug_get_token_role(t_tk_role role);
 char	*debug_get_token_class(t_tk_class cls);
-char	*convert_dbg_lvl_name(int lvl);
 
 #endif

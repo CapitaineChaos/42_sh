@@ -14,11 +14,8 @@
 #include "module_signal.h"
 #include "texts.h"
 #include "module_minishell.h"
-#include "module_env.h"
-#include "all_config.h"
 #include <stdlib.h>
 #include <string.h>
-#include <readline/readline.h>
 
 void	launch_animation(t_mns *mns)
 {
@@ -27,8 +24,6 @@ void	launch_animation(t_mns *mns)
 	char	*lvl;
 
 	if (mns->posix)
-		return ;
-	if (DLVL > -2)
 		return ;
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
 		return ;
@@ -46,16 +41,6 @@ void	launch_animation(t_mns *mns)
 		select_animation("gits_lines_micro");
 }
 
-void	interactive_shell_only(void)
-{
-	if (DLVL < -1 && (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO)))
-	{
-		write(STDERR_FILENO,
-			"minishell: non-interactive mode is not allowed\n", 47);
-		exit(1);
-	}
-}
-
 /**
  * @brief Point d'entrée du programme.
  */
@@ -71,7 +56,6 @@ int	main(int ac, char **av, char **envp)
 		write(STDERR_FILENO, "Usage: ./minishell [--posix]\n", 29);
 		return (1);
 	}
-	interactive_shell_only();
 	dbg_errors_reset();
 	init_mns(&mns, strdup(" \t\n"), envp);
 	mns.posix = posix;

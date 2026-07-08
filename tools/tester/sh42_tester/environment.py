@@ -30,7 +30,7 @@ def build_binary(no_build: bool) -> bool:
             return False
         if SH42.exists():
             print(f"{C.YELLOW}Binaire en cache refuse l'entrée pipée ; "
-                  f"rebuild (DLVL=0)...{C.RESET}")
+                  f"rebuild...{C.RESET}")
     print(f"{C.CYAN}make {' '.join(TEST_MAKE_ARGS)}{C.RESET}")
     # clear/tput dans le Makefile plantent sans TERM
     build_env = {**os.environ, "TERM": os.environ.get("TERM") or "xterm"}
@@ -42,10 +42,10 @@ def build_binary(no_build: bool) -> bool:
     shutil.copy2(SH42_SRC, SH42)
     SH42.chmod(0o755)
     SH42_SRC.unlink(missing_ok=True)          # seule la copie locale reste
-    print(f"{C.GREEN}Compilation réussie (42_sh_test, DLVL=0).{C.RESET}")
+    print(f"{C.GREEN}Compilation réussie (42_sh_test).{C.RESET}")
     if not accepts_pipes(SH42):
         sys.exit(f"{C.RED}42_sh refuse toujours l'entrée non-interactive.\n"
-                 f"-> vérifie all_config.h (DLVL) / interactive_shell_only.{C.RESET}")
+                 f"-> vérifie que le binaire lit bien stdin non-tty.{C.RESET}")
     return True
 
 

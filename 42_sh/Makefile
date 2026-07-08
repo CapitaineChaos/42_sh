@@ -12,7 +12,6 @@
 
 MAKEFLAGS		+= --silent --no-print-directory --warn-undefined-variables
 
-DLVL 			?= 0
 NAME 			:= 42_sh
 BONUS			:= bonus
 
