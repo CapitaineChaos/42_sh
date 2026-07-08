@@ -21,7 +21,7 @@ char	*nano_get_next_line(int fd)
 	char		buf;
 	ssize_t		r;
 
-	strapi_init(64, &api);
+	strapi_init(1024, &api);
 	while (1)
 	{
 		r = read(fd, &buf, 1);
