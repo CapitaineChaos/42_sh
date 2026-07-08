@@ -65,7 +65,6 @@ void	log_putch(t_logger *lg, char c);
 void	log_flush(int fd, t_logger *lg, bool to_file);
 void	log_putlong(t_logger *lg, long n);
 
-void	get_terminal_size(int *cols, int *rows);
 
 /**
  * SSTR SYSTEM

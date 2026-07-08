@@ -135,7 +135,6 @@ SRCS_INPUT = \
 				input
 
 SRCS_HELPERS = \
-				printer \
 				proc \
 				shell_level \
 				valid_id
@@ -152,7 +151,6 @@ SRCS_UTILS = \
 				strapi/ft_strapi_get \
 				strapi/ft_strapi_lifecycle \
 				strapi/ft_strapi_utils \
-				get_term_size \
 				logger
 
 # >>>HIDE_START
